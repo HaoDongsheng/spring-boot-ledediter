@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+	<head>
+	<meta charset="utf-8"></meta>
+	<title>LED编辑系统</title>
+	
+	<!-- Bootstrap 核心 CSS 文件 -->
+	<link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+	<link th:href="@{~/css/login_style.css}" rel="stylesheet" type="text/css">	
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"></link>
+	<!-- 在bootstrap.min.js 之前引入 -->
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>		
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<!--jquery.validate-->
+	<script src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+	<script src="https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js"></script>	
+	<script type="text/javascript" th:src="@{~/javascript/login.js}" ></script>	
+	<style type="text/css">				
+		#login_form{display: block;}
+		#register_form{display: none;}
+		#forgot_form{display: none;}		
+	</style>
+
+	</head>
+	
+	<body>
+		<div class="container">	
+				
+			<div class="row">			
+				<form id="login_form" action="#" class="fh5co-form col-md-4 offset-md-4">
+					<h2>登录</h2>
+					<div class="form-group">
+						<label for="username" class="sr-only">用户名</label>							
+						<input type="text" class="form-control required" id="login_username" placeholder="用户名" name="username" autofocus="autofocus" maxlength="20"></input>
+					</div>
+					<div class="form-group">
+						<label for="password" class="sr-only">密码</label>
+						<input type="password" class="form-control required" id="login_password" placeholder="密码" name="password" maxlength="20"></input>
+					</div>
+					<div class="form-group">
+						<label for="remember"><input type="checkbox" id="remember"></input>记住</label>
+					</div>
+					<div class="form-group">
+						<p>无用户? <a id="login_sign_up" href="#">注册</a> | <a id="login_forgot" href="#">忘记？</a></p>
+					</div>
+					<div class="form-group">
+						<input id="sign_in" type="submit" value="登录" class="btn btn-primary"></input>
+					</div>
+				</form>			
+			</div>	
+			
+			<div class="row">				
+				<form id="register_form" action="#" class="fh5co-form col-md-4 offset-md-4">
+					<h2>注册</h2>
+					<div class="form-group">
+						<div class="alert alert-success" role="alert">你的信息将被保存。</div>
+					</div>
+					<div class="form-group">
+						<label for="name" class="sr-only">用户名</label>
+						<input type="text" class="form-control required" id="register_username" placeholder="用户名" name="username"  autofocus="autofocus" maxlength="20"></input>
+					</div>
+					<div class="form-group">
+						<label for="email" class="sr-only">Email</label>
+						<input type="email" class="form-control required" id="register_email" placeholder="Email" name="email" maxlength="50"></input>
+					</div>
+					<div class="form-group">
+						<label for="password" class="sr-only">密码</label>
+						<input type="password" class="form-control required" id="register_password" placeholder="密码" name="password" maxlength="20"></input>
+					</div>
+					<div class="form-group">
+						<label for="re-password" class="sr-only">确认密码</label>
+						<input type="password" class="form-control required" id="register_rpassword" placeholder="确认密码" name="rpassword" maxlength="20"></input>
+					</div>					
+					<div class="form-group">
+						<p>已注册? <a id="register_sgin_in" href="#">登录</a></p>
+					</div>
+					<div class="form-group">
+						<input id="sgin_up" type="submit" value="注册" class="btn btn-primary"></input>
+					</div>
+				</form>
+			</div>	
+			
+			<div class="row">				
+				<form id="forgot_form" action="#" class="fh5co-form col-md-4 offset-md-4">
+					<h2>忘记密码</h2>
+					<div class="form-group">
+						<div class="alert alert-success" role="alert">你的邮箱将接收密码.</div>
+					</div>
+					<div class="form-group">
+						<label for="email" class="sr-only">Email</label>
+						<input type="email" class="form-control required" id="forgot_email" placeholder="Email" name="email" autofocus="autofocus" maxlength="50"></input>
+					</div>
+					<div class="form-group">
+						<p><a id="forgot_sgin_in" href="#">登录</a> or <a id="forgot_sgin_up" href="#">注册</a></p>
+					</div>
+					<div class="form-group">
+						<input id="send_email" type="submit" value="发送邮件" class="btn btn-primary"></input>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+	</body>
+</html>
+

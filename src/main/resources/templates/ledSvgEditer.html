@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>LED编辑系统</title>
+    <!-- Bootstrap 核心 CSS 文件 -->
+	<link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"></link>	
+	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">		
+	<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"></link>
+	<!-- 在bootstrap.min.js 之前引入 -->
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>		
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<!-- snap.svg 核心 JavaScript 文件 -->		
+	<script src="../static/javascript/snap.svg.js"></script>
+	<script type="text/javascript" src="../static/javascript/ledSvgEditer.js" ></script>	
+<body>
+
+<div id="header">
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+	  <!-- Brand -->
+	  <a class="navbar-brand" href="#">Logo</a>
+	
+	  <!-- Links -->
+	  <ul class="navbar-nav">
+	    <li class="nav-item">
+	      <a class="nav-link" href="#">Link 1</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link" href="#">Link 2</a>
+	    </li>
+	
+	    <!-- Dropdown -->
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Dropdown link
+	      </a>
+	      <div class="dropdown-menu">
+	        <a class="dropdown-item" href="#">Link 1</a>
+	        <a class="dropdown-item" href="#">Link 2</a>
+	        <a class="dropdown-item" href="#">Link 3</a>
+	      </div>
+	    </li>
+	  </ul>
+	</nav>
+</div>
+
+<div id="container" style="position:absolute;top:60px;left:0px;bottom: 60px; right: 0px;background-color: #444;">
+
+	<div id="tool_left" style="width: 60px; height: 100%; float: left;border-right-style:solid;border-right-color:#ffffff;">
+		<nav class="navbar bg-dark navbar-darkt" style="height:100%;">
+		  <ul class="navbar-nav">
+		    <li class="nav-item">
+		    	<a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="选择">
+		    		<i class="fa fa-mouse-pointer" style="font-size:24px;color:white"></i>
+				</a>      
+		    </li>		   
+		    <li class="nav-item">
+		     	<a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="画笔">
+		    		<i class="fa fa-pencil" style="font-size:24px;color:white"></i>
+				</a>    
+		    </li>
+		    <li class="nav-item">
+	     	    <a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="矩形">
+		    		<i class="fa fa-square" style="font-size:24px;color:white"></i>
+				</a>  
+		    </li>
+		    <li class="nav-item">
+	     	    <a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="圆形">
+		    		<i class="fa fa-circle" style="font-size:24px;color:white"></i>
+				</a>  
+		    </li>
+		    <li class="nav-item">
+	     	    <a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="图片">
+		    		<i class="fa fa-picture-o" style="font-size:24px;color:white"></i>
+				</a>  
+		    </li>
+		    <li class="nav-item">
+	     	    <a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="文字">
+		    		<i class="fa fa-font" style="font-size:24px;color:white"></i>
+				</a>  
+		    </li>
+		     <li class="nav-item">
+	     	    <a class="nav-link" href="#" data-toggle="tooltip" data-placement="right" title="吸管">
+		    		<i class="fa fa-eyedropper" style="font-size:24px;color:white"></i>
+				</a>  
+		    </li>
+		  </ul>
+		</nav>
+	</div>
+	
+	<div id="tool_right" style="width: 200px;height: 100%; float: right; overflow:auto;border-left-style:solid;border-left-color:#ffffff;">	
+		<div id="adjust" style="display:none;"><br>
+	    	<div class="card" style="margin-top:10px;margin-bottom:10px;">
+		    	<div class="card-header  bg-primary text-white" data-toggle="collapse" href="#svg_name">名称</div>
+			    <div id="svg_name" class="card-body collapse show">
+			    <input class="form-control" id="svg_name_id" placeholder="名称">			      	
+			    </div>
+			 </div>
+			 
+		    <div class="card" style="margin-top:10px;margin-bottom:10px;">
+		    	<div class="card-header  bg-info text-white" data-toggle="collapse" href="#svg_position">位置大小</div>
+			    <div id="svg_position" class="card-body collapse">
+			    <input type="number" class="form-control" id="svg_position_X" placeholder="X">
+		      	<input type="number" class="form-control" id="svg_position_Y" placeholder="Y">
+		      	<input type="number" class="form-control" id="svg_size_width" placeholder="宽度">
+		      	<input type="number" class="form-control" id="svg_size_height" placeholder="高度">
+		      	<input type="number" class="form-control" id="svg_rotate_value" placeholder="旋转">
+			    </div>
+			 </div>
+			 
+			 <div class="card" style="margin-top:10px;margin-bottom:10px;">
+		    	<div class="card-header  bg-info text-white" data-toggle="collapse" href="#svg_color">边框颜色</div>
+			    <div id="svg_color" class="card-body collapse">
+			    <input type="number" class="form-control" id="svg_stroke_width" placeholder="粗细">
+		      	<input type="number" class="form-control" id="svg_stroke_dashed" placeholder="虚实">
+		      	<input type="number" class="form-control" id="svg_rotate_corner" placeholder="圆角">
+			    <div class="form-inline">
+			    	<label>线条颜色:</label>
+			    	<input type="color" id="svg_color_stroke">
+			    </div>
+			    <div class="form-inline">
+			    	<label>填充颜色:</label>
+			    	<input type="color" id="svg_color_fill">
+			    </div>			
+			     <input type="number" class="form-control" id="svg_color_opacity" placeholder="透明度">      	
+			    </div>
+			 </div>
+			 				 
+			 <div class="card" style="margin-top:10px;margin-bottom:10px;">
+		    	<div class="card-header  bg-info text-white" data-toggle="collapse" href="#svg_animation">动画</div>
+			    <div id="svg_animation" class="card-body collapse">
+			    <input type="number" class="form-control" id="svg_animation_width" placeholder="旋转">
+		      	<input type="number" class="form-control" id="svg_animation_dashed" placeholder="圆角">
+			    </div>
+			 </div>
+	    </div>
+	    <div id="layer"><br>	    
+	    	<button id="creat_layer" type="button" class="btn btn-primary btn-block"><i class="fa fa-plus-circle" style="font-size:20px;color:white"></i>添加图层</button>	    
+	    </div>
+	</div>
+	
+
+	<div id="content" style="position:absolute;top:0px;left:60px;bottom: 0px; right: 200px;background-color: #444;">
+		<div id="rulers" style="position: absolute;top:0px;left:0px;width:100%;height:100%;">
+		<div id="ruler_corner" style="position: absolute;width:15px;height:15px;"></div>
+		<div id="ruler_x" style="position: absolute;top:0px;left:15px;height:15px;right:0;">		
+			<svg id="svg_rx" style="height:15px;width:100%"></svg>
+		</div>
+		<div id="ruler_y" style="position: absolute;top:15px;left:0px;width:15px;bottom:0;">
+			<svg id="svg_ry" style="height:100%;width:15px"></svg>
+		</div>
+		<div id="workarea" style="position: absolute;top:15px;left:15px;right:0;bottom:0;">
+			<svg id="svgcanvas" style="position:relative"><svg>
+		</div>
+		</div>
+			
+	</div>
+	
+</div>
+
+<div class="fixed-bottom"  id="footer">
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+	  <!-- Brand -->
+	  <a class="navbar-brand" href="#">Logo</a>
+	
+	  <!-- Links -->
+	  <ul class="navbar-nav">
+	    <li class="nav-item">
+	      <a class="nav-link" href="#">Link 1</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link" href="#">Link 2</a>
+	    </li>
+	
+	    <!-- Dropdown -->
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+	        Dropdown link
+	      </a>
+	      <div class="dropdown-menu">
+	        <a class="dropdown-item" href="#">Link 1</a>
+	        <a class="dropdown-item" href="#">Link 2</a>
+	        <a class="dropdown-item" href="#">Link 3</a>
+	      </div>
+	    </li>
+	  </ul>
+	</nav>
+</div>
+</body>
+</html>
