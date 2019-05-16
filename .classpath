@@ -6,7 +6,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**|static/ueditor/|static/ueditor/" kind="src" output="target/classes" path="src/main/resources">
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
@@ -15,11 +15,13 @@
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
@@ -37,5 +39,7 @@
 	<classpathentry kind="lib" path="src/main/resources/static/ueditor/jsp/lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/static/ueditor/jsp/lib/json.jar"/>
 	<classpathentry kind="lib" path="src/main/resources/static/ueditor/jsp/lib/ueditor-1.1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre1.8.0_211/lib/rt.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse-workspace/spring-boot-ledediter/gif4j_pro_trial_2.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

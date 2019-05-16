@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>LED编辑系统</title>
+    <!-- Bootstrap 核心 CSS 文件 -->
+	 	
+	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+			
+	<!-- 在bootstrap.min.js 之前引入 -->	
+	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
+	
+	<!-- jcanvas 核心 JavaScript 文件 -->	
+	<script type="text/javascript" th:src="@{~/javascript/jcanvas.js}" ></script>		
+		
+	<!-- jquery-ui 核心 JavaScript 文件 -->	
+	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>
+	
+	<!-- bootstrap-table -->
+	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>	
+	
+	<!-- 自定义 核心 JavaScript 文件 -->	
+	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">	
+	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/infoList.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/DrawInfolistbyCanvas.js}" ></script>
+		
+	<link th:href="@{~/css/bootstrap-timepicker.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>		
+</head>
+<body>
+   <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>公司: </strong>鞍山博海泰克电子设备有限公司
+                    &nbsp;&nbsp;
+                    <strong>电话: </strong>0412-5234000                
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END-->
+    
+    <section class="menu-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-collapse">
+                        <ul id="menu-top" class="nav navbar-right">
+                            <li id='main'><a href="main">首页</a></li>
+                            <li id='advManger'><a href="advManger">广告编辑</a></li>
+                            <li id='auditManger'><a href="auditManger">广告审核</a></li>
+                            <li id='infoList'><a class="menu-top-active" href="infoList">广告发布</a></li>
+                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li id='userManger'><a href="userManger">用户管理</a></li>
+                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
+                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <!-- <li><a href="blank.html">关于</a></li>  -->                         
+                        </ul>
+                    </div>                    
+                </div>
+
+            </div>
+        </div>
+    </section>
+  
+    <!-- MENU SECTION END-->    
+    <div class="content-wrapper">    	
+        <div class="container">
+      	   <div class="row">
+             <div class="col-md-12">
+             	<div class="form-inline page-head-line">
+                 <h4>广告列表</h4>                    
+                 </div>		   			
+             </div>
+           </div>              
+               
+           <div class="row">
+           <div class="col-md-12">
+           <div id="progress" class="progress" style="width:100%;height:0px;">
+		 	<div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%">
+		  	<span>0</span>
+		  	</div>
+			</div>
+           </div>
+           </div>   
+           
+           <div class="row">
+           <div class="col-md-2">
+           <div id='input_group_grouplist'>
+           	<div class="input-group mb-3 input-group-sm">
+		      <div class="input-group-prepend">
+		        <span class="input-group-text">分组</span>
+		      </div>
+		      <select id="grouplist" class="form-control"></select>
+		    </div>
+	        </div>
+           </div>
+           <!-- 
+           <div class="col-md-2">
+           <div id='input_group_grouplist'>
+           	<div class="input-group mb-3 input-group-sm">
+		      <div class="input-group-prepend">
+		        <span class="input-group-text">列表</span>
+		      </div>
+		      <select id="playlist" class="form-control"></select>
+		    </div>
+	        </div>           
+           </div>
+           
+           <div class="col-md-8">
+	           <div class="btn-group btn-group-sm">	           		      	
+			    <button id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
+			    <button id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
+			    <button id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
+			    <button id='list_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
+			    <button id='list_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
+			   </div> 
+			   <div class="btn-group btn-group-sm">	           		      				    			    
+			    <button id='info_delete' type="button" class="btn btn-success"><i class="fa fa-trash-o"></i>广告删除</button>
+			    <button id='info_copy' type="button" class="btn btn-success"><i class="fa fa-copy"></i>广告复制</button>			    
+			    <button id='info_SerialPort' type="button" class="btn btn-success"><i class="fa fa-magnet"></i>广告串口发送</button>
+			   </div> 
+		   </div>
+		    -->
+		   </div>   
+           
+           <div class="row">
+           <div class="col-md-12"> 
+            <div id="adv_table" class="table">
+			  <table id="infoitem_table" class='table-sm table-striped thead-dark'>						    						    
+			  </table>
+			</div>  
+			</div>
+           </div>
+           
+           <div class="row">
+             <div class="col-md-12">
+             	<div class="form-inline page-head-line">
+                 <h4>播放列表</h4>                    
+                 </div>		   			
+             </div>
+           </div>
+           
+           <div class="row">
+	           <div class="col-md-2">
+	           <div id='input_group_grouplist'>
+	           	<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">列表</span>
+			      </div>
+			      <select id="playlist" class="form-control"></select>
+			    </div>
+		        </div>           
+	           </div>
+	           
+	           <div class="col-md-8">
+		           <div class="btn-group btn-group-sm">	           		      	
+				    <button id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
+				    <button id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
+				    <button id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
+				    <button id='list_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
+				    <button id='list_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
+				   </div> 	
+			   </div>
+			   
+		    </div> 
+           	
+           <div class="row">
+           	<div class="col-md-12"> 	       			       
+		    <div id="pt_sort" class="table">
+			  <table id="infolist_table" class='table-sm table-striped thead-dark'>						    						    
+			  </table>
+			</div> 
+			</div> 	  		       		     
+	   	   </div>	
+	   	   
+	   	   <div id="pt_template" class="row">		       	          
+				<div id="info_workarea"  style="border:1px solid;position:relative;box-shadow: 10px 10px 5px #888888;">							
+				<canvas id="info_canvas" width=800px height=400px></canvas>	
+				<span id = 'tooltip' class="tooltipT" style="pointer-events:none;">提示文本</span>										
+			  </div>	       
+	       </div>	
+	     
+    	</div>
+    			
+		<!-- 模态框  添加广告-->
+		<div class="modal fade" data-backdrop="static" id="modal_addplaylist">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 
+		      <!-- 模态框头部 -->
+		      <div class="modal-header">
+		        <h4 class="modal-title">列表信息</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body">
+		      
+		      <div class="row">
+		      
+		      <div class="col-md-12">
+   				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">列表名称</span>
+			      </div>
+					<input type="text" class="form-control required" id="creat_playlist_name" placeholder="列表名称" autofocus="autofocus" maxlength="20"></input>	    
+			    </div>	
+		      </div>		      		      
+		      </div>
+		      
+		     <div class="row">
+		      		      		      		      		      
+		      <div class="col-md-12">
+   				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">列表级别</span>
+			      </div>
+			      <select id="creat_playlist_level" autofocus="autofocus" class="form-control">
+			      <option value=0>转场列表</option>
+			      <option value=1 selected="selected">普通列表</option>
+			      <option value=2>通知列表</option>
+			      </select>
+					<!-- <input type="text" class="form-control required" id="creat_playlist_level" placeholder="播放列表类型" autofocus="autofocus" maxlength="20"></input> -->			    
+			    </div>
+		      </div>
+		      
+		      </div>
+		      
+		      <div class="row">
+		      		      		      
+		      <div class="col-md-12">
+   				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">列表类型</span>
+			      </div>
+			      <select id="creat_playlist_type" autofocus="autofocus" class="form-control">
+			      <option value=2 selected="selected">顺序排期</option>
+			      <option value=1>模板排期</option>
+			      </select>								    
+			    </div>
+		      </div>
+		      		      
+		      </div>		      
+		      
+		      <div class="row">
+		      <div class="col-md-12">
+    				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">时间集合</span>
+			      </div>
+			       <select id="creat_playlist_quantum" autofocus="autofocus" class="form-control"></select>
+			       <a data-toggle="modal" data-target="#modal_addquantum" href='#'><i class="fa fa-plus"></i></a><a id='btn_del_quantum' href='#'><i class="fa fa-times"></i></a>
+			    </div>	
+		      </div>		      
+		      </div>
+		      
+		      <div class="row" style='display:none;'>
+		      <div class="col-md-12">
+    				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">模板周期</span>
+			      </div>				      
+					<input type="number" class="form-control required" id="creat_playlist_cycle" placeholder="模板周期" autofocus="autofocus" min="20" max="3600"></input>			    
+			    </div> 
+		      </div>
+		      </div>
+		      					  
+		      </div>				  			      
+		 
+		  		<!-- 模态框底部 -->
+		        <div class="modal-footer">
+		          <button id="btn_add_playlist" type="button" class="btn btn-primary">确定</button> 
+		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+						
+		<!-- 模态框  添加时间集合-->
+		<div class="modal fade" data-backdrop="static" id="modal_addquantum">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 
+		      <!-- 模态框头部 -->
+		      <div class="modal-header">
+		        <h4 class="modal-title">添加时间集合</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body">
+				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">时间集合</span>
+			      </div>
+					<input type="text" class="form-control timepicker timepicker-default startTime" id="playlist_StartTime" placeholder="开始日期" name="playlistStartTime" autofocus="autofocus" maxlength="20" value='00:00'></input>
+					<div class="input-group-prepend">
+			        <span class="input-group-text">~</span>
+			      	</div>		
+			      	<input type="text" class="form-control timepicker timepicker-default endTime" id="playlist_EndTime" placeholder="结束日期" name="playlistEndTime" autofocus="autofocus" maxlength="20" value='00:00'></input>			    
+			    </div>				  					  
+		      </div>				  			      
+		 
+		  		<!-- 模态框底部 -->
+		        <div class="modal-footer">
+		          <button id="btn_add_quantum" type="button" class="btn btn-primary">确定</button> 
+		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 模态框  删除item-->
+		<div class="modal fade" data-backdrop="static" id="modal_deleteitem">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 		     
+ 		      <!-- 模态框主体 -->
+		      <div class="modal-body">
+				是否删除该条目?				  
+		      </div>			
+		       		 
+		      <!-- 模态框底部 -->
+		      <div class="modal-footer">
+		      	<button id="btn_delete_item" type="button" class="btn btn-primary">确定</button> 
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		      </div>				  			      
+		 		  		
+		    </div>
+		  </div>
+		</div>
+					            	          
+	    <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_SerialPort">
+	    <div class="modal-dialog modal-sm">
+	      <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">设置串口</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	   
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">
+	        <div class="row">
+	        <div class="col-md-4">
+	        	串口号
+	        </div>
+	        <div class="col-md-8">
+	        	<select id="ComName" class="form-control">
+	        	<option value="COM1" selected>COM1</option>
+	        	<option value="COM2">COM2</option>
+	        	<option value="COM3">COM3</option>
+	        	<option value="COM4">COM4</option>
+	        	<option value="COM5">COM5</option>
+	        	<option value="COM6">COM6</option>
+	        	<option value="COM7">COM7</option>
+	        	<option value="COM8">COM8</option>	        					     
+			    </select>
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	波特率
+	        </div>
+	        <div class="col-md-8">
+	        	<select id="BaudRate" class="form-control">
+				   	<option value="9600" selected>9600</option>
+				   	<option value="19200"  >19200</option>
+				   	<option value="38400"  >38400</option>
+				   	<option value="43000"  >43000</option>
+				    <option value="57600"  >57600</option>
+				    <option value="115200" >115200</option>   
+			    </select> 
+	        </div>
+	        </div>			         			    
+	        </div>
+	   
+	        <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_setSerialPort" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+	   
+	      </div>
+	     </div>
+	     </div>
+	     
+	    <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_details">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">广告详情</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	   
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">	        
+	        	<div class="table">
+        		<div id="details_toolbar">				     				     										    				     				           
+		        </div>
+			        
+	         	<table id="info_details_table" class='table-sm table-striped thead-dark'>						    						    
+			  	</table>
+			  	</div>
+	        </div>
+	   
+	        <!-- 模态框底部 -->
+	        <div class="modal-footer">	          
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+	   
+	      </div>
+	     </div>
+	     </div>
+	     
+    </div>
+    
+    <!-- CONTENT-WRAPPER SECTION END-->
+    <footer>
+        <div class="container">        
+            <div class="row">
+                <div class="col-md-12">
+                    &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER SECTION END-->
+</body>
+</html>

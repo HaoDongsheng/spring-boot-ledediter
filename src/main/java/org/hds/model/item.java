@@ -1,7 +1,7 @@
 package org.hds.model;
 
 public class item {
-    private Integer adid;
+    private Integer infoSN;
 
     private Integer pageid;
 
@@ -15,7 +15,15 @@ public class item {
 
     private Integer itemheight;
 
+    private Integer itemfontno;
+    
     private String itembackcolor;
+    
+    private Integer itembackopacity;
+    
+    private String itemforecolor;
+    
+    private Integer itemforeopacity;
 
     private Integer itemtype;
 
@@ -23,12 +31,16 @@ public class item {
 
     private String itemcontext;
 
-    public Integer getAdid() {
-        return adid;
+    private String itemcontextjson;
+
+    private String itemstyle;
+
+    public Integer getInfoSN() {
+        return infoSN;
     }
 
-    public void setAdid(Integer adid) {
-        this.adid = adid;
+    public void setInfoSN(Integer infoSN) {
+        this.infoSN = infoSN;
     }
 
     public Integer getPageid() {
@@ -71,6 +83,14 @@ public class item {
         this.itemwidth = itemwidth;
     }
 
+    public Integer getItemfontno() {
+        return itemfontno;
+    }
+
+    public void setItemfontno(Integer itemfontno) {
+        this.itemfontno = itemfontno;
+    }
+    
     public Integer getItemheight() {
         return itemheight;
     }
@@ -85,6 +105,30 @@ public class item {
 
     public void setItembackcolor(String itembackcolor) {
         this.itembackcolor = itembackcolor == null ? null : itembackcolor.trim();
+    }
+    
+    public Integer getItembackopacity() {
+        return itembackopacity;
+    }
+
+    public void setItembackopacity(Integer itembackopacity) {
+        this.itembackopacity = itembackopacity;
+    }
+    
+    public String getItemforecolor() {
+        return itemforecolor;
+    }
+
+    public void setItemforecolor(String itemforecolor) {
+        this.itemforecolor = itemforecolor == null ? null : itemforecolor.trim();
+    }
+    
+    public Integer getItemforeopacity() {
+        return itemforeopacity;
+    }
+
+    public void setItemforeopacity(Integer itemforeopacity) {
+        this.itemforeopacity = itemforeopacity;
     }
 
     public Integer getItemtype() {
@@ -109,5 +153,21 @@ public class item {
 
     public void setItemcontext(String itemcontext) {
         this.itemcontext = itemcontext == null ? null : itemcontext.trim();
+    }
+
+    public String getItemcontextjson() {
+        return itemcontextjson;
+    }
+
+    public void setItemcontextjson(String itemcontextjson) {
+        this.itemcontextjson = itemcontextjson == null ? null : itemcontextjson.trim();
+    }
+
+    public String getItemstyle() {
+        return itemstyle;
+    }
+
+    public void setItemstyle(String itemstyle) {
+        this.itemstyle = itemstyle == null ? null : itemstyle.trim();
     }
 }

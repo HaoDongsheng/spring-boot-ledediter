@@ -1,0 +1,393 @@
+2019-04-18 12:59:51,957 INFO (StartupInfoLogger.java:48)- Starting Application on CJ-201601111028 with PID 8224 (started by Administrator in D:\软件\workspace\spring-boot-ledediter)
+2019-04-18 12:59:52,241 INFO (SpringApplication.java:661)- No active profile set, falling back to default profiles: default
+2019-04-18 12:59:56,497 INFO (AbstractApplicationContext.java:581)- Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@71a189c7: startup date [Thu Apr 18 12:59:56 CST 2019]; root of context hierarchy
+2019-04-18 12:59:56,884 INFO (Version.java:30)- HV000001: Hibernate Validator 5.2.4.Final
+2019-04-18 13:00:27,397 INFO (PostProcessorRegistrationDelegate.java:328)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$51d9ef8d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-04-18 13:00:40,994 INFO (TomcatEmbeddedServletContainer.java:87)- Tomcat initialized with port(s): 8011 (http)
+2019-04-18 13:00:41,557 INFO (DirectJDKLog.java:179)- Starting service Tomcat
+2019-04-18 13:00:41,558 INFO (DirectJDKLog.java:179)- Starting Servlet Engine: Apache Tomcat/8.5.5
+2019-04-18 13:00:43,970 INFO (DirectJDKLog.java:179)- Initializing Spring embedded WebApplicationContext
+2019-04-18 13:00:43,971 INFO (EmbeddedWebApplicationContext.java:276)- Root WebApplicationContext: initialization completed in 47474 ms
+2019-04-18 13:00:45,597 INFO (ServletRegistrationBean.java:190)- Mapping servlet: 'dispatcherServlet' to [/]
+2019-04-18 13:00:45,599 INFO (ServletRegistrationBean.java:190)- Mapping servlet: 'org.hds.config.DruidStatViewServlet' to [/druid/*]
+2019-04-18 13:00:45,912 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'characterEncodingFilter' to: [/*]
+2019-04-18 13:00:45,914 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2019-04-18 13:00:45,914 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2019-04-18 13:00:45,915 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'requestContextFilter' to: [/*]
+2019-04-18 13:00:45,916 INFO (AbstractFilterRegistrationBean.java:271)- Mapping filter: 'druidWebStatFilter' to urls: [/*]
+2019-04-18 13:00:55,957 INFO (RequestMappingHandlerAdapter.java:534)- Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@71a189c7: startup date [Thu Apr 18 12:59:56 CST 2019]; root of context hierarchy
+2019-04-18 13:00:56,808 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/advManger]}" onto public java.lang.String org.hds.web.advMangerController.advManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,810 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.CreatInfo(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,811 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getadvList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,812 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdateInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.UpdateInfo(int,int,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,813 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetItem],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.GetItem(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,814 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/uploadvideo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.uploadvideo(int,int,java.lang.String,java.lang.String,org.springframework.web.multipart.MultipartFile,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,850 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemaptypebyprojectid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemaptypebyprojectid(java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,851 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemapbyprojectid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemapbyprojectid(int,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,852 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getPublishInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.getPublishInfobyid(int,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,852 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetImg2DBbyBase64],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.GetImg2DBbyBase64(int,int,java.lang.String,org.springframework.web.multipart.MultipartFile,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,853 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getvideotypebygroupid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getvideotypebygroupid(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,854 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getvideobygroupid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getvideobygroupid(int,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,855 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CopyInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.CopyInfo(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,856 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/SaveItem],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.SaveItem(int,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,856 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.DeleteInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,857 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/AuditInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.AuditInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,858 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemaplist],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemaplist(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,859 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemapbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.getbasemapbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,859 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deletevideobyid],methods=[POST]}" onto public int org.hds.web.advMangerController.deletevideobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,860 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvEditListbyGrpid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getadvListbyGrpid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,860 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deletebasemapbyid],methods=[POST]}" onto public int org.hds.web.advMangerController.deletebasemapbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,861 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/updatebasemapclassify],methods=[POST]}" onto public int org.hds.web.advMangerController.updatebasemapclassify(java.lang.Integer,java.lang.Integer,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,861 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/updatevideoclassify],methods=[POST]}" onto public int org.hds.web.advMangerController.updatevideoclassify(java.lang.Integer,java.lang.Integer,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,864 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/PublishInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.PublishInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,864 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfobytesbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.getInfobytesbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,865 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/auditManger]}" onto public java.lang.String org.hds.web.auditMangerController.auditManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,865 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/RefuseInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.RefuseInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,866 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvListbyGrpidState],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.auditMangerController.getadvListbyGrpidState(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,868 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Set_parameter],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.Set_parameter(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,869 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.CreatGroup(java.lang.String,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,869 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Get_parameter],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.Get_parameter(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,870 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.DeleteGroup(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,870 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/EditGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.EditGroup(int,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,871 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetProvinceList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.GetProvinceList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,871 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/groupManger]}" onto public java.lang.String org.hds.web.groupMangerController.groupManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,872 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetCityList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.GetCityList(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,874 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.GetInfoList(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,875 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfopubs],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.GetInfopubs(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,879 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/infoList]}" onto public java.lang.String org.hds.web.infoListController.infoList(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,880 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.CreatInfoList(java.lang.String,int,int,java.lang.String,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,880 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdateInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.UpdateInfoList(int,java.lang.String,int,int,java.lang.String,int,java.lang.String,java.lang.Boolean,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,883 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deleteinfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.deleteinfobyid(int,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,883 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CopyInfotodraft],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.CopyInfotodraft(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,884 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.getGroup(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,884 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdatePlaylistName],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.UpdatePlaylistName(int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,885 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deleteplaylistbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.deleteplaylistbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,885 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Publishplaylistbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.Publishplaylistbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,886 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getPublishListbyTemp],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.getPublishListbyTemp(int,java.lang.String,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,887 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getinfoListbyinfoid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.getinfoListbyinfoid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,889 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/jsCOMM]}" onto public java.lang.String org.hds.web.jsCOMMController.index()
+2019-04-18 13:00:56,890 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/index]}" onto public java.lang.String org.hds.web.LoginController.index()
+2019-04-18 13:00:56,891 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/login],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.LoginController.login(java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,892 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/main]}" onto public java.lang.String org.hds.web.MainController.main(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,894 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getProjectlist],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.projectMangerController.getProjectlist(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,894 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/createProject],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.projectMangerController.createProject(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,895 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/removeProject],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.projectMangerController.removeProject(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,895 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/projectManger]}" onto public java.lang.String org.hds.web.projectMangerController.projectManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,896 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/taxiManger]}" onto public java.lang.String org.hds.web.taxiMangerController.projectManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,898 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getTerminalsbypageNum],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.taxiMangerController.getTerminalsbypageNum(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,903 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/uploadimage],methods=[POST],produces=[application/json]}" onto public java.util.Map<java.lang.String, java.lang.Object> org.hds.web.ueditorConfig.save(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,904 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/ueditor/config],produces=[application/json]}" onto public java.lang.String org.hds.web.ueditorConfig.imgUpload(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2019-04-18 13:00:56,906 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getUserList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.userMangerController.getUserList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,907 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getProjectList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.userMangerController.getProjectList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,909 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.CreatUser(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,909 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/EditUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.EditUser(int,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,910 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.DeleteUser(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,910 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/userManger]}" onto public java.lang.String org.hds.web.userMangerController.userManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,915 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:00:56,916 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2019-04-18 13:00:57,125 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:00:57,127 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:00:57,536 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:01:07,513 INFO (OptionalLiveReloadServer.java:58)- LiveReload server is running on port 35729
+2019-04-18 13:01:07,983 INFO (MBeanExporter.java:431)- Registering beans for JMX exposure on startup
+2019-04-18 13:01:07,986 INFO (MBeanExporter.java:912)- Bean with name 'dataSource' has been autodetected for JMX exposure
+2019-04-18 13:01:07,995 INFO (MBeanExporter.java:667)- Located MBean 'dataSource': registering with JMX server as MBean [com.alibaba.druid.pool:name=dataSource,type=DruidDataSource]
+2019-04-18 13:01:08,171 INFO (DirectJDKLog.java:179)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-04-18 13:01:08,674 INFO (DirectJDKLog.java:179)- Starting ProtocolHandler [http-nio-8011]
+2019-04-18 13:01:13,923 INFO (DirectJDKLog.java:179)- Using a shared selector for servlet write/read
+2019-04-18 13:01:14,234 INFO (TomcatEmbeddedServletContainer.java:185)- Tomcat started on port(s): 8011 (http)
+2019-04-18 13:01:14,264 INFO (StartupInfoLogger.java:57)- Started Application in 92.314 seconds (JVM running for 107.025)
+2019-04-18 13:04:01,891 INFO (DirectJDKLog.java:179)- Initializing Spring FrameworkServlet 'dispatcherServlet'
+2019-04-18 13:04:01,892 INFO (FrameworkServlet.java:489)- FrameworkServlet 'dispatcherServlet': initialization started
+2019-04-18 13:04:02,085 INFO (FrameworkServlet.java:508)- FrameworkServlet 'dispatcherServlet': initialization completed in 192 ms
+2019-04-18 13:04:04,367 ERROR (auditMangerController.java:37)- null
+2019-04-18 13:04:04,468 INFO (TemplateEngine.java:825)- [THYMELEAF] INITIALIZING TEMPLATE ENGINE
+2019-04-18 13:04:05,164 INFO (AbstractTemplateResolver.java:99)- [THYMELEAF] INITIALIZING TEMPLATE RESOLVER: org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
+2019-04-18 13:04:05,164 INFO (AbstractTemplateResolver.java:110)- [THYMELEAF] TEMPLATE RESOLVER INITIALIZED OK
+2019-04-18 13:04:05,165 INFO (AbstractMessageResolver.java:72)- [THYMELEAF] INITIALIZING MESSAGE RESOLVER: org.thymeleaf.spring4.messageresolver.SpringMessageResolver
+2019-04-18 13:04:05,166 INFO (AbstractMessageResolver.java:78)- [THYMELEAF] MESSAGE RESOLVER INITIALIZED OK
+2019-04-18 13:04:05,210 INFO (ConfigurationPrinterHelper.java:123)- [THYMELEAF] TEMPLATE ENGINE CONFIGURATION:
+[THYMELEAF] * Cache Factory implementation: org.thymeleaf.cache.StandardCacheManager
+[THYMELEAF] * Template modes:
+[THYMELEAF]     * VALIDXML
+[THYMELEAF]     * XML
+[THYMELEAF]     * XHTML
+[THYMELEAF]     * LEGACYHTML5
+[THYMELEAF]     * VALIDXHTML
+[THYMELEAF]     * HTML5
+[THYMELEAF] * Template resolvers (in order):
+[THYMELEAF]     * org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
+[THYMELEAF] * Message resolvers (in order):
+[THYMELEAF]     * org.thymeleaf.spring4.messageresolver.SpringMessageResolver
+[THYMELEAF] * Dialect [1 of 2]: org.thymeleaf.spring4.dialect.SpringStandardDialect
+[THYMELEAF]     * Prefix: "th"
+[THYMELEAF] * Dialect [2 of 2]: nz.net.ultraq.thymeleaf.LayoutDialect
+[THYMELEAF]     * Prefix: "layout"
+[THYMELEAF] TEMPLATE ENGINE CONFIGURED OK
+2019-04-18 13:04:05,212 INFO (TemplateEngine.java:838)- [THYMELEAF] TEMPLATE ENGINE INITIALIZED
+2019-04-18 13:04:10,334 ERROR (DirectJDKLog.java:181)- Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
+java.lang.NullPointerException: null
+	at org.hds.web.infoListController.getGroup(infoListController.java:46)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:221)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:114)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:897)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at com.alibaba.druid.support.http.WebStatFilter.doFilter(WebStatFilter.java:123)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:89)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:108)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:784)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:802)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1410)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-04-18 13:30:20,741 INFO (StartupInfoLogger.java:48)- Starting Application on CJ-201601111028 with PID 11032 (started by Administrator in D:\软件\workspace\spring-boot-ledediter)
+2019-04-18 13:30:20,768 INFO (SpringApplication.java:661)- No active profile set, falling back to default profiles: default
+2019-04-18 13:30:22,945 INFO (Version.java:30)- HV000001: Hibernate Validator 5.2.4.Final
+2019-04-18 13:30:23,088 INFO (AbstractApplicationContext.java:581)- Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@10f52b26: startup date [Thu Apr 18 13:30:23 CST 2019]; root of context hierarchy
+2019-04-18 13:30:34,315 INFO (PostProcessorRegistrationDelegate.java:328)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [class org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$c4b1631e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-04-18 13:30:38,434 INFO (TomcatEmbeddedServletContainer.java:87)- Tomcat initialized with port(s): 8011 (http)
+2019-04-18 13:30:38,743 INFO (DirectJDKLog.java:179)- Starting service Tomcat
+2019-04-18 13:30:38,746 INFO (DirectJDKLog.java:179)- Starting Servlet Engine: Apache Tomcat/8.5.5
+2019-04-18 13:30:39,442 INFO (DirectJDKLog.java:179)- Initializing Spring embedded WebApplicationContext
+2019-04-18 13:30:39,443 INFO (EmbeddedWebApplicationContext.java:276)- Root WebApplicationContext: initialization completed in 16355 ms
+2019-04-18 13:30:40,494 INFO (ServletRegistrationBean.java:190)- Mapping servlet: 'dispatcherServlet' to [/]
+2019-04-18 13:30:40,497 INFO (ServletRegistrationBean.java:190)- Mapping servlet: 'org.hds.config.DruidStatViewServlet' to [/druid/*]
+2019-04-18 13:30:40,515 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'characterEncodingFilter' to: [/*]
+2019-04-18 13:30:40,516 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2019-04-18 13:30:40,539 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2019-04-18 13:30:40,540 INFO (AbstractFilterRegistrationBean.java:258)- Mapping filter: 'requestContextFilter' to: [/*]
+2019-04-18 13:30:40,540 INFO (AbstractFilterRegistrationBean.java:271)- Mapping filter: 'druidWebStatFilter' to urls: [/*]
+2019-04-18 13:30:52,173 INFO (RequestMappingHandlerAdapter.java:534)- Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@10f52b26: startup date [Thu Apr 18 13:30:23 CST 2019]; root of context hierarchy
+2019-04-18 13:30:53,589 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/AuditInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.AuditInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,591 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemaplist],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemaplist(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,592 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemapbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.getbasemapbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,592 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deletevideobyid],methods=[POST]}" onto public int org.hds.web.advMangerController.deletevideobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,593 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/advManger]}" onto public java.lang.String org.hds.web.advMangerController.advManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,594 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CopyInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.CopyInfo(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,595 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/SaveItem],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.SaveItem(int,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,595 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.DeleteInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,596 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvEditListbyGrpid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getadvListbyGrpid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,596 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getadvList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,597 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.CreatInfo(java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,598 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdateInfo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.UpdateInfo(int,int,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,598 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetItem],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.GetItem(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,599 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/uploadvideo],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.uploadvideo(int,int,java.lang.String,java.lang.String,org.springframework.web.multipart.MultipartFile,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,600 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deletebasemapbyid],methods=[POST]}" onto public int org.hds.web.advMangerController.deletebasemapbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,600 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/updatebasemapclassify],methods=[POST]}" onto public int org.hds.web.advMangerController.updatebasemapclassify(java.lang.Integer,java.lang.Integer,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,601 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/updatevideoclassify],methods=[POST]}" onto public int org.hds.web.advMangerController.updatevideoclassify(java.lang.Integer,java.lang.Integer,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,601 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemaptypebyprojectid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemaptypebyprojectid(java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,602 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getbasemapbyprojectid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getbasemapbyprojectid(int,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,602 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getPublishInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.getPublishInfobyid(int,java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,603 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetImg2DBbyBase64],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.advMangerController.GetImg2DBbyBase64(int,int,java.lang.String,org.springframework.web.multipart.MultipartFile,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,603 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getvideotypebygroupid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getvideotypebygroupid(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,604 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getvideobygroupid],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.advMangerController.getvideobygroupid(int,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,608 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/RefuseInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.RefuseInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,609 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getadvListbyGrpidState],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.auditMangerController.getadvListbyGrpidState(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,609 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/PublishInfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.PublishInfobyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,610 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfobytesbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.auditMangerController.getInfobytesbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,610 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/auditManger]}" onto public java.lang.String org.hds.web.auditMangerController.auditManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,612 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Set_parameter],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.Set_parameter(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,613 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.CreatGroup(java.lang.String,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,614 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Get_parameter],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.Get_parameter(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,614 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.DeleteGroup(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,615 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/EditGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.EditGroup(int,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,615 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetProvinceList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.GetProvinceList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,616 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/groupManger]}" onto public java.lang.String org.hds.web.groupMangerController.groupManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,616 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/GetCityList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.groupMangerController.GetCityList(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,619 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getGroup],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.getGroup(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,619 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.GetInfoList(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,620 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getInfopubs],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.infoListController.GetInfopubs(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,620 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/infoList]}" onto public java.lang.String org.hds.web.infoListController.infoList(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,621 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.CreatInfoList(java.lang.String,int,int,java.lang.String,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,621 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdateInfoList],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.UpdateInfoList(int,java.lang.String,int,int,java.lang.String,int,java.lang.String,java.lang.Boolean,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,621 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deleteinfobyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.deleteinfobyid(int,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,622 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CopyInfotodraft],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.CopyInfotodraft(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,622 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/UpdatePlaylistName],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.UpdatePlaylistName(int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,633 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/deleteplaylistbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.deleteplaylistbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,634 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/Publishplaylistbyid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.Publishplaylistbyid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,634 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getPublishListbyTemp],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.getPublishListbyTemp(int,java.lang.String,int,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,635 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getinfoListbyinfoid],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.infoListController.getinfoListbyinfoid(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,636 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/jsCOMM]}" onto public java.lang.String org.hds.web.jsCOMMController.index()
+2019-04-18 13:30:53,636 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/index]}" onto public java.lang.String org.hds.web.LoginController.index()
+2019-04-18 13:30:53,637 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/login],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.LoginController.login(java.lang.String,java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,638 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/main]}" onto public java.lang.String org.hds.web.MainController.main(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,639 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getProjectlist],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.projectMangerController.getProjectlist(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,639 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/createProject],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.projectMangerController.createProject(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,640 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/removeProject],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.projectMangerController.removeProject(java.lang.String,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,640 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/projectManger]}" onto public java.lang.String org.hds.web.projectMangerController.projectManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,641 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/taxiManger]}" onto public java.lang.String org.hds.web.taxiMangerController.projectManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,641 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getTerminalsbypageNum],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.taxiMangerController.getTerminalsbypageNum(int,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,645 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/uploadimage],methods=[POST],produces=[application/json]}" onto public java.util.Map<java.lang.String, java.lang.Object> org.hds.web.ueditorConfig.save(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,645 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/ueditor/config],produces=[application/json]}" onto public java.lang.String org.hds.web.ueditorConfig.imgUpload(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2019-04-18 13:30:53,647 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getUserList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.userMangerController.getUserList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,647 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/getProjectList],methods=[POST]}" onto public com.alibaba.fastjson.JSONArray org.hds.web.userMangerController.getProjectList(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,667 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/CreatUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.CreatUser(java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,669 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/EditUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.EditUser(int,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,669 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/DeleteUser],methods=[POST]}" onto public com.alibaba.fastjson.JSONObject org.hds.web.userMangerController.DeleteUser(int,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,670 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/userManger]}" onto public java.lang.String org.hds.web.userMangerController.userManger(org.springframework.ui.Model,javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,685 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2019-04-18 13:30:53,686 INFO (AbstractHandlerMethodMapping.java:543)- Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2019-04-18 13:30:53,972 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:30:53,972 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:30:54,390 INFO (AbstractUrlHandlerMapping.java:354)- Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2019-04-18 13:31:00,397 INFO (OptionalLiveReloadServer.java:58)- LiveReload server is running on port 35729
+2019-04-18 13:31:01,089 INFO (MBeanExporter.java:431)- Registering beans for JMX exposure on startup
+2019-04-18 13:31:01,097 INFO (MBeanExporter.java:912)- Bean with name 'dataSource' has been autodetected for JMX exposure
+2019-04-18 13:31:01,107 INFO (MBeanExporter.java:667)- Located MBean 'dataSource': registering with JMX server as MBean [com.alibaba.druid.pool:name=dataSource,type=DruidDataSource]
+2019-04-18 13:31:01,206 INFO (DirectJDKLog.java:179)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-04-18 13:31:01,374 INFO (DirectJDKLog.java:179)- Starting ProtocolHandler [http-nio-8011]
+2019-04-18 13:31:01,655 INFO (DirectJDKLog.java:179)- Using a shared selector for servlet write/read
+2019-04-18 13:31:01,877 INFO (TomcatEmbeddedServletContainer.java:185)- Tomcat started on port(s): 8011 (http)
+2019-04-18 13:31:01,894 INFO (StartupInfoLogger.java:57)- Started Application in 43.602 seconds (JVM running for 49.379)
+2019-04-18 13:38:25,128 INFO (DirectJDKLog.java:179)- Initializing Spring FrameworkServlet 'dispatcherServlet'
+2019-04-18 13:38:25,128 INFO (FrameworkServlet.java:489)- FrameworkServlet 'dispatcherServlet': initialization started
+2019-04-18 13:38:25,233 INFO (FrameworkServlet.java:508)- FrameworkServlet 'dispatcherServlet': initialization completed in 105 ms
+2019-04-18 13:38:27,317 ERROR (DirectJDKLog.java:181)- Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
+java.lang.NullPointerException: null
+	at org.hds.web.infoListController.getGroup(infoListController.java:46)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:221)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:114)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:827)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:738)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:85)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:897)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:970)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:872)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:648)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:846)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:729)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:230)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at com.alibaba.druid.support.http.WebStatFilter.doFilter(WebStatFilter.java:123)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HttpPutFormContentFilter.doFilterInternal(HttpPutFormContentFilter.java:89)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:77)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:197)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:192)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:165)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:108)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:349)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:784)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:802)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1410)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+2019-04-18 13:38:32,300 INFO (LoginController.java:43)- /Index Open
+2019-04-18 13:38:32,346 INFO (TemplateEngine.java:825)- [THYMELEAF] INITIALIZING TEMPLATE ENGINE
+2019-04-18 13:38:33,352 INFO (AbstractTemplateResolver.java:99)- [THYMELEAF] INITIALIZING TEMPLATE RESOLVER: org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
+2019-04-18 13:38:33,353 INFO (AbstractTemplateResolver.java:110)- [THYMELEAF] TEMPLATE RESOLVER INITIALIZED OK
+2019-04-18 13:38:33,354 INFO (AbstractMessageResolver.java:72)- [THYMELEAF] INITIALIZING MESSAGE RESOLVER: org.thymeleaf.spring4.messageresolver.SpringMessageResolver
+2019-04-18 13:38:33,354 INFO (AbstractMessageResolver.java:78)- [THYMELEAF] MESSAGE RESOLVER INITIALIZED OK
+2019-04-18 13:38:33,409 INFO (ConfigurationPrinterHelper.java:123)- [THYMELEAF] TEMPLATE ENGINE CONFIGURATION:
+[THYMELEAF] * Cache Factory implementation: org.thymeleaf.cache.StandardCacheManager
+[THYMELEAF] * Template modes:
+[THYMELEAF]     * HTML5
+[THYMELEAF]     * VALIDXML
+[THYMELEAF]     * XML
+[THYMELEAF]     * XHTML
+[THYMELEAF]     * VALIDXHTML
+[THYMELEAF]     * LEGACYHTML5
+[THYMELEAF] * Template resolvers (in order):
+[THYMELEAF]     * org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver
+[THYMELEAF] * Message resolvers (in order):
+[THYMELEAF]     * org.thymeleaf.spring4.messageresolver.SpringMessageResolver
+[THYMELEAF] * Dialect [1 of 2]: org.thymeleaf.spring4.dialect.SpringStandardDialect
+[THYMELEAF]     * Prefix: "th"
+[THYMELEAF] * Dialect [2 of 2]: nz.net.ultraq.thymeleaf.LayoutDialect
+[THYMELEAF]     * Prefix: "layout"
+[THYMELEAF] TEMPLATE ENGINE CONFIGURED OK
+2019-04-18 13:38:33,410 INFO (TemplateEngine.java:838)- [THYMELEAF] TEMPLATE ENGINE INITIALIZED
+2019-04-18 13:38:36,879 INFO (DruidDataSource.java:722)- {dataSource-1} inited
+2019-04-18 13:38:38,576 INFO (LoginController.java:32)- ===用户登录:admin===
+2019-04-18 13:38:38,582 INFO (LoginController.java:33)- ===用户登录数据:{"result":"success","adminInfo":{"admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"admin","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-04-18 13:38:38,932 INFO (advMangerController.java:64)- ===用户:admin/advManger Open===
+2019-04-18 13:38:41,289 INFO (infoListController.java:42)- ===用户:admin/getGroup===
+2019-04-18 13:38:42,169 INFO (advMangerController.java:97)- ===用户:admin/getadvListbyGrpid===
+2019-04-18 13:38:42,505 INFO (advMangerController.java:413)- ===用户:admin 广告id:506获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":506,"itembackcolor":"#000000","itembackopacity":100,"itemcontext":"<p><span style=\"font-size: 20px;\">文明驾驶安全行车<span style=\"font-size: 20px;\">文明驾驶安全行车</span><span style=\"font-size: 20px;\">文明驾驶安全行车</span></span></p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"},{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"},{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"}]]","itemfontno":0,"itemforecolor":"#ff0000","itemforeopacity":100,"itemheight":21,"itemid":1,"itemleft":53,"itemstyle":"{\"special\":{\"shadow\":{\"shadowBlur\":\"1\",\"shadowColor\":\"#e3115d\"},\"gradient\":{\"gradientcolor1\":\"#5e21e0\",\"gradientcolor2\":\"#0fe618\",\"gradientdirection\":\"vertical\"}},\"linkmove\":1,\"rollstop\":0,\"playtype\":1,\"stoptime\":0,\"playtime\":0,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":75,"pageid":1},{"delindex":0,"infoSN":506,"itembackcolor":"#000000","itembackopacity":100,"itemcontext":"<p>文明驾驶安全行车</p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"}]]","itemfontno":0,"itemforecolor":"#ff0000","itemforeopacity":100,"itemheight":14,"itemid":2,"itemleft":0,"itemstyle":"{\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"stoptime\":0,\"playtime\":9,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":52,"pageid":1},{"delindex":0,"infoSN":506,"itembackcolor":"#000000","itembackopacity":100,"itemcontext":"<p>文明驾驶安全行车</p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"}]]","itemfontno":0,"itemforecolor":"#ff0000","itemforeopacity":100,"itemheight":21,"itemid":1,"itemleft":0,"itemstyle":"{\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"stoptime\":0,\"playtime\":12.8,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":128,"pageid":2}]}===
+2019-04-18 13:38:50,835 INFO (advMangerController.java:413)- ===用户:admin 广告id:514获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":514,"itembackcolor":"#000000","itembackopacity":100,"itemcontext":"<p><span style=\"font-size: 20px;\">文明<span style=\"font-size: 20px; color: rgb(84, 141, 212);\">驾驶</span>安全行车<span style=\"font-size: 20px;\">车</span></span></p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明\"},{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#548dd4\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"驾驶\"},{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"安全行车\"},{\"fontName\":\"SimSun\",\"fontSize\":20,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"车\"}]]","itemfontno":0,"itemforecolor":"#ff0000","itemforeopacity":100,"itemheight":21,"itemid":1,"itemleft":0,"itemstyle":"{\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"stoptime\":0,\"playtime\":15.4,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":128,"pageid":1},{"delindex":0,"infoSN":514,"itembackcolor":"#000000","itembackopacity":100,"itemcontext":"<p>文明驾驶安全行车</p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全行车\"}]]","itemfontno":0,"itemforecolor":"#ff0000","itemforeopacity":100,"itemheight":21,"itemid":1,"itemleft":0,"itemstyle":"{\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"stoptime\":0,\"playtime\":7.05,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":13,"pageid":2}]}===
+2019-04-18 13:38:56,144 INFO (advMangerController.java:219)- ===用户:admin 新建广告:ett 返回结果:{"result":"success","infoName":"ett","infoID":565,"groupid":1,"pubid":0,"advType":0,"BackgroundStyle":"{\"width\":128,\"height\":21,\"basemapStyle\":[]}","playMode":0,"DelIndex":0}===
+2019-04-18 13:38:56,167 INFO (advMangerController.java:413)- ===用户:admin 广告id:565获取显示项返回结果:{"result":"success","itemlist":[]}===
+2019-04-18 13:39:02,047 INFO (advMangerController.java:150)- ===用户:admin/getbasemapbyprojectid===
+2019-04-18 13:39:08,768 INFO (advMangerController.java:150)- ===用户:admin/getbasemapbyprojectid===
+2019-04-18 13:39:25,190 INFO (advMangerController.java:394)- ===用户:admin 广告id:565保存显示项返回结果:{"result":"success","infoID":565}===
+2019-04-18 13:39:25,212 INFO (advMangerController.java:320)- ===用户:admin 送审核广告id:565 返回结果:{"result":"success"}===
+2019-04-18 13:39:26,698 INFO (auditMangerController.java:33)- /auditManger Open
+2019-04-18 13:39:27,289 INFO (auditMangerController.java:48)- ===用户:admin/getadvListbyGrpidState===
+2019-04-18 13:39:32,472 INFO (getCode.java:818)- ===读取显示项  广告id:565===
+2019-04-18 13:39:32,483 INFO (getCode.java:820)- ===读取显示项  广告id:565结果 1条记录===
+2019-04-18 13:39:40,306 INFO (auditMangerController.java:64)- ===用户:admin 发布广告id:565 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===

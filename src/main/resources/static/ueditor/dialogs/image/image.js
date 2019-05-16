@@ -893,7 +893,7 @@
                         _this.isLoadingData = false;
                     }
                 });
-            }
+                }
         },
         /* 添加图片到列表界面上 */
         pushData: function (list) {

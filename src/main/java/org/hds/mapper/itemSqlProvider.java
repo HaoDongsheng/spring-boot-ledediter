@@ -9,7 +9,7 @@ public class itemSqlProvider {
         SQL sql = new SQL();
         sql.INSERT_INTO("t_item");
         
-        if (record.getAdid() != null) {
+        if (record.getInfoSN() != null) {
             sql.VALUES("adid", "#{adid,jdbcType=INTEGER}");
         }
         
@@ -34,11 +34,27 @@ public class itemSqlProvider {
         }
         
         if (record.getItemheight() != null) {
-            sql.VALUES("itemheight", "#{itemheight,jdbcType=VARCHAR}");
+            sql.VALUES("itemheight", "#{itemheight,jdbcType=INTEGER}");
+        }
+        
+        if (record.getItemfontno() != null) {
+            sql.VALUES("itemfontno", "#{itemfontno,jdbcType=INTEGER}");
         }
         
         if (record.getItembackcolor() != null) {
             sql.VALUES("itembackcolor", "#{itembackcolor,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getItembackopacity() != null) {
+            sql.VALUES("itembackopacity", "#{itembackopacity,jdbcType=INTEGER}");
+        }
+        
+        if (record.getItemforecolor() != null) {
+            sql.VALUES("itemforecolor", "#{itemforecolor,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getItemforeopacity() != null) {
+            sql.VALUES("itemforeopacity", "#{itemforeopacity,jdbcType=INTEGER}");
         }
         
         if (record.getItemtype() != null) {
@@ -51,6 +67,14 @@ public class itemSqlProvider {
         
         if (record.getItemcontext() != null) {
             sql.VALUES("itemContext", "#{itemcontext,jdbcType=LONGVARCHAR}");
+        }
+        
+        if (record.getItemcontextjson() != null) {
+            sql.VALUES("itemContextJson", "#{itemcontextjson,jdbcType=LONGVARCHAR}");
+        }
+        
+        if (record.getItemstyle() != null) {
+            sql.VALUES("itemStyle", "#{itemstyle,jdbcType=LONGVARCHAR}");
         }
         
         return sql.toString();
@@ -73,11 +97,27 @@ public class itemSqlProvider {
         }
         
         if (record.getItemheight() != null) {
-            sql.SET("itemheight = #{itemheight,jdbcType=VARCHAR}");
+            sql.SET("itemheight = #{itemheight,jdbcType=INTEGER}");
+        }
+        
+        if (record.getItemfontno() != null) {
+            sql.SET("itemfontno = #{itemfontno,jdbcType=INTEGER}");
         }
         
         if (record.getItembackcolor() != null) {
             sql.SET("itembackcolor = #{itembackcolor,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getItembackopacity() != null) {
+            sql.SET("itembackopacity = #{itembackopacity,jdbcType=INTEGER}");
+        }
+        
+        if (record.getItemforecolor() != null) {
+            sql.SET("itemforecolor = #{itemforecolor,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getItemforeopacity() != null) {
+            sql.SET("itemforeopacity = #{itemforeopacity,jdbcType=INTEGER}");
         }
         
         if (record.getItemtype() != null) {
@@ -90,6 +130,14 @@ public class itemSqlProvider {
         
         if (record.getItemcontext() != null) {
             sql.SET("itemContext = #{itemcontext,jdbcType=LONGVARCHAR}");
+        }
+        
+        if (record.getItemcontextjson() != null) {
+            sql.SET("itemContextJson = #{itemcontextjson,jdbcType=LONGVARCHAR}");
+        }
+        
+        if (record.getItemstyle() != null) {
+            sql.SET("itemStyle = #{itemstyle,jdbcType=LONGVARCHAR}");
         }
         
         sql.WHERE("adid = #{adid,jdbcType=INTEGER}");

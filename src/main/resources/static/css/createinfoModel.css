@@ -1,0 +1,30 @@
+.basemapStyle{
+	position:relative;
+	margin:5px;
+	border: 1px solid #ccc;
+}
+
+.basemapStyle:hover {
+    border: 1px solid #777;
+}
+
+.basemapStyle input{
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+.basemapStyle a{
+	position:absolute;
+	right:0px;
+	top:0px;
+}
+
+.editor-container {/* 编辑器容器样式 */
+    padding: 10px 20px 25px;
+    margin-bottom: 10px;
+    background-color: #eeeeee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}

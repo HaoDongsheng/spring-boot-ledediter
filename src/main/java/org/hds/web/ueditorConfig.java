@@ -169,7 +169,7 @@ public class ueditorConfig {
             
             /*你的处理图片的代码*/
             rs.put("state", "SUCCESS");// UEDITOR的规则:不为SUCCESS则显示state的内容
-            rs.put("url","http://127.0.0.1:8011/ueditor/jsp/upload/image/" + fileName);         //能访问到你现在图片的路径
+            rs.put("url","http://192.168.1.136:8011/ueditor/jsp/upload/image/" + fileName);         //能访问到你现在图片的路径
             rs.put("title", originalFileName);
             rs.put("original", originalFileName);                       
 

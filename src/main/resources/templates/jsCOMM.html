@@ -1,0 +1,180 @@
+<HTML  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+<title>web调用comm插件,web串口调试助手,web串口通信</title>
+<meta charset="utf-8" />
+<meta name="Keywords" content="IE调用comm,web调用comm,activex,串口设备访问,web串口通信" />
+<meta name="Description" content="可以用于web系统调用串口设备,web串口通信,可对接电子秤 地磅 条码枪 二维码枪等设备。" />
+<!-- 在bootstrap.min.js 之前引入 -->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>	
+
+ 
+<script   language="JavaScript"   type="text/JavaScript"> 
+  
+ 
+String.prototype.Blength = function(){  
+    var arr = this.match(/[^\x00-\xff]/ig);  
+    return  arr == null ? this.length : this.length + arr.length;  
+}  
+ 
+ function OperatePort()
+ {	 
+	 var isopen = mytt.IsOpen();
+     if(isopen == true)
+     {      
+    	mytt.Close();
+   		document.getElementById("OperateButton").value="打开串口";             
+     }
+     else{    
+   	 	var iso = mytt.Open();
+       	document.getElementById("OperateButton").value="关闭串口";           
+     }
+ }
+ 
+  function ConfigPort()
+  {
+	var isopen = mytt.IsOpen();
+    if(isopen == false)
+    {   
+      try{
+    	  var comName = document.getElementById("ComName").value;
+    	  var BaudRate = document.getElementById("BaudRate").value.toString();
+    	  var boolset = mytt.SetComPort("COM" + comName,BaudRate);
+    	  
+        alert("已配置串口COM"+comName+"\n 波特率:"+BaudRate);       
+        }catch(ex){alert(ex.message);}
+    }
+    else{ alert("请先关闭串口后再设置！");}
+  }
+  
+ function stringToHex(str,n){
+　　　　var val="";
+　　　　for(var i = 0; i < str.length; i++){
+　　　　　　if(val == "")
+　　　　　　　　val = str.charCodeAt(i).toString(16);
+　　　　　　else
+　　　　　　　　val += " " + str.charCodeAt(i).toString(16);
+　　　　}
+　　　　return val;
+　　}
+ 
+ function Send()
+ {
+     //alert(document.getElementById("txtSend").value);
+     var orgstr=document.getElementById("txtSend").value;     
+     var newstr="";
+     /*
+     var hexflag=document.getElementById("isSendHex").checked;
+     if(hexflag&&orgstr!="")
+     {
+       if(orgstr.substr(0,2)=="0x"||orgstr.substr(0,2)=="0X") orgstr=orgstr.substring(2,orgstr.length);
+       if(orgstr.length%2!=0) orgstr="0"+orgstr;
+		//alert(stringToHex(orgstr,16));
+       if((newstr=stringToHex(orgstr,16))=="") {alert("错误的16进制数");return false;}
+     }
+     */
+     newstr = stringToHex(orgstr,16);
+     try{
+    	 var isSend = mytt.SendData(newstr); 
+     }catch(ex)     
+     {alert(ex.message);}
+ }
+ 
+function Receive()
+{       
+    document.getElementById("txtReceive").value += mytt.ReceiveDate();       
+}
+ 
+function ClearReceived()
+{
+	document.getElementById("txtReceive").innerText="";
+} 
+ 
+ 
+</script> 
+
+<script language="Javascript" event="OnReceive(dataString)" for="mytt">    
+    function mytt::OnReceive(dataString)
+    {
+     document.getElementById("txtReceive").value += dataString+"\r\n";
+     console.info("数据:" + dataString);
+    }
+</script>
+
+</head>
+
+<body>
+ 
+<form name="form1">     
+ 
+ 
+<fieldset style="width:200px;height:250px;text-align:center;">
+<legend>配置串口</legend>
+    <div style="float:left;width:200px">   
+    <br/>   
+    <span>串口号:</span>
+    <select name="ComName" id="ComName" style="width:75px" >
+    <option value="1"  >COM1</option>
+    <option value="2"  >COM2</option>
+   <option value="3" selected >COM3</option>
+    <option value="4"  >COM4</option>   
+    </select>   
+    <br/>   
+    <span>波特率:</span>
+    <select name="BaudRate" id="BaudRate" style="width:75px" >
+   <option value="9600" selected  >9600</option>
+    <option value="57600"  >57600</option>
+    <option value="115200" >115200</option>   
+    </select>   
+    <br/>
+   
+    <span>校验位:</span>
+    <select name="CheckBit" id="CheckBit" style="width:75px" >
+    <option value="N" selected  >无NONE</option>
+    <option value="O"  >奇ODD</option>
+    <option value="E" >偶EVEN</option>   
+    </select>   
+    <br/>   
+   
+    <span>数据位:</span>
+    <input type=text id="DataBits" name="DataBits" value=8 style="width:75px;height:20px">
+    <br/>
+   
+    <span>停止位:</span>
+    <input type=text id="StopBits" name="StopBits" value=1 style="width:75px;height:20px">
+    <br/>
+    <br/>
+    <input   type="button" id="ConfigButton" style="width:80px;height:30px;font-size:13px"   name="ConfigButton"   value="配置串口"   onClick="ConfigPort()">       
+    <input   type="button" id="OperateButton" style="width:80px;height:30px;font-size:13px"   name="OperateButton"   value="打开串口"   onClick="OperatePort()">       
+    </div> 
+</fieldset>
+ 
+ 
+ 
+<fieldset style="width:200px;height:250px;text-align:center;">
+<legend>发送区域</legend>
+<div style="float:left;">
+    <textarea id="txtSend"  name="txtSend" style="width:200px;height:160px"></textarea> 
+    <br/>
+    <span><input id="isSendHex" name="isSendHex" type="checkbox" checked="0" />16进制</span>
+    <input   type="button" id="SendButton" style="width:100px;height:30px"   name="SendButton"   value="发送"   onClick="Send()">   
+</div> 
+</fieldset>
+ 
+<fieldset style="width:200px;height:250px;text-align:center;">
+<legend>接收区域</legend>   
+<div style="float:left;">
+    <textarea id="txtReceive" READONLY=TRUE  name="txtReceive" style="width:200px;height:160px"></textarea>  
+    <br/>
+  <span><input id="isReceiveHex" name="isReceiveHex" type="checkbox" />16进制</span>
+    <input  type="button" id="ClearButton" style="width:100px;height:30px"   name="ClearButton"   value="清空"   onClick="ClearReceived()">
+</div>
+</fieldset>   
+ 
+ 
+</form> 
+
+<object id="mytt" classid="clsid:0E56CB3E-0A58-4F3A-BC4C-E34FE76AF6C6"  
+        codebase="cab/ActiveXSerialPort.cab"></object>
+</body> 
+
+</HTML>

@@ -1,4 +1,4 @@
-﻿
+
 
 
 /* =============================================================
@@ -223,20 +223,34 @@ footer {
     background-color: #b739b9;
 }
 
+.bk-clr-five {
+    background-color: #FFC0CB;
+}
+
+.bk-clr-six {
+    background-color: #87CEEB
+}
+
+.bk-clr-seven {
+    background-color: #BDB76B;
+}
+
+
 .dashboard-div-icon {
-    height: 75px;
-    width: 75px;
+    height: 50px;
+    width: 50px;
     border: 2px solid #fff;
-    padding: 20px;
+    padding: 6px;
     border-radius: 50%;
     -webkit-border-radius:50%;
     -moz-border-radius:50%;
     font-size: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #fff;
 }
 
 .dashboard-div-wrapper {
+	cursor: pointer;
     border-radius: 5px;
     text-align: center;
     padding: 15px;
@@ -244,9 +258,9 @@ footer {
     margin-bottom: 50px;
 }
 
-    .dashboard-div-wrapper .progress {
-        height: 2px;
-    }
+ .dashboard-div-wrapper .progress {
+     height: 2px;
+ }
 
 /* NOTICE BOARD */
 
@@ -305,3 +319,24 @@ footer {
 .btn-google {
     background-color: #c32f10;
 }
+
+.tooltiptext {
+    visibility: hidden;
+    font-size:6px;
+    color: #ADFF2F;  
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltipT {
+    visibility: hidden;
+    font-size:10px;
+    color: #ff0000;  
+    position: absolute;
+    z-index: 1;
+}
+
+.changeColor{
+     background-color: #31b0d5  !important;
+     color: white;
+ }

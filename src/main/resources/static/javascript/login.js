@@ -1,4 +1,6 @@
+/*
 $().ready(function() {
+	
 	$("#login_form").validate({
 		rules: {
 			username: "required",
@@ -15,6 +17,7 @@ $().ready(function() {
 			},
 		}
 	});
+	
 	$("#register_form").validate({
 		rules: {
 			username: "required",
@@ -45,6 +48,7 @@ $().ready(function() {
 			}
 		}
 	});
+	
 	$("#forgot_form").validate({
 		rules: {			
 			email: {
@@ -59,7 +63,9 @@ $().ready(function() {
 			}
 		}
 	});
+	
 });
+*/
 $(function() {
 	$("#login_sign_up").click(function() {
 		$("#register_form").css("display", "block");
@@ -102,12 +108,13 @@ $(function() {
 	        success:function(data)  
 	        {  
 	            if(data.result=="success")
-	            	{window.location="main";}
+	            	{
+	            		window.location.href="main";
+	            		localStorage.setItem("adminInfo",JSON.stringify(data.adminInfo));
+	            		sessionStorage.setItem('grpsinfo', null);
+	            	}
 	            else{alert(data.resultMessage);}
-	        },  
-	        error: function() {  
-	            alert("error");  
-	          }  
+	        }
 	    });   
 	});
 });

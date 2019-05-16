@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>LED编辑系统</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    
+	<!-- 在bootstrap.min.js 之前引入 -->	
+	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
+					
+	<!-- jquery-ui 核心 JavaScript 文件 -->	
+	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>	
+	
+	<!-- bootstrap-table -->
+	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>		
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+	<!-- 自定义 核心 JavaScript 文件 -->
+	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/projectManger.js}" ></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>公司: </strong>鞍山博海泰克电子设备有限公司
+                    &nbsp;&nbsp;
+                    <strong>电话: </strong>0412-5234000
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END-->
+
+    <!-- LOGO HEADER END-->
+    <section class="menu-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-collapse">
+                        <ul id="menu-top" class="nav navbar-right">
+                            <li id='main'><a href="main">首页</a></li>
+                            <li id='advManger'><a href="advManger">广告编辑</a></li>
+                            <li id='auditManger'><a href="auditManger">广告审核</a></li>
+                            <li id='infoList'><a href="infoList">广告发布</a></li>
+                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li id='userManger'><a href="userManger">用户管理</a></li>
+                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
+                            <li id='projectManger'><a class="menu-top-active" href="projectManger">项目管理</a></li>
+                            <!-- <li><a href="blank.html">关于</a></li> -->
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- MENU SECTION END-->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="page-head-line">项目管理</h4>
+                </div>
+            </div>                         
+                  
+            <div class="row">            	
+                <div class="col-md-12">
+                <div class="table">           			 
+				     <div id="toolbar">				     				     
+						<button id="btn_table_add" type="button" class="btn  btn-success">
+			                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+			            </button>				    				     				            
+			        </div>
+			        
+				  	<table id="projectinfo_table" class='table-sm table-striped thead-dark'>						    						    
+				  	</table>
+				</div>                     
+                </div>
+            </div>
+        </div>
+        
+	    <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_CreateProject">
+	    <div class="modal-dialog modal-lg">
+	      <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">创建项目</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	   
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">
+	        
+	        <div class="row">
+	        <div class="col-md-6">
+	        
+	        <div class="card">
+			  <div class="card-header">项目参数</div>
+			  <div class="card-body">
+	  	        <div class="row">
+		        <div class="col-md-4">
+		        	项目编号
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="project_id" class="form-control" maxlength="255">	
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	项目名称
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="project_name" class="form-control" maxlength="255">
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	我司模块
+		        </div>
+		        <div class="col-md-8">
+		        	<select id="select_our" class="form-control">
+				      <option value='0'>否</option>
+				      <option selected value='1'>是</option>
+				    </select>
+		        </div>
+		        </div>			
+	    	  </div> 								  
+			</div>
+			
+	        </div>
+	        
+	        <div class="col-md-6">
+	        
+	         <div class="card">
+			  <div class="card-header">连接参数</div>
+			  <div class="card-body">
+			  	        <div class="row">
+	        <div class="col-md-4">
+	        	地址
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" id="protocal_ip" class="form-control" maxlength="255"> 
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	端口
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" id="protocal_port" class="form-control" maxlength="255"> 
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	用户名
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" id="protocal_name" class="form-control" maxlength="255"> 
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	密码
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" id="protocal_pwd" class="form-control" maxlength="255"> 
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	协议
+	        </div>
+	        <div class="col-md-8">
+	        	<select id="protocal_type" class="form-control">
+			      <option selected value='博海科技XML1.0'>博海科技XML1.0</option>
+			      <option value='博海科技XML1.0'>博海科技XML2.0</option>
+			      <option value='中国交通部部标V1.0'>中国交通部部标V1.0</option>
+			      <option value='深圳星安'>深圳星安</option>
+			      <option value='星网锐捷'>星网锐捷</option>
+			    </select> 
+	        </div>
+	        </div>			
+	    	  </div> 								  
+			</div>
+			
+	        </div>
+	        
+	        </div>	        
+	        
+	        <div class="row">
+	        <div class="col-md-6">
+	        
+	        <div id='user_card' class="card">
+			  <div class="card-header">用户参数</div>
+			  <div class="card-body">	
+	  	       <div class="row">
+		        <div class="col-md-4">
+		        	用户名
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="user_name" class="form-control" maxlength="255"> 
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	密码
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="user_pwd" class="form-control" maxlength="255"> 
+		        </div>
+		        </div>	
+	    	  </div> 								  
+			</div>
+			
+	        </div>
+	        
+	        <div class="col-md-6">
+	        
+	         <div  id='group_card' class="card">
+			  <div class="card-header">分组参数</div>
+			  <div class="card-body">
+	  	        <div class="row">
+		        <div class="col-md-4">
+		        	分组名称
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="group_name" class="form-control" maxlength="255"> 
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	屏幕大小
+		        </div>
+		        <div class="col-md-4">
+		        	<input type="number" id="group_width" class="form-control" value= "128"> 
+		        </div>
+		        
+		        <div class="col-md-4">
+		        	<input type="number" id="group_height" class="form-control" value= "21"> 
+		        </div>
+		        </div>			
+	    	  </div> 								  
+			</div>
+			
+	        </div>
+	        
+	        </div>	        	        	        	        
+	        			         			    
+	        </div>
+	   
+	        <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_createProject" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+	   
+	      </div>
+	     </div>
+	     </div>
+	     
+    </div>
+    <!-- CONTENT-WRAPPER SECTION END-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER SECTION END-->
+</body>
+</html>

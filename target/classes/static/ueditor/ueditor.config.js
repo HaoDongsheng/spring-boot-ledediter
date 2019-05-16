@@ -48,11 +48,10 @@
             'print', 'preview', 'searchreplace', 'drafts', 'help'
         ]]
         */
+        
         , toolbars: [[
                       'source', '|', 'undo', 'redo', '|',
-                      'fontfamily', 'fontsize','bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'selectall', 'cleardoc', '|',                                            
-                      'simpleupload','insertimage', 'emotion', 'scrawl', 'insertvideo', '|',
-                      'date', 'time', 'spechars'
+                      'fontfamily', 'fontsize', '|', 'forecolor', 'backcolor','|','customimage','customspecial'//, 'newimage', 'newgif', 'newvideo', 'newspecial'
                   ]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         //,labelMap:{
@@ -105,7 +104,7 @@
         //,autoClearEmptyNode : true //getContent时，是否删除空的inlineElement节点（包括嵌套的情况）
 
         //启用自动保存
-        //,enableAutoSave: true
+        ,enableAutoSave: false
         //自动保存间隔时间， 单位ms
         //,saveInterval: 500
 
@@ -117,11 +116,11 @@
         //,emotionLocalization:false //是否开启表情本地化，默认关闭。若要开启请确保emotion文件夹下包含官网提供的images表情文件夹
 
         //粘贴只保留标签，去除标签所有属性
-        //,retainOnlyLabelPasted: false
+        ,retainOnlyLabelPasted: true
 
-        //,pasteplain:false  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+        ,pasteplain:false  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
         //纯文本粘贴模式下的过滤规则
-        //'filterTxtRules' : function(){
+        //,'filterTxtRules' : function(){
         //    function transP(node){
         //        node.tagName = 'p';
         //        node.setStyle();
@@ -185,23 +184,23 @@
 
         //fontfamily
         //字体设置 label留空支持多语言自动切换，若配置，则以配置值为准
-        //,'fontfamily':[
-        //    { label:'',name:'songti',val:'宋体,SimSun'},
-        //    { label:'',name:'kaiti',val:'楷体,楷体_GB2312, SimKai'},
-        //    { label:'',name:'yahei',val:'微软雅黑,Microsoft YaHei'},
-        //    { label:'',name:'heiti',val:'黑体, SimHei'},
-        //    { label:'',name:'lishu',val:'隶书, SimLi'},
-        //    { label:'',name:'andaleMono',val:'andale mono'},
-        //    { label:'',name:'arial',val:'arial, helvetica,sans-serif'},
-        //    { label:'',name:'arialBlack',val:'arial black,avant garde'},
-        //    { label:'',name:'comicSansMs',val:'comic sans ms'},
-        //    { label:'',name:'impact',val:'impact,chicago'},
-        //    { label:'',name:'timesNewRoman',val:'times new roman'}
-        //]
+        ,'fontfamily':[
+            { label:'',name:'songti',val:'宋体,SimSun'},
+            { label:'',name:'kaiti',val:'楷体,楷体_GB2312, SimKai'},
+            { label:'',name:'yahei',val:'微软雅黑,Microsoft YaHei'},
+            { label:'',name:'heiti',val:'黑体, SimHei'},
+            { label:'',name:'lishu',val:'隶书, SimLi'},
+            { label:'',name:'andaleMono',val:'andale mono'},
+            { label:'',name:'arial',val:'arial, helvetica,sans-serif'},
+            { label:'',name:'arialBlack',val:'arial black,avant garde'},
+            { label:'',name:'comicSansMs',val:'comic sans ms'},
+            { label:'',name:'impact',val:'impact,chicago'},
+            { label:'',name:'timesNewRoman',val:'times new roman'}
+        ]
 
         //fontsize
         //字号
-        //,'fontsize':[10, 11, 12, 14, 16, 18, 20, 24, 36]
+        ,'fontsize':[10, 11, 12, 14, 16, 18, 20, 24, 32 ,36]
 
         //paragraph
         //段落格式 值留空时支持多语言自动识别，若配置，则以配置值为准
@@ -236,7 +235,7 @@
         //]
 
         //打开右键菜单功能
-        //,enableContextMenu: true
+        ,enableContextMenu: false
         //右键菜单的内容，可以参考plugins/contextmenu.js里边的默认菜单的例子，label留空支持国际化，否则以此配置为准
         //,contextMenu:[
         //    {
@@ -255,7 +254,7 @@
 
         //elementPathEnabled
         //是否启用元素路径，默认是显示
-        //,elementPathEnabled : true
+        ,elementPathEnabled : false
 
         //wordCount
         //,wordCount:true          //是否开启字数统计
@@ -364,11 +363,11 @@
         //,rgb2Hex:true               //默认产出的数据中的color自动从rgb格式变成16进制格式
 
 		// xss 过滤是否开启,inserthtml等操作
-		,xssFilterRules: true
+		,xssFilterRules: false
 		//input xss过滤
-		,inputXssFilter: true
+		,inputXssFilter: false
 		//output xss过滤
-		,outputXssFilter: true
+		,outputXssFilter: false
 		// xss过滤白名单 名单来源: https://raw.githubusercontent.com/leizongmin/js-xss/master/lib/default.js
 		,whitList: {
 			a:      ['target', 'href', 'title', 'class', 'style'],
@@ -408,7 +407,7 @@
 			header: [],
 			hr:     [],
 			i:      ['class', 'style'],
-			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', 'loadingclass', 'class', 'data-latex'],
+			img:    ['src', 'alt', 'title', 'width', 'height', 'id', '_src', '_url' , 'loadingclass', 'class', 'data-latex'],
 			ins:    ['datetime'],
 			li:     ['class', 'style'],
 			mark:   [],
@@ -433,7 +432,11 @@
 			tt:     [],
 			u:      [],
 			ul:     ['class', 'style'],
-			video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style']
+			video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width', 'class', 'style'],
+			source: ['src', 'type'],
+			 embed: ['type', 'class', 'pluginspage', 'src', 'width', 'height', 'align', 'style', 'wmode', 'play',  
+			      +  'autoplay','loop', 'menu', 'allowscriptaccess', 'allowfullscreen', 'controls', 'preload'],
+			 iframe: ['src', 'class', 'height', 'width', 'max-width', 'max-height', 'align', 'frameborder', 'allowfullscreen']
 		}
     };
 

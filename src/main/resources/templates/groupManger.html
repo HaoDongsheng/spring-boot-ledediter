@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>LED编辑系统</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    
+	<!-- 在bootstrap.min.js 之前引入 -->	
+	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
+					
+	<!-- jquery-ui 核心 JavaScript 文件 -->	
+	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>	
+	
+	<!-- bootstrap-table -->
+	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>
+		
+	<!-- 自定义 核心 JavaScript 文件 -->
+	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/groupManger.js}" ></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                  <strong>公司: </strong>鞍山博海泰克电子设备有限公司
+                    &nbsp;&nbsp;
+                    <strong>电话: </strong>0412-5234000
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END-->
+
+    <!-- LOGO HEADER END-->
+    <section class="menu-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-collapse">
+                        <ul id="menu-top" class="nav navbar-right">
+                            <li id='main'><a href="main">首页</a></li>
+                            <li id='advManger'><a href="advManger">广告编辑</a></li>
+                            <li id='auditManger'><a href="auditManger">广告审核</a></li>
+                            <li id='infoList'><a href="infoList">广告发布</a></li>
+                            <li id='groupManger'><a class="menu-top-active" href="groupManger">分组管理</a></li>
+                            <li id='userManger'><a href="userManger">用户管理</a></li>
+                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
+                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <!-- <li><a href="blank.html">关于</a></li> -->
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- MENU SECTION END-->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="page-head-line">分组管理</h4>
+                </div>
+            </div>
+                        
+            <div class="row">
+                <div class="col-md-12"> 
+                <div class="table">           			 
+			     <div id="toolbar" class="btn-group">
+		            <button id="btn_table_add" type="button" class="btn  btn-success">
+		                <span class="fa fa-plus" aria-hidden="true"></span>创建分组
+		            </button>				           
+		        </div>
+		        
+			  	<table id="groupManger_table" class='table-sm table-striped thead-dark'>						    						    
+			  	</table>
+				</div>     
+                </div>
+            </div>
+            
+            <!-- 模态框  编辑分组-->
+			<div class="modal fade" data-backdrop="static" id="modal_group_edit">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">分组编辑</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">	
+			      <div class="row">
+			       <div class="col-md-6">
+			       <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">分组名称</span>
+				      </div>
+						<input type="text" class="form-control required" id="group_edit_name" placeholder="用户名" autofocus="autofocus"></input>												    
+				    </div>
+			       </div>	
+			       
+			       <div class="col-md-6">
+			       <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">项目名称</span>
+				      </div>
+						<select id="group_edit_project" class="form-control">						
+						</select>					    
+				    </div>			       		
+			       </div>				       
+			      </div>
+			      
+			       <div class="row">
+			       <div class="col-md-6">
+  						  <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">屏幕宽度</span>
+				      </div>
+				      <input type="number" class="form-control" id="group_edit_width" step="8" placeholder="宽度">				      		    
+				    </div>
+			       </div>
+			       <div class="col-md-6">
+		    		<div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">屏幕高度</span>
+				      </div>
+				      <input type="number" class="form-control" id="group_edit_height" step="8" placeholder="高度">												    
+				    </div>
+			       </div>
+			      </div>
+			      
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_group_edit" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+            <!-- 模态框  删除分组-->
+			<div class="modal fade" data-backdrop="static" id="modal_group_delete">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">用户编辑</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">	
+			      	是否确定删除分组？
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_group_delete" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<!-- 模态框  用户参数-->
+			<div class="modal fade" data-backdrop="static" id="modal_user_parameter">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">用户参数</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">				       					
+				    <div class="row">
+				    	<div class="col-md-12">						  	
+					  	默认标语						  							  	
+					  	<input id="DefaulText" type="text" class="form-control" maxlength=16 value='文明驾驶安全行车'>
+					  	</div>						  		  					  	 	
+				  	</div>
+				  	
+				  	<div class="row">		
+				  		<div class="col-md-12">				  	
+					  	报警文字						  							  	
+					  	<input id="AlarmText" type="text" class="form-control" maxlength=16 value='我被打劫,请报警!'>
+					  	</div>						  		  	 	
+				  	</div>  	  							    	   	
+												  
+				  	<div class="row">
+				  		<div class="col-md-6">						  	
+					  	顶灯照明控制方式						  							  	
+					  	<select id="setZhaoMingMode" class="form-control">
+					  	<option value='0' selected>定时</option>
+					  	<option value='1'>常关</option>
+					  	<option value='2'>常开</option>
+					  	</select>			
+					  	</div>			  		  					  	 	
+				  	</div>
+				  	
+				  	<div class="row">	
+				  		<div class="col-md-6">					  	
+					  	开启时间						  							  	
+					  	<input  id="m_ZhaoMingTimeStart" type="time" value='17:00' class="form-control">
+					  	</div>
+					  	<div class="col-md-6">
+					  	关闭时间						  							  	
+					  	<input id="m_ZhaoMingTimeEnd" type="time" value='07:00' class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>			  	  							    	  		      	
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_user_parameter" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<!-- 模态框  时间亮度参数-->
+			<div class="modal fade" data-backdrop="static" id="modal_brightness_parameter">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">时间亮度调节</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">
+			      	<div class="row">
+				    	<div class="col-md-4">						  	
+						<select id="select_ProvinceList" class="form-control">					  						  	
+					  	</select>
+					  	</div>
+					  	<div class="col-md-4">						  	
+						<select id="select_CityList" class="form-control">					  						  	
+					  	</select>
+					  	</div>
+				  	</div>						       					
+				    <div class="row">
+				    	<div class="col-md-3">						  	
+					  	黎明					  	
+					  	<input id="brightness1" type="number" min=1 max=16 value=6 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	拂晓					  	
+					  	<input id="brightness2" type="number" min=1 max=16 value=9 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	早晨
+					  	<input id="brightness3" type="number" min=1 max=16 value=12 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	白天					  	
+					  	<input id="brightness4" type="number" min=1 max=16 value=16 class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>
+				  	
+				  	<div class="row">
+				    	<div class="col-md-3">						  	
+					  	黄昏					  	
+					  	<input id="brightness5" type="number" min=1 max=16 value=13 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	傍晚					  	
+					  	<input id="brightness6" type="number" min=1 max=16 value=10 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	晚上					  	
+					  	<input id="brightness7" type="number" min=1 max=16 value=7 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	夜间					  	
+					  	<input id="brightness8" type="number" min=1 max=16 value=4 class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_brightness_parameter" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<!-- 模态框  时间亮度参数-->
+			<div class="modal fade" data-backdrop="static" id="modal_brightness2_parameter">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">时间亮度调节</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">			      							       					
+				    <div class="row">
+				    	<div class="col-md-3">						  	
+					  	<input  id="time1" type="time" value='03:00' class="form-control">					  	
+					  	<input id="brightnessB1" type="number" min=1 max=16 value=6 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time2" type="time" value='05:00' class="form-control">					  	
+					  	<input id="brightnessB2" type="number" min=1 max=16 value=9 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time3" type="time" value='06:00' class="form-control">
+					  	<input id="brightnessB3" type="number" min=1 max=16 value=12 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time4" type="time" value='07:00' class="form-control">					  	
+					  	<input id="brightnessB4" type="number" min=1 max=16 value=16 class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>
+				  	
+				  	<div class="row">
+				    	<div class="col-md-3">						  	
+					  	<input  id="time5" type="time" value='16:00' class="form-control">					  	
+					  	<input id="brightnessB5" type="number" min=1 max=16 value=13 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time6" type="time" value='17:00' class="form-control">					  	
+					  	<input id="brightnessB6" type="number" min=1 max=16 value=10 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time7" type="time" value='19:00' class="form-control">					  	
+					  	<input id="brightnessB7" type="number" min=1 max=16 value=7 class="form-control">
+					  	</div>
+					  	<div class="col-md-3">						  	
+					  	<input  id="time8" type="time" value='21:00' class="form-control">					  	
+					  	<input id="brightnessB8" type="number" min=1 max=16 value=4 class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_brightness2_parameter" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<!-- 模态框  基础参数-->
+			<div class="modal fade" data-backdrop="static" id="modal_basic_parameter">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">基本共有参数</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">				       					
+				    <div class="row">
+				    	<div class="col-md-4">						  	
+					  	开机是否显示版本					  	
+					  	<select id="Showversion" class="form-control">
+					  	<option value='0'>是</option>
+					  	<option value='1' selected>否</option>					  	
+					  	</select>			
+					  	</div>
+					  	<div class="col-md-4">						  	
+					  	心跳间隔(分钟)					  							  	
+					  	<input id="LinkTime" type="number" min=1 max=60 value=2 class="form-control">
+					  	</div>
+					  	<div class="col-md-4">						  	
+					  	回信包长						  							  	
+					  	<input id="MaxReceiveLen" type="number" min=256 max=4096 value=512 class="form-control">
+					  	</div>						  		  					  	 	
+				  	</div>
+				  	
+				  	<div class="row">						  		
+					  	<div class="col-md-4">						  	
+					  	引导超时						  							  	
+					  	<input id="BootstrapperWaitingTime" type="number" min=2 max=5 value=2 class="form-control">
+					  	</div>
+					  	<div class="col-md-4">						  	
+					  	调试状态(秒)					  							  	
+					  	<select id="Test" class="form-control">
+					  	<option value='1'>是</option>
+					  	<option value='0' selected>否</option>					  	
+					  	</select>
+					  	</div>
+					  	<div class="col-md-4">						  	
+					  	是否节能						  							  	
+					  	<select id="Energy" class="form-control">
+					  	<option value='0'>是</option>
+					  	<option value='1' selected>否</option>					  	
+					  	</select>
+					  	</div>									  		  	 	
+				  	</div>  	  							    	   	
+												  
+				  	<div class="row">				  		
+					  	<div class="col-md-4">						  	
+					  	DTU心跳(分钟)						  							  	
+					  	<input id="DTULink" type="number" min=1 max=60 value=3 class="form-control">
+					  	</div>					  	  					  	 	
+				  	</div>				  					  				  	  							    	  		      	
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_basic_parameter" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+						
+        </div>
+    </div>
+    <!-- CONTENT-WRAPPER SECTION END-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER SECTION END-->
+</body>
+</html>

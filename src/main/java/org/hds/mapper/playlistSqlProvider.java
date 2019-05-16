@@ -9,28 +9,77 @@ public class playlistSqlProvider {
         SQL sql = new SQL();
         sql.INSERT_INTO("t_playlist");
         
-        if (record.getId() != null) {
-            sql.VALUES("Id", "#{id,jdbcType=INTEGER}");
+        if (record.getplaylistSN() != null) {
+            sql.VALUES("playlistSN", "#{playlistSN,jdbcType=INTEGER}");
         }
         
-        if (record.getPlaylistid() != null) {
-            sql.VALUES("playlistid", "#{playlistid,jdbcType=INTEGER}");
+        if (record.getGroupid() != null) {
+            sql.VALUES("groupid", "#{groupid,jdbcType=INTEGER}");
         }
         
-        if (record.getPlaylistcrc() != null) {
-            sql.VALUES("playlistCRC", "#{playlistcrc,jdbcType=INTEGER}");
+        if (record.getPubid() != null) {
+            sql.VALUES("pubid", "#{pubid,jdbcType=VARCHAR}");
         }
         
         if (record.getPlaylistname() != null) {
             sql.VALUES("playlistname", "#{playlistname,jdbcType=VARCHAR}");
         }
         
-        if (record.getPlaylisttype() != null) {
-            sql.VALUES("playlisttype", "#{playlisttype,jdbcType=INTEGER}");
+        if (record.getPlaylistlevel() != null) {
+            sql.VALUES("playlistlevel", "#{playlistlevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getPlaylistlifeact() != null) {
+            sql.VALUES("playlistLifeAct", "#{playlistlifeact,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getPlaylistlifedie() != null) {
+            sql.VALUES("playlistLifeDie", "#{playlistlifedie,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getcreater() != null) {
+            sql.VALUES("creater", "#{creater,jdbcType=INTEGER}");
+        }
+        
+        if (record.getcreateDate() != null) {
+            sql.VALUES("createDate", "#{createDate,jdbcType=VARCHAR}");
+        }                
+        
+        if (record.getpublisher() != null) {
+            sql.VALUES("publisher", "#{publisher,jdbcType=INTEGER}");
+        }
+        
+        if (record.getpublishDate() != null) {
+            sql.VALUES("publishDate", "#{publishDate,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getdeleter() != null) {
+            sql.VALUES("deleter", "#{deleter,jdbcType=INTEGER}");
+        }
+        
+        if (record.getdeleteDate() != null) {
+            sql.VALUES("deleteDate", "#{deleteDate,jdbcType=VARCHAR}");
+        }
+
+        
+        if (record.getScheduletype() != null) {
+            sql.VALUES("ScheduleType", "#{scheduletype,jdbcType=INTEGER}");
+        }
+        
+        if (record.getDelindex() != null) {
+            sql.VALUES("DelIndex", "#{delindex,jdbcType=INTEGER}");
+        }
+        
+        if (record.getTimequantum() != null) {
+            sql.VALUES("Timequantum", "#{timequantum,jdbcType=LONGVARCHAR}");
         }
         
         if (record.getProgramlist() != null) {
             sql.VALUES("programlist", "#{programlist,jdbcType=LONGVARCHAR}");
+        }
+        
+        if (record.getMutiProgramlist() != null) {
+            sql.VALUES("mutiProgramlist", "#{mutiProgramlist,jdbcType=LONGVARCHAR}");
         }
         
         return sql.toString();
@@ -40,27 +89,75 @@ public class playlistSqlProvider {
         SQL sql = new SQL();
         sql.UPDATE("t_playlist");
         
-        if (record.getPlaylistid() != null) {
-            sql.SET("playlistid = #{playlistid,jdbcType=INTEGER}");
+        if (record.getGroupid() != null) {
+            sql.SET("groupid = #{groupid,jdbcType=INTEGER}");
         }
         
-        if (record.getPlaylistcrc() != null) {
-            sql.SET("playlistCRC = #{playlistcrc,jdbcType=INTEGER}");
+        if (record.getPubid() != null) {
+            sql.SET("pubid = #{pubid,jdbcType=VARCHAR}");
         }
         
         if (record.getPlaylistname() != null) {
             sql.SET("playlistname = #{playlistname,jdbcType=VARCHAR}");
         }
         
-        if (record.getPlaylisttype() != null) {
-            sql.SET("playlisttype = #{playlisttype,jdbcType=INTEGER}");
+        if (record.getPlaylistlevel() != null) {
+            sql.SET("playlistlevel = #{playlistlevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getPlaylistlifeact() != null) {
+            sql.SET("playlistLifeAct = #{playlistlifeact,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getPlaylistlifedie() != null) {
+            sql.SET("playlistLifeDie = #{playlistlifedie,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getcreater() != null) {
+            sql.SET("creater = #{creater,jdbcType=INTEGER}");
+        }
+        
+        if (record.getcreateDate() != null) {
+            sql.SET("createDate = #{createDate,jdbcType=VARCHAR}");
+        }                
+        
+        if (record.getpublisher() != null) {
+            sql.SET("publisher = #{publisher,jdbcType=INTEGER}");
+        }
+        
+        if (record.getpublishDate() != null) {
+            sql.SET("publishDate = #{publishDate,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getdeleter() != null) {
+            sql.SET("deleter = #{deleter,jdbcType=INTEGER}");
+        }
+        
+        if (record.getdeleteDate() != null) {
+            sql.SET("deleteDate = #{deleteDate,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getScheduletype() != null) {
+            sql.SET("ScheduleType = #{scheduletype,jdbcType=INTEGER}");
+        }
+        
+        if (record.getDelindex() != null) {
+            sql.SET("DelIndex = #{delindex,jdbcType=INTEGER}");
+        }
+        
+        if (record.getTimequantum() != null) {
+            sql.SET("Timequantum = #{timequantum,jdbcType=LONGVARCHAR}");
         }
         
         if (record.getProgramlist() != null) {
             sql.SET("programlist = #{programlist,jdbcType=LONGVARCHAR}");
         }
         
-        sql.WHERE("Id = #{id,jdbcType=INTEGER}");
+        if (record.getMutiProgramlist() != null) {
+            sql.SET("mutiProgramlist = #{mutiProgramlist,jdbcType=LONGVARCHAR}");
+        }
+        
+        sql.WHERE("playlistSN = #{playlistSN,jdbcType=INTEGER}");
         
         return sql.toString();
     }

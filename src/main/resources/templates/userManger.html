@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>LED编辑系统</title>
+     
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    
+	<!-- 在bootstrap.min.js 之前引入 -->	
+	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
+					
+	<!-- jquery-ui 核心 JavaScript 文件 -->	
+	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>	
+	
+	<!-- bootstrap-table -->
+	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>
+	<!-- 自定义 核心 JavaScript 文件 -->
+	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
+	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/userManger.js}" ></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <strong>公司: </strong>鞍山博海泰克电子设备有限公司
+                    &nbsp;&nbsp;
+                    <strong>电话: </strong>0412-5234000
+                </div>
+
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END-->
+
+    <!-- LOGO HEADER END-->
+    <section class="menu-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-collapse">
+                        <ul id="menu-top" class="nav navbar-right">
+                             <li id='main'><a href="main">首页</a></li>
+                            <li id='advManger'><a href="advManger">广告编辑</a></li>
+                            <li id='auditManger'><a href="auditManger">广告审核</a></li>
+                            <li id='infoList'><a href="infoList">广告发布</a></li>
+                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li id='userManger'><a class="menu-top-active" href="userManger">用户管理</a></li>
+                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
+                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <!-- <li><a href="blank.html">关于</a></li> --> 
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- MENU SECTION END-->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="page-head-line">用户管理</h4>
+                </div>
+            </div>            
+            <div class="row">				
+			 <div class="col-md-12">
+                <div class="table">           			 
+				     <div id="toolbar" class="btn-group">
+				            <button id="btn_table_add" type="button" class="btn  btn-success">
+				                <span class="fa fa-plus" aria-hidden="true"></span>创建用户
+				            </button>				           
+				        </div>
+			        
+				  	<table id="userManger_table" class='table-sm table-striped thead-dark'>						    						    
+				  	</table>
+				</div>                     
+              </div>		
+			</div>
+            
+            <!-- 模态框  编辑用户-->
+			<div class="modal fade" data-backdrop="static" id="modal_user_edit">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">用户编辑</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">	
+			      <div class="row">
+			       <div class="col-md-6">
+			       <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">用户名称</span>
+				      </div>
+						<input type="text" class="form-control required" id="user_edit_name" placeholder="用户名" autofocus="autofocus"></input>	
+						<div class="input-group-prepend">
+				        <span class="input-group-text"><input id="inherit" type="checkbox">继承</span>
+				      </div>			    
+				    </div>
+			       </div>
+			       <div class="col-md-6">
+			        <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">用户密码</span>
+				      </div>
+						<input type="password" class="form-control required" id="user_edit_pwd" placeholder="密码" autofocus="autofocus"></input>				    
+				    </div>
+			       </div>
+			      </div>
+			      
+			       <div class="row">
+			       <div class="col-md-6">
+				  	<div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">用户状态</span>
+				      </div>
+						<select id="user_edit_status" class="form-control">
+						<option value='0'>正常</option>
+						<option value='1'>停用</option>
+						</select>					    
+				    </div>
+			       </div>
+			       <div class="col-md-6">
+		    		<div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">到期时间</span>
+				      </div>
+						<input type="date" class="form-control required" id="user_edit_exp" autofocus="autofocus"></input>				    
+				    </div>
+			       </div>
+			      </div>
+			      
+			      <div class="row">			       
+			       <div class="col-md-6">
+			       <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">项目名称</span>
+				      </div>
+						<select id="user_edit_project" class="form-control">						
+						</select>					    
+				    </div>			       		
+			       </div>
+			      </div>
+			      
+			       <div class="row">			       
+			       <div class="col-md-12">
+			       		<div class="card">
+						  <div class="card-header">管理权限</div>
+						  <div id='user_edit_pm' class="card-body">								  
+							<label><input type="checkbox" value="广告编辑" />广告编辑</label>
+							<label><input type="checkbox" value="广告审核" />广告审核</label> 
+					    	<label><input type="checkbox" value="广告发布" />广告发布</label>
+					    	<label><input type="checkbox" value="分组管理" />分组管理</label>
+					    	<label><input type="checkbox" value="用户管理" />用户管理</label>
+					    	<label><input type="checkbox" value="车辆管理" />车辆管理</label> 						    	  
+				    	  </div> 								  
+						</div>
+			       </div>
+			      </div>
+											    						   
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_user_edit" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+            <!-- 模态框  编辑用户-->
+			<div class="modal fade" data-backdrop="static" id="modal_user_delete">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					 
+					      <!-- 模态框头部 -->
+					      <div class="modal-header">
+					        <h4 class="modal-title">用户编辑</h4>
+					        <button type="button" class="close" data-dismiss="modal">&times;</button>
+					      </div>
+					 
+					      <!-- 模态框主体 -->
+					      <div class="modal-body">	
+					      	是否确定删除用户？
+					      </div>				  			      
+					 
+					  		<!-- 模态框底部 -->
+					        <div class="modal-footer">
+					          <button id="btn_user_delete" type="button" class="btn btn-primary">确定</button> 
+					          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+					        </div>
+					    </div>
+					  </div>
+					</div>
+        </div>
+    </div>
+    <!-- CONTENT-WRAPPER SECTION END-->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER SECTION END-->
+</body>
+</html>

@@ -942,6 +942,14 @@ div.edui-box {
 .edui-default  .edui-for-simpleupload  .edui-icon {
     background-position: -380px 0px;
 }
+/*自定义*/
+.edui-default .edui-for-customimage .edui-icon {        
+    background-position: -726px -77px;
+}
+
+.edui-default .edui-for-customspecial .edui-icon {        
+    background-position: -640px -40px;;
+}
 /*splitbutton*/
 .edui-default .edui-toolbar .edui-splitbutton-body .edui-arrow,
 .edui-default .edui-toolbar .edui-menubutton-body .edui-arrow {

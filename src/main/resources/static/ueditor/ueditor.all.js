@@ -6920,7 +6920,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     '.view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n' +
                     //设置默认字体和字号
                     //font-family不能呢随便改，在safari下fillchar会有解析问题
-                    'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
+                    'body{margin:8px;font-family:SimSun;font-size:16px;}' +
                     //设置段落间距
                     'p{margin:5px 0;}</style>' +
                     ( options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '' ) +
@@ -10012,12 +10012,14 @@ UE.plugins['defaultfilter'] = function () {
                         break;
                     case 'img':
                         //todo base64暂时去掉，后边做远程图片上传后，干掉这个
+                    	/*
                         if (val = node.getAttr('src')) {
                             if (/^data:/.test(val)) {
                                 node.parentNode.removeChild(node);
                                 break;
                             }
                         }
+                        */
                         node.setAttr('_src', node.getAttr('src'));
                         break;
                     case 'span':
@@ -13741,6 +13743,18 @@ UE.commands['cleardoc'] = {
 
     }
 };
+//自定义
+UE.commands['customimage'] = {
+	    execCommand : function( cmdName) {
+	    	ueditor_customImage();	    	
+	    }
+	};
+
+UE.commands['customspecial'] = {
+	    execCommand : function( cmdName) {	        
+	        ueditor_customSpecial();
+	    }
+	};
 
 
 
@@ -23975,6 +23989,11 @@ UE.plugin.register('autosave', function (){
 
             'contentchange': function () {
 
+            	//新增加的代码
+                if (!me.getOpt('enableAutoSave')) {
+                    return;
+                }
+                
                 if ( !saveKey ) {
                     return;
                 }
@@ -26524,6 +26543,7 @@ UE.ui = baidu.editor.ui = {};
             for (var i=0; i<this.items.length; i++) {
                 buff[i] = this.items[i].renderHtml();
             }
+            //style="display:none;"
             return '<div id="##" class="edui-toolbar %%" onselectstart="return false;" onmousedown="return $$._onMouseDown(event, this);">' +
                 buff.join('') +
                 '</div>'
@@ -27832,7 +27852,7 @@ UE.ui = baidu.editor.ui = {};
         'blockquote', 'pasteplain', 'pagebreak',
         'selectall', 'print','horizontal', 'removeformat', 'time', 'date', 'unlink',
         'insertparagraphbeforetable', 'insertrow', 'insertcol', 'mergeright', 'mergedown', 'deleterow',
-        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts'];
+        'deletecol', 'splittorows', 'splittocols', 'splittocells', 'mergecells', 'deletetable', 'drafts','customimage','customspecial'];
 
     for (var i = 0, ci; ci = btnCmds[i++];) {
         ci = ci.toLowerCase();
