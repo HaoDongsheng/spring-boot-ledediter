@@ -185,6 +185,37 @@ public class AdvMangerServiceImpl implements IAdvMangerService{
 	}
 	
 	@Override
+	public JSONObject getadvListDelbyGrpid(int Grpid,int pageNum, int pageSize)
+	{							
+		
+		JSONObject jObject=new JSONObject();
+		int delCount = advertisementMapper.selectDelCountBygroupid(Grpid);
+		int startoffset = (pageNum - 1) * pageSize;
+		
+		JSONArray itemJSONArray =new JSONArray();
+		List<advertisement> advlist=advertisementMapper.selectDelBygroupid(Grpid, startoffset, pageSize);
+		if(advlist!=null && advlist.size()>0)
+		{	
+			for(int j=0;j<advlist.size();j++)
+			{
+				JSONObject jitem=new JSONObject();
+				jitem.put("infosn", advlist.get(j).getinfoSN());
+				jitem.put("infoname", advlist.get(j).getAdvname());				
+				jitem.put("lifeAct", advlist.get(j).getlifeAct());
+				jitem.put("lifeDie", advlist.get(j).getlifeDie());				
+				jitem.put("timelenght", advlist.get(j).getplayTimelength());								
+				
+				itemJSONArray.add(jitem);
+			}
+		}
+		
+		jObject.put("total", delCount);
+		jObject.put("rows", itemJSONArray);
+				
+		return jObject;
+	}
+	
+	@Override
 	public JSONArray getadvEditListbyGrpid(int Grpid)
 	{							
 		JSONArray itemJSONArray =new JSONArray();

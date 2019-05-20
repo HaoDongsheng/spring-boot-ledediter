@@ -13,6 +13,7 @@
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
 					
@@ -26,17 +27,12 @@
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>		
 	
 	<script type="text/javascript" th:src="@{~/spin/spin.min.js}" ></script>
-	<!-- 		
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
-			
-	<script type="text/javascript" th:src="@{~/spin/spin.js}" ></script>
-	<script type="text/javascript" th:src="@{~/spin/spin.umd.js}" ></script>
-	 -->
+	
 	<!-- 自定义 核心 JavaScript 文件 -->
 	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/auditManger.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/recycleManger.js}" ></script>
 </head>
 <body>
     <header>
@@ -62,15 +58,13 @@
                         <ul id="menu-top" class="nav navbar-right">
                             <li id='main'><a href="main">首页</a></li>
                             <li id='advManger'><a href="advManger">广告编辑</a></li>
-                            <li id='auditManger'><a class="menu-top-active" href="auditManger">广告审核</a></li>
+                            <li id='auditManger'><a href="auditManger">广告审核</a></li>
                             <li id='infoList'><a href="infoList">广告发布</a></li>
-                            <li id='recycleManger'><a href="recycleManger">回收站</a></li>
+                            <li id='recycleManger'><a class="menu-top-active" href="recycleManger">回收站</a></li>
                             <li id='groupManger'><a href="groupManger">分组管理</a></li>
                             <li id='userManger'><a href="userManger">用户管理</a></li>
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
-                            <!-- <li><a href="blank.html">关于</a></li> -->
-
+                            <li id='projectManger'><a href="projectManger">项目管理</a></li>                            
                         </ul>
                     </div>
                 </div>
@@ -83,7 +77,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">广告审核</h4>
+                    <h4 class="page-head-line">广告回收站</h4>
                 </div>
             </div>   
              
@@ -109,64 +103,12 @@
 					    </div>					    				     				            
 			        </div>
 			        
-				  	<table id="auditinfo_table" class='table-sm table-striped thead-dark'>						    						    
+				  	<table id="recycle_table" class='table-sm table-striped thead-dark'>						    						    
 				  	</table>
 				</div>                     
                 </div>
             </div>
-        </div>
-        
-    	<!-- 模态框 -->
-	    <div class="modal fade" data-backdrop="static" id="modal_allow">
-	    <div class="modal-dialog modal-sm">
-	      <div class="modal-content">
-	   
-	        <!-- 模态框头部 -->
-	        <div class="modal-header">
-	          <h4 class="modal-title">广告审核</h4>
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        </div>
-	   
-	        <!-- 模态框主体 -->
-	        <div class="modal-body">
-	         	 审核通过
-	        </div>
-	   
-	        <!-- 模态框底部 -->
-	        <div class="modal-footer">
-	          <button id="btn_allow" type="button" class="btn btn-primary">确定</button>
-	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-	        </div>
-	   
-	      </div>
-	     </div>
-	     </div>
-	     
-	     <!-- 模态框 -->
-	    <div class="modal fade" data-backdrop="static" id="modal_refuse">
-	    <div class="modal-dialog modal-sm">
-	      <div class="modal-content">
-	   
-	        <!-- 模态框头部 -->
-	        <div class="modal-header">
-	          <h4 class="modal-title">广告审核</h4>
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        </div>
-	   
-	        <!-- 模态框主体 -->
-	        <div class="modal-body">
-	         	 审核不通过
-	        </div>
-	   
-	        <!-- 模态框底部 -->
-	        <div class="modal-footer">
-	          <button id="btn_refuse" type="button" class="btn btn-primary">确定</button>
-	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-	        </div>
-	   
-	      </div>
-	     </div>
-	     </div>
+        </div>       
 	            	          
 	    <!-- 模态框 -->
 	    <div class="modal fade" data-backdrop="static" id="modal_SerialPort">

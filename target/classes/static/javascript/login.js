@@ -93,6 +93,14 @@ $(function() {
 		$("#forgot_form").css("display", "none");		
 	});
 	
+	var loginInfo = localStorage.getItem("loginInfo");
+	if(loginInfo != "" && loginInfo != null)
+		{
+		var loginJson = JSON.parse(loginInfo);
+		$("#login_username").val(loginJson.adminname); 
+		$("#login_password").val(loginJson.adminpwd); 
+		}
+	
 	$("#sign_in").click(function() {
 		var adminName = $("#login_username").val(); 
 		var adminPwd = $("#login_password").val(); 
@@ -109,6 +117,20 @@ $(function() {
 	        {  
 	            if(data.result=="success")
 	            	{
+	            		var remember = $('#remember').prop("checked");
+	            		if(remember)
+	            			{
+	            				var loginInfo={
+            						adminname:adminName,
+            			        	adminpwd:adminPwd
+	            				};
+	            				
+	            				localStorage.setItem("loginInfo",JSON.stringify(loginInfo));
+	            			}
+	            		else {
+	            			localStorage.setItem("loginInfo","");
+						}
+	            		
 	            		window.location.href="main";
 	            		localStorage.setItem("adminInfo",JSON.stringify(data.adminInfo));
 	            		sessionStorage.setItem('grpsinfo', null);

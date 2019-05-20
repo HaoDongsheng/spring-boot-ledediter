@@ -118,6 +118,37 @@ public interface advertisementMapper {
         "select",
         "infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
         "from t_advertisement",
+        "where groupid = #{0} and (delindex = 1 or lifeDie<curdate())",
+        "order by infoSN asc LIMIT #{1},#{2}"
+    })
+    @Results({
+    	 @Result(column="infoSN", property="infoSN", jdbcType=JdbcType.INTEGER, id=true),
+         @Result(column="advName", property="advname", jdbcType=JdbcType.VARCHAR),
+         @Result(column="groupid", property="groupid", jdbcType=JdbcType.INTEGER),
+         @Result(column="lifeAct", property="lifeAct", jdbcType=JdbcType.VARCHAR),
+         @Result(column="lifeDie", property="lifeDie", jdbcType=JdbcType.VARCHAR),
+         @Result(column="advType", property="advtype", jdbcType=JdbcType.VARCHAR),
+         @Result(column="infoState", property="infoState", jdbcType=JdbcType.INTEGER),
+         @Result(column="creater", property="creater", jdbcType=JdbcType.INTEGER),
+         @Result(column="createDate", property="createDate", jdbcType=JdbcType.VARCHAR),
+         @Result(column="auditor", property="auditor", jdbcType=JdbcType.INTEGER),
+         @Result(column="auditDate", property="auditDate", jdbcType=JdbcType.VARCHAR),
+         @Result(column="publisher", property="publisher", jdbcType=JdbcType.INTEGER),
+         @Result(column="publishDate", property="publishDate", jdbcType=JdbcType.VARCHAR),
+         @Result(column="deleter", property="deleter", jdbcType=JdbcType.INTEGER),
+         @Result(column="deleteDate", property="deleteDate", jdbcType=JdbcType.VARCHAR),
+         @Result(column="playMode", property="playmode", jdbcType=JdbcType.VARCHAR),
+         @Result(column="pubid", property="pubid", jdbcType=JdbcType.INTEGER),
+         @Result(column="delindex", property="delindex", jdbcType=JdbcType.INTEGER),
+         @Result(column="playTimelength", property="playTimelength", jdbcType=JdbcType.INTEGER),
+         @Result(column="BackgroundStyle", property="backgroundstyle", jdbcType=JdbcType.LONGVARCHAR)
+    })
+    List<advertisement> selectDelBygroupid(Integer groupid,int startoffset,int pageSize);
+    
+    @Select({
+        "select",
+        "infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
+        "from t_advertisement",
         "where groupid = #{0} and delindex = #{1} and (infoState=0 or infoState=2)  and (lifeDie>=curdate() or lifeDie='')"
     })
     @Results({
@@ -211,6 +242,14 @@ public interface advertisementMapper {
         "where pubid = #{0} and groupid = #{1} and (lifeDie>=curdate() or lifeDie='')"
     })    
     int selectCountBypubid(Integer pubid,Integer groupid);
+    
+    @Select({
+        "select",
+        "count(*)",
+        "from t_advertisement",
+        "where groupid = #{0} and (delindex=1 or lifeDie<curdate())"
+    })    
+    int selectDelCountBygroupid(Integer groupid);
     
     @Select({
         "select",

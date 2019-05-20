@@ -7,6 +7,7 @@ public interface IAdvMangerService {
 	public JSONArray getadvlist(JSONObject adminInfoJsonObject);
 	public JSONArray getadvListbyGrpid(int Grpid);
 	public JSONArray getadvEditListbyGrpid(int Grpid);
+	public JSONObject getadvListDelbyGrpid(int Grpid,int pageNum, int pageSize);
 	public JSONArray getadvListbyGrpidState(int Grpid,int infoState);
 	public JSONObject Creatinfo(String infoName,int groupid,String lifeAct,String lifeDie,String BackgroundStyle,int adminid);
 	public JSONObject CopyInfo(String infoName,int groupid,String lifeAct,String lifeDie,String BackgroundStyle,String itemlist);

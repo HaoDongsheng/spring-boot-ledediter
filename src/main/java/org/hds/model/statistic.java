@@ -1,11 +1,8 @@
 package org.hds.model;
 
 public class statistic {
-    private String mutiserverflag;
 
     private String recordingtime;
-
-    private Integer actionflag;
 
     private Integer total;
 
@@ -19,17 +16,9 @@ public class statistic {
 
     private Integer renewable;
 
-    private String dtukey;
-
     private String projectid;
-
-    public String getMutiserverflag() {
-        return mutiserverflag;
-    }
-
-    public void setMutiserverflag(String mutiserverflag) {
-        this.mutiserverflag = mutiserverflag == null ? null : mutiserverflag.trim();
-    }
+    
+    private Double UpdateRate;
 
     public String getRecordingtime() {
         return recordingtime;
@@ -37,14 +26,6 @@ public class statistic {
 
     public void setRecordingtime(String recordingtime) {
         this.recordingtime = recordingtime == null ? null : recordingtime.trim();
-    }
-
-    public Integer getActionflag() {
-        return actionflag;
-    }
-
-    public void setActionflag(Integer actionflag) {
-        this.actionflag = actionflag;
     }
 
     public Integer getTotal() {
@@ -95,14 +76,6 @@ public class statistic {
         this.renewable = renewable;
     }
 
-    public String getDtukey() {
-        return dtukey;
-    }
-
-    public void setDtukey(String dtukey) {
-        this.dtukey = dtukey == null ? null : dtukey.trim();
-    }
-
     public String getProjectid() {
         return projectid;
     }
@@ -110,4 +83,12 @@ public class statistic {
     public void setProjectid(String projectid) {
         this.projectid = projectid == null ? null : projectid.trim();
     }
+    
+	public Double getUpdateRate() {
+		return UpdateRate;
+	}
+
+	public void setUpdateRate(Double updateRate) {
+		UpdateRate = updateRate;
+	}
 }

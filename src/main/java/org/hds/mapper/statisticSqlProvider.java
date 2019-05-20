@@ -8,18 +8,10 @@ public class statisticSqlProvider {
     public String insertSelective(statistic record) {
         SQL sql = new SQL();
         sql.INSERT_INTO("t_statistics");
-        
-        if (record.getMutiserverflag() != null) {
-            sql.VALUES("MutiServerFlag", "#{mutiserverflag,jdbcType=VARCHAR}");
-        }
-        
+                
         if (record.getRecordingtime() != null) {
             sql.VALUES("RecordingTime", "#{recordingtime,jdbcType=VARCHAR}");
-        }
-        
-        if (record.getActionflag() != null) {
-            sql.VALUES("ActionFlag", "#{actionflag,jdbcType=INTEGER}");
-        }
+        }        
         
         if (record.getTotal() != null) {
             sql.VALUES("Total", "#{total,jdbcType=INTEGER}");
@@ -45,12 +37,12 @@ public class statisticSqlProvider {
             sql.VALUES("Renewable", "#{renewable,jdbcType=INTEGER}");
         }
         
-        if (record.getDtukey() != null) {
-            sql.VALUES("DtuKey", "#{dtukey,jdbcType=VARCHAR}");
-        }
-        
         if (record.getProjectid() != null) {
             sql.VALUES("projectid", "#{projectid,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getUpdateRate() != null) {
+            sql.VALUES("UpdateRate", "#{UpdateRate,jdbcType=VARCHAR}");
         }
         
         return sql.toString();

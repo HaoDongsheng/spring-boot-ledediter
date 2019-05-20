@@ -18,7 +18,7 @@ function initBTabel()
         sortable: true,                     //是否启用排序
         sortOrder: "asc",                   //排序方式                        
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-        queryParams:queryParams,//请求服务器时所传的参数        
+        queryParams:queryParams,			//请求服务器时所传的参数        
         pageNumber:1,                       //初始化加载第一页，默认第一页
         pageSize: 10,                       //每页的记录行数（*）
         pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）

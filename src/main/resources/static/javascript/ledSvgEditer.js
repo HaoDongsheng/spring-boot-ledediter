@@ -1896,7 +1896,7 @@ function getplaytime(pageid,itemid)
 							var contextJson = JSON.parse(item.contextJson);
 							for(var c=0;c<contextJson.length;c++)
 								{								
-								playtime += parseFloat(contextJson[c][0].giftimelength) * item.itemstyle.looptime;
+								playtime += Math.floor(parseFloat(contextJson[c][0].giftimelength)) * item.itemstyle.looptime;
 								}
 						};break;
 						default:{};break;

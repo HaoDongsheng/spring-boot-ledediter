@@ -76,7 +76,8 @@ public class advMangerController {
     public JSONArray getadvList(HttpServletRequest request){	
 		try
 		{			
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}			
 			JSONArray JsonArray = advMangerSer.getadvlist(adminInfoJsonObject);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvList===");
 			return JsonArray;
@@ -92,7 +93,8 @@ public class advMangerController {
     public JSONArray getadvListbyGrpid(@RequestParam("Grpid") int Grpid,HttpServletRequest request){	
 		try
 		{			
-			//JSONArray JsonArray = advMangerSer.getadvListbyGrpid(Grpid);
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONArray JsonArray = advMangerSer.getadvEditListbyGrpid(Grpid);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvListbyGrpid===");
 			return JsonArray;
@@ -108,6 +110,8 @@ public class advMangerController {
     public JSONArray getbasemaplist(HttpServletRequest request){	
 		try
 		{			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONArray JsonArray = advMangerSer.getbasemaplist();
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemaplist===");
 			return JsonArray;
@@ -123,6 +127,8 @@ public class advMangerController {
     public JSONArray getbasemaptypebyprojectid(@RequestParam("projectid") String projectid,@RequestParam("imgtype") int imgtype,HttpServletRequest request){	
 		try
 		{			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONArray JsonArray = advMangerSer.getimgclassifybyprojectid(projectid, imgtype);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemaptypebyprojectid==");
 			return JsonArray;
@@ -137,7 +143,9 @@ public class advMangerController {
 	@RequestMapping(value = "/getbasemapbyprojectid", method = RequestMethod.POST) 
     public JSONArray getbasemapbyprojectid(@RequestParam("groupid") int groupid, @RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,HttpServletRequest request){	
 		try
-		{				
+		{			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			String projectid="";
 		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
 		    {
@@ -161,6 +169,8 @@ public class advMangerController {
     public JSONObject getbasemapbyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
 		try
 		{			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONObject JObject = advMangerSer.getbasemapbyid(basemapid);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemapbyid===");
 			return JObject;
@@ -175,7 +185,9 @@ public class advMangerController {
 	@RequestMapping(value = "/deletebasemapbyid", method = RequestMethod.POST) 
     public int deletebasemapbyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
 		try
-		{			
+		{		
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int result= advMangerSer.deletebasemapbyid(basemapid);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletebasemapbyid===");
 			return result;
@@ -190,7 +202,9 @@ public class advMangerController {
 	@RequestMapping(value = "/updatebasemapclassify", method = RequestMethod.POST) 
     public int updatebasemapclassify(@RequestParam("groupid") Integer groupid,@RequestParam("imgtype") Integer imgtype,@RequestParam("oldbasemapclassify") String oldbasemapclassify,@RequestParam("newbasemapclassify") String newbasemapclassify,HttpServletRequest request){	
 		try
-		{			
+		{		
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			String projectid="";
 		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
 		    {
@@ -213,6 +227,8 @@ public class advMangerController {
 	@RequestMapping(value = "/CreatInfo", method = RequestMethod.POST)    
     public JSONObject CreatInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,HttpServletRequest request){
 		try {
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			
 			JSONObject JObject =advMangerSer.Creatinfo(infoName,groupid,lifeAct,lifeDie,BackgroundStyle,adminid);
@@ -227,7 +243,9 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/UpdateInfo", method = RequestMethod.POST)    
     public JSONObject UpdateInfo(@RequestParam("infoid") int infoid,@RequestParam("pubid") int pubid,@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,HttpServletRequest request){
-		try {			
+		try {	
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			JSONObject JObject=new JSONObject();
 			if(pubid != 0)
@@ -286,7 +304,9 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/CopyInfo", method = RequestMethod.POST)    
     public JSONObject CopyInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,@RequestParam("itemlist") String itemlist,HttpServletRequest request){
-		try {			
+		try {	
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONObject JObject =advMangerSer.CopyInfo(infoName,groupid,lifeAct,lifeDie,BackgroundStyle,itemlist);			
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 复制广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
@@ -300,6 +320,8 @@ public class advMangerController {
 	@RequestMapping(value = "/DeleteInfobyid", method = RequestMethod.POST)    
     public JSONObject DeleteInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
 		try {
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			JSONObject JObject =advMangerSer.DeleteInfobyid(infoid,adminid);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 删除广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
@@ -314,6 +336,8 @@ public class advMangerController {
 	@RequestMapping(value = "/AuditInfobyid", method = RequestMethod.POST)    
     public JSONObject AuditInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
 		try {
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int adminid = adminInfoJsonObject.getIntValue("adminid");
 			
 			JSONObject JObject =advMangerSer.AuditInfobyid(infoid,adminid);
@@ -329,7 +353,8 @@ public class advMangerController {
 	@RequestMapping(value = "/getPublishInfobyid", method = RequestMethod.POST)    
     public JSONObject getPublishInfobyid(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,HttpServletRequest request){
 		try {			
-			
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONObject jinfo = JSONObject.parseObject(infodata);
 			JSONObject jsoninfo = JSONObject.parseObject(arritem);
 			
@@ -346,7 +371,9 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/SaveItem", method = RequestMethod.POST)    
     public JSONObject SaveItem(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,HttpServletRequest request){
-		try {			
+		try {		
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			JSONObject jinfo = JSONObject.parseObject(infodata);	
 
@@ -408,7 +435,9 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/GetItem", method = RequestMethod.POST)    
     public JSONObject GetItem(@RequestParam("infoid") int infoid,HttpServletRequest request){
-		try {							
+		try {		
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONObject JObject = advMangerSer.GetItembyid(infoid);			
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 广告id:"+infoid+"获取显示项返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
@@ -421,6 +450,8 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/GetImg2DBbyBase64", method = RequestMethod.POST)    
     public JSONObject GetImg2DBbyBase64(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,HttpServletRequest request){
+		if(adminInfoJsonObject==null)
+		{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 		JSONObject JObject=new JSONObject();
 		try {			
 			String contentType = file.getContentType();
@@ -481,7 +512,7 @@ public class advMangerController {
 	        else {imgindex=3;}
 	        */
 	        int imgindex = 3;
-	        float gtl = (float)giftimelength/1000;	        	        
+	        float gtl = (float)Math.floor((float)giftimelength/1000);	        	        
 	        
 		    JSONObject jsonObject=new JSONObject();
 		    jsonObject.put("imgtype", imgindex);
@@ -525,6 +556,8 @@ public class advMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/uploadvideo", method = RequestMethod.POST)    
     public JSONObject uploadvideo(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype, @RequestParam("duration") String duration,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,HttpServletRequest request){
+		if(adminInfoJsonObject==null)
+		{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 		JSONObject JObject=new JSONObject();
 		try {			
 			String contentType = file.getContentType();
@@ -610,7 +643,9 @@ public class advMangerController {
 	@RequestMapping(value = "/getvideotypebygroupid", method = RequestMethod.POST) 
     public JSONArray getvideotypebygroupid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,HttpServletRequest request){	
 		try
-		{			
+		{	
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONArray JsonArray = advMangerSer.getvideoclassifybyGrpid(groupid, imgtype);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getvideotypebygroupid===");
 			return JsonArray;
@@ -625,7 +660,9 @@ public class advMangerController {
 	@RequestMapping(value = "/getvideobygroupid", method = RequestMethod.POST) 
     public JSONArray getvideobygroupid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,HttpServletRequest request){	
 		try
-		{			
+		{	
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			JSONArray JsonArray = advMangerSer.getvideobyGrpid(groupid, imgtype,classify);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getvideobygroupid===");
 			return JsonArray;
@@ -640,7 +677,9 @@ public class advMangerController {
 	@RequestMapping(value = "/updatevideoclassify", method = RequestMethod.POST) 
     public int updatevideoclassify(@RequestParam("groupid") Integer groupid,@RequestParam("videotype") Integer videotype,@RequestParam("oldvideoclassify") String oldvideoclassify,@RequestParam("newvideoclassify") String newvideoclassify,HttpServletRequest request){	
 		try
-		{			
+		{	
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int result= advMangerSer.updatevideoclassify(groupid, videotype, oldvideoclassify, newvideoclassify);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/updatevideoclassify===");
 			return result;
@@ -655,7 +694,9 @@ public class advMangerController {
 	@RequestMapping(value = "/deletevideobyid", method = RequestMethod.POST) 
     public int deletevideobyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
 		try
-		{			
+		{		
+			if(adminInfoJsonObject==null)
+			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
 			int result= advMangerSer.deletevideobyid(basemapid);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletevideobyid===");
 			return result;

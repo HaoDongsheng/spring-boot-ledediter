@@ -111,6 +111,23 @@ $(function(){
 	initBTabel();
 });
 
+//获取当前时间，格式YYYY-MM-DD
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
+}
+
 function initBTabel()
 {    
     $('#infolist_table').bootstrapTable({            
@@ -811,7 +828,10 @@ function playlistSelectChange(playlistid)
 							{DrawBackground(jsontq.listcycle);}
 							GetitemList('','');
 						};break;
-					}										
+					}
+					
+					refreshTablebyDate(getNowFormatDate(),'');					
+					
 					break;
     				}
 			}
@@ -840,6 +860,32 @@ function refreshTableRowSelect() {
 		}
 }
 
+function refreshTablebyDate(dts,dte)
+{
+	var slt = $("#infolist_table").bootstrapTable("getData");    		    	
+	if(slt.length>0)
+		{    	
+		if(dts==''){dts='1999-09-09';}
+		if(dte==''){dte='2100-09-09';}
+		for(var r=0;r<slt.length;r++)
+			{
+			var lifeAct = slt[r].lifeAct;
+			var lifeDie = slt[r].lifeDie;
+			if(lifeAct==''){lifeAct='1999-09-09';}
+			if(lifeDie==''){lifeDie='2100-09-09';}
+			var isjion = dtJion(dts,dte,lifeAct,lifeDie);//判断日期是否有交集
+			if(isjion)
+				{$("#infolist_table").bootstrapTable('showRow', {index:r});}
+			else {
+				$("#infolist_table").bootstrapTable('hideRow', {index:r});
+			}
+			}    			   		    		            
+		}
+	
+	clearlayeritem();
+	GetitemList(dts,dte);
+}
+
 //播放列表选择改变
 function infoSelectChange(infoid)
 {		
@@ -864,6 +910,8 @@ function infoSelectChange(infoid)
 				}    			   		    		            
 			}	
 	
+		refreshTablebyDate(dts,dte);
+		/*
 		var slt = $("#infolist_table").bootstrapTable("getData");    		    	
     	if(slt.length>0)
     		{    	
@@ -883,11 +931,11 @@ function infoSelectChange(infoid)
 				}
 				}    			   		    		            
     		}
-    	
-    	refreshTableRowSelect();
-    	
+    		
 		clearlayeritem();
 		GetitemList(dts,dte);
+    	*/
+    	refreshTableRowSelect();    		
 				        					        			
 		if(itemlist!=null && itemlist.length>0)
 		{
@@ -921,18 +969,8 @@ function infoSelectChange(infoid)
 	else
 	{			
 	selectinfoid = 0;	
-	var slt = $("#infolist_table").bootstrapTable("getData");    		    	
-	if(slt.length>0)
-		{    	
-		if(dts==''){dts='1999-09-09';}
-		if(dte==''){dte='2100-09-09';}
-		for(var r=0;r<slt.length;r++)
-			{
-			$("#infolist_table").bootstrapTable('showRow', {index:r});
-			}    			   		    		            
-		}
-	clearlayeritem();
-	GetitemList('','');
+	
+	refreshTablebyDate(getNowFormatDate(),'')	 
 	}
 }
 //删除列表
