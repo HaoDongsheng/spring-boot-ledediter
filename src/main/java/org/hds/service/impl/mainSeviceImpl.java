@@ -40,6 +40,7 @@ public class mainSeviceImpl implements ImainService {
 				int LedArr[] = new int[statisticList.size()];
 				int UpdatedArr[] = new int[statisticList.size()];
 				int WaitingArr[] = new int[statisticList.size()];
+				double UpdateRateArr[] = new double[statisticList.size()];
 				for(int i=0;i<statisticList.size();i++)
 				{
 					statistic statistic = statisticList.get(i);
@@ -49,13 +50,17 @@ public class mainSeviceImpl implements ImainService {
 					int Led = statistic.getLed();
 					int Updated = statistic.getUpdated();
 					int Waiting = statistic.getWaiting();
-					
+					double UpdateRate = 0;
+					if(statistic.getUpdateRate()!=null)
+					{UpdateRate = statistic.getUpdateRate();}
+					UpdateRate = (double)((int)(UpdateRate*10000))/100;
 					recordingtimeArr[i] = Recordingtime;
 					TotalArr[i] = Total;
 					DtuArr[i] = Dtu;
 					LedArr[i] = Led;
 					UpdatedArr[i] = Updated;
-					WaitingArr[i] = Waiting;					
+					WaitingArr[i] = Waiting;
+					UpdateRateArr[i] = UpdateRate;
 				}
 				jObject.put("result", "success");
 				jObject.put("recordingtimeArr", recordingtimeArr);
@@ -64,6 +69,7 @@ public class mainSeviceImpl implements ImainService {
 				jObject.put("LedArr", LedArr);
 				jObject.put("UpdatedArr", UpdatedArr);
 				jObject.put("WaitingArr", WaitingArr);
+				jObject.put("UpdateRateArr", UpdateRateArr);
 			}
 			else {
 				jObject.put("result", "fail");
@@ -91,6 +97,7 @@ public class mainSeviceImpl implements ImainService {
 				int LedArr[] = new int[statisticList.size()];
 				int UpdatedArr[] = new int[statisticList.size()];
 				int WaitingArr[] = new int[statisticList.size()];
+				double UpdateRateArr[] = new double[statisticList.size()];
 				String maxDate="1999-09-09 0:00:00",minDate="2100-09-09 23:59:59";
 				for(int i=0;i<statisticList.size();i++)
 				{
@@ -111,13 +118,15 @@ public class mainSeviceImpl implements ImainService {
 					int Led = statistic.getLed();
 					int Updated = statistic.getUpdated();
 					int Waiting = statistic.getWaiting();
-					
+					double UpdateRate = statistic.getUpdateRate();
+					UpdateRate = (double)((int)(UpdateRate*10000))/100;
 					recordingtimeArr[i] = Recordingtime;
 					TotalArr[i] = Total;
 					DtuArr[i] = Dtu;
 					LedArr[i] = Led;
 					UpdatedArr[i] = Updated;
-					WaitingArr[i] = Waiting;					
+					WaitingArr[i] = Waiting;
+					UpdateRateArr[i] = UpdateRate;
 				}
 				jObject.put("result", "success");
 				jObject.put("minDate", minDate);
@@ -128,6 +137,7 @@ public class mainSeviceImpl implements ImainService {
 				jObject.put("LedArr", LedArr);
 				jObject.put("UpdatedArr", UpdatedArr);
 				jObject.put("WaitingArr", WaitingArr);
+				jObject.put("UpdateRateArr", UpdateRateArr);
 			}
 			else {
 				jObject.put("result", "fail");

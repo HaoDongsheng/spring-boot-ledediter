@@ -21,15 +21,12 @@ public class recycleMangerController {
 
 	@Autowired
 	IAdvMangerService advMangerSer;
-	final Logger logger=LoggerFactory.getLogger(this.getClass());
-	JSONObject adminInfoJsonObject;
+	final Logger logger=LoggerFactory.getLogger(this.getClass());	
 	
 	@RequestMapping("/recycleManger")    
     public String recycleManger(Model model,HttpServletRequest request){	
 		try
-		{
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			model.addAttribute("userName", adminInfoJsonObject.getString("adminName"));
+		{			
 			logger.info("/recycleManger Open");
 			return "recycleManger";
 		}
@@ -41,17 +38,15 @@ public class recycleMangerController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getDelinfolistbypageNum", method = RequestMethod.POST) 
-    public JSONObject getDelinfolistbypageNum(@RequestParam("Grpid") int Grpid,@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize,HttpServletRequest request){		
+    public JSONObject getDelinfolistbypageNum(@RequestParam("Grpid") int Grpid,@RequestParam("pageNum") int pageNum,@RequestParam("pageSize") int pageSize,@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
-		{		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{								
 			JSONObject JSONObject = advMangerSer.getadvListDelbyGrpid(Grpid,pageNum,pageSize);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getDelinfolistbypageNum===");
+			logger.info("===用户:"+adminname+"/getDelinfolistbypageNum===");
 			return JSONObject;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getDelinfolistbypageNum 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getDelinfolistbypageNum 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }

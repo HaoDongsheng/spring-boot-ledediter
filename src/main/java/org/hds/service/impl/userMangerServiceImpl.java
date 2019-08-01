@@ -61,7 +61,16 @@ public class userMangerServiceImpl implements IuserMangerService {
 			if(isSuperuser==0)//普通用户
 			{
 				int adminid=adminInfoJsonObject.getIntValue("adminid");
-				List<user> adminlist = adminMapper.selectByParentid(adminid);
+				int adminlevel=adminInfoJsonObject.getIntValue("adminlevel");
+				List<user> adminlist=new ArrayList<user>();
+				if(adminlevel==1)
+				{
+					adminlist = adminMapper.selectByprojectid(adminInfoJsonObject.getString("projectid"));
+				}
+				else {
+					adminlist.add(adminMapper.selectByPrimaryKey(adminid));
+				}
+				//List<user> adminlist = adminMapper.selectByParentid(adminid);
 				JsonArray = JSONArray.parseArray(JSON.toJSONString(adminlist));
 			}
 			else//超级用户
@@ -78,7 +87,7 @@ public class userMangerServiceImpl implements IuserMangerService {
 	}
 	
 	@Override
-	public JSONObject CreatUser(String adminname,String adminpwd,int adminstatus,String expdate,String adminpermission,String projectid,int inherit,int parentid,int adminlevel)
+	public JSONObject CreatUser(String adminname,String adminpwd,int adminstatus,String expdate,String adminpermission,String admingrps,String projectid,int inherit,int parentid,int adminlevel)
 	{
 		JSONObject jObject=new JSONObject();
 		try {
@@ -97,10 +106,13 @@ public class userMangerServiceImpl implements IuserMangerService {
 				record.setAdminstatus(adminstatus);
 				record.setExpdate(expdate);
 				record.setAdminpermission(adminpermission);
+				record.setGroupids(admingrps);
 				record.setProjectid(projectid);
 				record.setinherit(inherit);
 				record.setAdmincount(0);
-				record.setAdminlevel(adminlevel);
+				if(inherit==0)
+				{record.setAdminlevel(2);}
+				else {record.setAdminlevel(1);}
 				record.setDelindex(0);
 				record.setGrpcount(0);
 				record.setIssuperuser(0);
@@ -130,7 +142,7 @@ public class userMangerServiceImpl implements IuserMangerService {
 	}
 	
 	@Override
-	public JSONObject EditUser(int adminid,String adminname,String adminpwd,int adminstatus,String expdate,String adminpermission,int inherit)
+	public JSONObject EditUser(int adminid,String adminname,String adminpwd,int adminstatus,String expdate,String adminpermission,String admingrps,int inherit)
 	{
 		JSONObject jObject=new JSONObject();
 		try {
@@ -148,7 +160,8 @@ public class userMangerServiceImpl implements IuserMangerService {
 				record.setAdminpwd(adminpwd);
 				record.setAdminstatus(adminstatus);
 				record.setExpdate(expdate);
-				record.setAdminpermission(adminpermission);				
+				record.setAdminpermission(adminpermission);	
+				record.setGroupids(admingrps);
 				record.setinherit(inherit);
 				int rowCount = adminMapper.updateByPrimaryKeySelective(record);	
 				

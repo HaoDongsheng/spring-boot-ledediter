@@ -31,7 +31,7 @@ public interface statisticMapper {
     
     @Select({
         "select",
-        "RecordingTime, Total, DTU, LED, Updated, Waiting, Renewable, projectid",
+        "RecordingTime, Total, DTU, LED, Updated, Waiting, Renewable, UpdateRate, projectid",
         "from t_statistics",
         "where projectid = #{0} order by RecordingTime asc"
     })
@@ -42,14 +42,15 @@ public interface statisticMapper {
          @Result(column="Updated", property="updated", jdbcType=JdbcType.VARCHAR),
          @Result(column="Total", property="total", jdbcType=JdbcType.VARCHAR),
          @Result(column="Waiting", property="waiting", jdbcType=JdbcType.VARCHAR),
-         @Result(column="Renewable", property="renewable", jdbcType=JdbcType.VARCHAR),                  
+         @Result(column="Renewable", property="renewable", jdbcType=JdbcType.VARCHAR),
+         @Result(column="UpdateRate", property="UpdateRate", jdbcType=JdbcType.DOUBLE),
          @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR)
     })
     List<statistic> selectidByprojectid(String projectid);
     
     @Select({
         "select",
-        "RecordingTime, Total, DTU, LED, Updated, Waiting, Renewable, projectid",
+        "RecordingTime, Total, DTU, LED, Updated, Waiting, Renewable, UpdateRate, projectid",
         "from t_statistics",
         "where projectid = #{0} and (RecordingTime > #{1} and RecordingTime <= #{2}) order by RecordingTime asc"
     })
@@ -60,7 +61,8 @@ public interface statisticMapper {
          @Result(column="Updated", property="updated", jdbcType=JdbcType.VARCHAR),
          @Result(column="Total", property="total", jdbcType=JdbcType.VARCHAR),
          @Result(column="Waiting", property="waiting", jdbcType=JdbcType.VARCHAR),
-         @Result(column="Renewable", property="renewable", jdbcType=JdbcType.VARCHAR),                 
+         @Result(column="Renewable", property="renewable", jdbcType=JdbcType.VARCHAR), 
+         @Result(column="UpdateRate", property="UpdateRate", jdbcType=JdbcType.DOUBLE),
          @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR)
     })
     List<statistic> selectidByprojectidDate(String projectid, String startDate, String endDate);

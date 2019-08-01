@@ -23,7 +23,8 @@ $(function(){
 	        url:"/DeleteGroup",          
 	        type:"post", 
 	        data:{	        	
-	        	grpid:parseInt($("#modal_group_delete").attr("data-type"))
+	        	grpid:parseInt($("#modal_group_delete").attr("data-type")),
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        dataType:"json", 
 	        success:function(data)  
@@ -49,11 +50,11 @@ $(function(){
 		        			$('#modal_group_delete').modal('hide');	
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
 	        error: function() {  
-	            alert("error");  
+	        	alertMessage(2, "异常", "ajax 函数  DeleteGroup 错误"); 	            
 	          }  
 	    });
 	});	
@@ -158,7 +159,10 @@ function initBTabel()
             field: 'group_sn'
         }, {
             field: 'group_name',
-            title: '分组名称'            
+            title: '分组名称'                        	
+        }, {
+            field: 'maxPackLength',
+            title: '最大包长'
             
         }, {
             field: 'group_screenwidth',
@@ -228,6 +232,7 @@ window.operateEvents = {
         'click .edit': function (e, value, row, index) {  
 			
 			$('#group_edit_name').val(row.group_name);
+			$('#group_edit_packLength').val(row.maxPackLength);
 			$('#group_edit_width').val(row.group_screenwidth);
 			$('#group_edit_height').val(row.group_screenheight);	
 						
@@ -291,6 +296,9 @@ function getprojectList()
         url:"/getProjectList",          
         type:"post",  
         dataType:"json", 
+        data:{
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        	},
         success:function(data)  
         {       	  
         	if(data!=null && data.length>0)    		
@@ -313,8 +321,8 @@ function getprojectList()
 					}	        		
         		}        	
         },  
-        error: function() {  
-            alert("error");  
+        error: function() { 
+        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
           }  
     });
 }
@@ -328,6 +336,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
 	        success:function(data)  
 	        {       
 	        	var ArrayTable = [];
@@ -346,6 +357,7 @@ function getGroup()
 	        				var item={
 	        						group_sn:grpid,
 	        						group_name:grpname,
+	        						maxPackLength:grpsinfo[i].maxPackLength,
 	        						group_screenwidth:screenwidth,
 	        						group_screenheight:screenheight
 		        			};
@@ -357,8 +369,8 @@ function getGroup()
 	        	else
 	        		{$("#groupManger_table").bootstrapTable('removeAll');}
 	        },  
-	        error: function() {  
-	            alert("error");  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误");	            
 	          }  
 	    });
 		}
@@ -377,6 +389,7 @@ function getGroup()
 				var item={
 						group_sn:grpid,
 						group_name:grpname,
+						maxPackLength:grpsinfo[i].maxPackLength,
 						group_screenwidth:screenwidth,
 						group_screenheight:screenheight
     			};
@@ -397,6 +410,9 @@ function getProvinceList()
         url:"/GetProvinceList",          
         type:"post",  
         dataType:"json", 
+        data:{	        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+			},
         success:function(data)  
         {       	  
         	if(data!=null && data.result=='success')    		
@@ -418,10 +434,10 @@ function getProvinceList()
 	        			$('#select_ProvinceList').append(option);
 					}	        		
         		}
-        	else{ alert(data.resultMessage); }
+        	else{ alertMessage(1, "警告", data.resultMessage); }
         },  
-        error: function() {  
-            alert("error");  
+        error: function() { 
+        	alertMessage(2, "异常", "ajax 函数  GetProvinceList 错误");            
           }  
     });
 }
@@ -432,7 +448,8 @@ function getCityList(ProvinceName)
         url:"/GetCityList",          
         type:"post",
         data:{	        	
-        	ProvinceName:ProvinceName//$('#select_ProvinceList').val()
+        	ProvinceName:ProvinceName,//$('#select_ProvinceList').val()
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -455,10 +472,10 @@ function getCityList(ProvinceName)
 	        			$('#select_CityList').append(option);
 					}	        		
         		}
-        	else{ alert(data.resultMessage); }
+        	else{ alertMessage(1, "警告", data.resultMessage); }
         },  
         error: function() {  
-            alert("error");  
+        	alertMessage(2, "异常", "ajax 函数  GetCityList 错误");            
           }  
     });
 }
@@ -469,7 +486,8 @@ function getSelectCityList(ProvinceName,CityName)
         url:"/GetCityList",          
         type:"post",
         data:{	        	
-        	ProvinceName:ProvinceName//$('#select_ProvinceList').val()
+        	ProvinceName:ProvinceName,//$('#select_ProvinceList').val()
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -492,10 +510,10 @@ function getSelectCityList(ProvinceName,CityName)
 	        			$('#select_CityList').append(option);
 					}	        		
         		}
-        	else{ alert(data.resultMessage); }
+        	else{ alertMessage(1, "警告", data.resultMessage); }
         },  
         error: function() {  
-            alert("error");  
+        	alertMessage(2, "异常", "ajax 函数  GetCityList 错误");            
           }  
     });
 }
@@ -507,13 +525,13 @@ function model_eidtgroup()
 	var grpheight = $('#group_edit_height').val();
 		
 	if(grpname==null && grpname=='')
-		{alert("分组名不能为空！");return;}
+		{alertMessage(1, "警告", "分组名不能为空!");return;}
 	
 	if(grpwidth==null && grpwidth=='')
-	{alert("宽度不能为空！");return;}
+	{alertMessage(1, "警告", "宽度不能为空!");return;}
 	
 	if(grpheight==null && grpheight=='')
-	{alert("高度不能为空！");return;}
+	{alertMessage(1, "警告", "高度不能为空!");return;}
 				
 	if(parseInt($("#modal_group_edit").attr("data-type"))==0)//创建
 		{
@@ -523,8 +541,10 @@ function model_eidtgroup()
 	        data:{	        	
 	        	grpname:grpname,
 	        	projectid:$('#group_edit_project').val(),
+	        	packLength:parseInt($('#group_edit_packLength').val()),
 	        	grpwidth:grpwidth,
-	        	grpheight:grpheight
+	        	grpheight:grpheight,
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        dataType:"json", 
 	        success:function(data)  
@@ -536,6 +556,7 @@ function model_eidtgroup()
 	        				var item={
 	        						group_sn:data.groupid,
 	        						group_name:grpname,
+	        						maxPackLength:parseInt($('#group_edit_packLength').val()),
 	        						group_screenwidth:grpwidth,
 	        						group_screenheight:grpheight
 		        			};
@@ -550,6 +571,7 @@ function model_eidtgroup()
 		        			grpitem.grpname=grpname;
 		        			grpitem.screenwidth=grpwidth;
 		        			grpitem.screenheight=grpheight;
+		        			grpitem.maxPackLength=parseInt($('#group_edit_packLength').val());
 		        			grpitem.pubid=100;
 		        			grpitem.plpubid=100;
 		        			grpitem.delindex=0;
@@ -559,11 +581,11 @@ function model_eidtgroup()
 		        			sessionStorage.setItem('grpsinfo', JSON.stringify(grpsinfo));	
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
-	        error: function() {  
-	            alert("error");  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  CreatGroup 错误"); 	            
 	          }  
 	    });
 		}
@@ -575,8 +597,10 @@ function model_eidtgroup()
 	        data:{
 	        	grpid:parseInt($("#modal_group_edit").attr("data-type")),
 	        	grpname:grpname,
+	        	packLength:parseInt($('#group_edit_packLength').val()),
 	        	grpwidth:grpwidth,
-	        	grpheight:grpheight
+	        	grpheight:grpheight,
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				}, 
 	        dataType:"json", 
 	        success:function(data)  
@@ -587,6 +611,7 @@ function model_eidtgroup()
 						{		        					        			
 		        			var item={		        					
 		        					group_name:grpname,
+		        					maxPackLength:parseInt($('#group_edit_packLength').val()),
 		        					group_screenwidth:grpwidth,		        					
 		        					group_screenheight:grpheight
 		        			};		        			
@@ -604,6 +629,7 @@ function model_eidtgroup()
 		        				if(parseInt($("#modal_group_edit").attr("data-type"))==grpid)
 		        					{		        					
 				        				grpsinfo[i].grpname=grpname;
+				        				grpsinfo[i].maxPackLength=parseInt($('#group_edit_packLength').val());
 				        				grpsinfo[i].screenwidth=grpwidth;
 				        				grpsinfo[i].screenheight=grpheight;
 				        				break;
@@ -615,11 +641,11 @@ function model_eidtgroup()
 		        			$('#modal_group_edit').modal('hide');
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
 	        error: function() {  
-	            alert("error");  
+	        	alertMessage(2, "异常", "ajax 函数  EditGroup 错误");  
 	          }  
 	    });
 		}
@@ -631,7 +657,8 @@ function set_parameter(parameter)
         url:"/Set_parameter",          
         type:"post",
         data:{	        	
-        	parameter:JSON.stringify(parameter)
+        	parameter:JSON.stringify(parameter),
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -652,10 +679,10 @@ function set_parameter(parameter)
         			};break;
         			}
         		}
-        	else{ alert(data.resultMessage); }
+        	else{ alertMessage(1, "警告", data.resultMessage); }
         },  
         error: function() {  
-            alert("error");  
+        	alertMessage(2, "异常", "ajax 函数  Set_parameter 错误");  
           }  
     });
 }
@@ -666,7 +693,8 @@ function get_parameter(parameter)
         url:"/Get_parameter",          
         type:"post",
         data:{	        	
-        	parameter:JSON.stringify(parameter)
+        	parameter:JSON.stringify(parameter),
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -748,10 +776,10 @@ function get_parameter(parameter)
         			};break;
         			}
         		}
-        	else{ alert(data.resultMessage); }
+        	else{ alertMessage(1, "警告", data.resultMessage); }
         },  
         error: function() {  
-            alert("error");  
+        	alertMessage(2, "异常", "ajax 函数  Get_parameter 错误");             
           }  
     });
 }

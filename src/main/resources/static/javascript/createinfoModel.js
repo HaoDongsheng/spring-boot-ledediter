@@ -67,7 +67,9 @@ function init_modal()
 		        	groupid:parseInt($("#grouplist").val()),
 		        	lifeAct:lifeAct,
 		        	lifeDie:lifeDie,
-		        	BackgroundStyle:strbackgroundStyle
+		        	BackgroundStyle:strbackgroundStyle,
+		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 					},  
 		        type:"post",  
 		        dataType:"json", 
@@ -87,12 +89,12 @@ function init_modal()
 	    					infoSelectChange(id);
 		        		}
 		        	else
-		        		{
-		        			alert(data.resultMessage);
+		        		{		        			
+		        			alertMessage(1, "警告", data.resultMessage);
 		        		}
 		        },  
 		        error: function() { 
-		        	alert("ajax 函数  CreatInfo 错误");		            
+		        	alertMessage(2, "异常", "ajax 函数  CreatInfo 错误");		        		           
 		          }  
 		    });
 			}
@@ -123,8 +125,8 @@ function init_modal()
 				}
 				
 				if(isc)
-				{
-					alert("广告名称"+newadvname+"已存在");
+				{					
+					alertMessage(1, "警告", "广告名称"+newadvname+"已存在");
 					$("#creat_infoname").val(advname);
 					return
 				}
@@ -145,7 +147,9 @@ function init_modal()
 				        	groupid:parseInt($("#grouplist").val()),
 				        	lifeAct:lifeAct,
 				        	lifeDie:lifeDie,
-				        	BackgroundStyle:strbackgroundStyle
+				        	BackgroundStyle:strbackgroundStyle,
+				        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+				        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 							},  
 				        type:"post",  
 				        dataType:"json", 
@@ -182,11 +186,11 @@ function init_modal()
 				        		}
 				        	else
 				        		{
-				        			alert(data.resultMessage);
+				        			alertMessage(1, "警告", data.resultMessage);				        			
 				        		}
 				        },  
 				        error: function() {  
-				        	alert("ajax 函数  UpdateInfo 错误");			            
+				        	alertMessage(2, "异常", "ajax 函数  UpdateInfo 错误");				        				            
 				          }  
 				    });
 					}
@@ -249,7 +253,8 @@ function init_modal()
 					if(data_imgtype==1)
 						{						
 						var img="<img src='"+src+"' data-mapstyle='"+datamapstyle+"'>";					
-						ue.execCommand('insertHtml', img);												
+						//ue.execCommand('insertHtml', img);	
+						tinymce.execCommand('mceInsertContent', false, img);
 						}
 					else
 						{
@@ -385,12 +390,12 @@ function init_modal()
 							$('#modal_save').modal('hide');
 		        		}
 			        	else
-		        		{
-		        			alert(data.resultMessage);
+		        		{		        			
+		        			alertMessage(1, "警告", data.resultMessage);
 		        		}
 			        },  
 			        error: function() { 
-			        	alert("ajax 函数  SaveItem 错误");		            
+			        	alertMessage(2, "异常", "ajax 函数  SaveItem 错误");			        		            
 			          }  
 			    });
 				}
@@ -464,12 +469,12 @@ function init_modal()
 	    					$("#modal_creatinfo").modal('hide');	    					
 		        		}
 			        	else
-		        		{
-		        			alert(data.resultMessage);
+		        		{		        			
+		        			alertMessage(1, "警告", data.resultMessage);
 		        		}
 			        },  
 			        error: function() {  
-			        	alert("ajax 函数  UpdateInfo 错误");			            
+			        	alertMessage(2, "异常", "ajax 函数  UpdateInfo 错误");			        				            
 			          }  
 			    });
 				}									
@@ -771,7 +776,8 @@ function initgif()
         data:{     
         	groupid:parseInt($("#grouplist").val()),
         	imgtype:2,
-        	classify:""
+        	classify:"",
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -801,7 +807,7 @@ function initgif()
     		}
         },  
         error: function() {  
-        	alert("ajax 函数  getbasemapbyprojectid 错误");              
+        	alertMessage(2, "异常", "ajax 函数  getbasemapbyprojectid 错误");        	           
           }  
     });
 }
@@ -809,91 +815,11 @@ function initgif()
 function initbasemap(imgtype)
 {
 	showdivimg("",imgtype);
-	/*
-	$.ajax({  
-        url:"/getbasemaptypebyprojectid",		
-        data:{
-        	groupid:parseInt($("#grouplist").val()),
-        	imgtype:imgtype
-			},  
-        type:"post",  
-        dataType:"json", 
-        success:function(data)  
-        {       	  
-        	if(data!=null && data.length>0)
-    		{	        		
-        		$('#nav_pictype .itempage').remove();
-        		for(var i=0;i<data.length;i++)
-				{
-        			var classify=data[i].classify;
-        			var fn= "showdivimg('"+classify+"',"+imgtype+")";
-        			var dblfn="dbldivimg('"+classify+"',"+imgtype+")";
-        			if(i==0)
-        				{        					
-		        			var nav = "<li class='nav-item itempage'><a class='nav-link active' data-toggle='pill' href='#' onclick="+fn+">"+classify+"</a></li>"
-		        			$('#nav_pictype').prepend(nav);
-		        			showdivimg(classify,imgtype);
-        				}
-        			else
-        				{
-	        				var nav = "<li class='nav-item itempage'><a class='nav-link' data-toggle='pill' href='#' onclick="+fn+" ondblclick="+dblfn+">"+classify+"</a></li>"
-		        			$('#nav_pictype').prepend(nav);
-        				}
-				}
-    		}
-        	else
-        		{
-        			alert(data.resultMessage);
-        		}
-        },  
-        error: function() {  
-        	alert("ajax 函数  getbasemaptypebyprojectid 错误");            
-          }  
-    });
-	*/
 }
 //视频初始化
 function initvideo(imgtype)
 {
-	showdivvideo("",imgtype);
-	/*
-	$.ajax({  
-        url:"/getvideotypebygroupid",		
-        data:{
-        	groupid:parseInt($("#grouplist").val()),
-        	imgtype:imgtype
-			},  
-        type:"post",  
-        dataType:"json", 
-        success:function(data)  
-        {       	  
-        	if(data!=null && data.length>0)
-    		{	        		
-        		$('#nav_videotype .itempage').remove();
-        		for(var i=0;i<data.length;i++)
-				{
-        			var classify=data[i].classify;
-        			var fn= "showdivvideo('"+classify+"',"+imgtype+")";
-        			var dblfn="dbldivvideo('"+classify+"',"+imgtype+")";
-        			if(i==0)
-        				{        					
-		        			var nav = "<li class='nav-item itempage'><a class='nav-link active' data-toggle='pill' href='#' onclick="+fn+">"+classify+"</a></li>"
-		        			$('#nav_videotype').prepend(nav);
-		        			showdivvideo(classify,imgtype);
-        				}
-        			else
-        				{
-	        				var nav = "<li class='nav-item itempage'><a class='nav-link' data-toggle='pill' href='#' onclick="+fn+" ondblclick="+dblfn+">"+classify+"</a></li>"
-		        			$('#nav_videotype').prepend(nav);
-        				}
-				}
-    		}
-        },  
-        error: function() {  
-        	alert("ajax 函数  getvideotypebygroupid 错误");            
-          }  
-    });
-	*/
+	showdivvideo("",imgtype);	
 }
 //获取图片组
 function showdivimg(classify,imgtype)
@@ -903,7 +829,8 @@ function showdivimg(classify,imgtype)
         data:{     
         	groupid:parseInt($("#grouplist").val()),
         	imgtype:imgtype,
-        	classify:classify
+        	classify:classify,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -933,7 +860,7 @@ function showdivimg(classify,imgtype)
     		}
         },  
         error: function() {  
-        	alert("ajax 函数  getbasemapbyprojectid 错误");              
+        	alertMessage(2, "异常", "ajax 函数  getbasemapbyprojectid 错误");        	            
           }  
     });
 }
@@ -946,7 +873,8 @@ function showdivvideo(classify,imgtype)
         data:{
         	groupid:parseInt($("#grouplist").val()),
         	imgtype:imgtype,
-        	classify:classify
+        	classify:classify,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -977,7 +905,7 @@ function showdivvideo(classify,imgtype)
     		}
         },  
         error: function() {  
-        	alert("ajax 函数  getvideobygroupid 错误");              
+        	alertMessage(2, "异常", "ajax 函数  getvideobygroupid 错误");         	            
           }  
     });
 }
@@ -1006,7 +934,8 @@ function input_upload(file)
 	sendData.append('groupid',parseInt($("#grouplist").val()));
 	sendData.append('imgtype',imgtype);
 	sendData.append('classify',"");
-    sendData.append('file',file.files[0]);
+    sendData.append('file',file.files[0]);    
+    sendData.append('adminname',JSON.parse(localStorage.getItem("adminInfo")).adminname);
     
 	$.ajax({  
         url:"/GetImg2DBbyBase64", 
@@ -1029,13 +958,13 @@ function input_upload(file)
         		*/
     		}
     	else
-    		{
-    			alert(data.resultMessage);
+    		{    			
+    			alertMessage(1, "警告", data.resultMessage); 
     		}
         	$('#input_upload').val("");
         },  
         error: function() { 
-        	alert("ajax 函数  GetImg2DBbyBase64 错误");
+        	alertMessage(2, "异常", "ajax 函数  GetImg2DBbyBase64 错误");         	
         	$('#input_upload').val("");
           }  
     });
@@ -1048,12 +977,13 @@ function input_gif_upload(file)
 	sendData.append('imgtype',2);
 	sendData.append('classify',"");
     sendData.append('file',file.files[0]);
+    sendData.append('adminname',JSON.parse(localStorage.getItem("adminInfo")).adminname);
     
     var fileKB = file.files[0].size / 1024;
     
     if(fileKB > 250)
-    	{
-    	alert("上传文件大小不能超过250KB");
+    	{    	
+    	alertMessage(1, "警告", "上传文件大小不能超过250KB"); 
     	return;
     	}
     
@@ -1072,13 +1002,13 @@ function input_gif_upload(file)
         		addimg2div("#div_giflist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);        		
     		}
     	else
-    		{
-    			alert(data.resultMessage);
+    		{    			
+    			alertMessage(1, "警告", data.resultMessage);
     		}
         	$('#input_gif_upload').val("");
         },  
         error: function() { 
-        	alert("ajax 函数  GetImg2DBbyBase64 错误"); 
+        	alertMessage(2, "异常", "ajax 函数  GetImg2DBbyBase64 错误");        	
         	$('#input_gif_upload').val("");
           }  
     });
@@ -1090,7 +1020,7 @@ function input_video_upload(file)
 		{return;}
 	var duration = file.duration;
 	if(parseInt(duration)>30)
-		{alert("视频时长大于30秒不能上传!");return;}
+		{alertMessage(1, "警告", "视频时长大于30秒不能上传!");return;}
 	var navitem = $('#nav_videotype .active')[0];
 	var imgtype=1;
 	
@@ -1100,6 +1030,7 @@ function input_video_upload(file)
 	sendData.append('duration',duration);
 	sendData.append('classify',navitem.text);
     sendData.append('file',$('#input_video_upload')[0].files[0]);
+    sendData.append('adminname',JSON.parse(localStorage.getItem("adminInfo")).adminname);
     
 	$.ajax({  
         url:"/uploadvideo", 
@@ -1128,15 +1059,15 @@ function input_video_upload(file)
     			     		
     		}
     	else
-    		{
-    			alert(data.resultMessage);
+    		{    			
+    			alertMessage(1, "警告", data.resultMessage);
     		}
         	
         	$('#input_video_upload').val("");
     		
         },  
         error: function() {  
-        	alert("ajax 函数  uploadvideo 错误"); 
+        	alertMessage(2, "异常", "ajax 函数  uploadvideo 错误");        	
         	$('#input_video_upload').val("");
           }  
     });
@@ -1145,7 +1076,7 @@ function input_video_upload(file)
 function addimg2div(parentdiv,basemapid,fileName,contentType,duration,basemapstyle,imgBase64String,isdelete)
 {
 	var urlbase64 = "data:"+contentType+";base64," + imgBase64String;
-	var div="<div id='basemap"+basemapid+"' class='basemapStyle'>";	
+	var div="<div id='basemap"+basemapid+"' title='"+fileName+"' class='basemapStyle'>";	
 	
 	var deletefn='',imgClickfn='';
 	switch(parentdiv)
@@ -1178,13 +1109,14 @@ function addimg2div(parentdiv,basemapid,fileName,contentType,duration,basemapsty
 	  
 	var checkbox="<input type='checkbox'>";
 	var deletebox="<a href='#' onclick='"+deletefn+"'><i class='fa fa-trash' style='font-size:16px;color:white;'></i></a>";
+	var namebox="<div style='width:128px;height:20px;overflow: hidden;'>"+fileName+"</div>";
 	
 	var html="";
 	
 	if(isdelete)
-		{html=div+img+checkbox+deletebox+"</div>";}
+		{html=div+img+checkbox+deletebox+namebox+"</div>";}
 	else
-		{html=div+img+checkbox+"</div>";}	
+		{html=div+img+checkbox+namebox+"</div>";}	
 	
 	$(parentdiv).prepend(html);			
 }
@@ -1209,7 +1141,8 @@ function imgdeletepic2db(basemapid)
 	$.ajax({  
         url:"/deletebasemapbyid",         
         data:{
-        	basemapid:basemapid  	
+        	basemapid:basemapid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1221,12 +1154,12 @@ function imgdeletepic2db(basemapid)
         			$('#div_giflist #basemap'+basemapid).remove();
         		}
         	else
-        		{
-        			alert("删除图片失败");
+        		{        			
+        			alertMessage(1, "警告", "删除图片失败");
         		}
         },  
         error: function() {
-        	alert("ajax 函数  deletebasemapbyid 错误");            
+        	alertMessage(2, "异常", "ajax 函数  deletebasemapbyid 错误");        	           
           }  
     });
 }
@@ -1236,7 +1169,8 @@ function imgdeletevideo2db(basemapid)
 	$.ajax({  
         url:"/deletevideobyid",         
         data:{
-        	basemapid:basemapid  	
+        	basemapid:basemapid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1248,11 +1182,11 @@ function imgdeletevideo2db(basemapid)
         		}
         	else
         		{
-        			alert("删除视频失败");
+        			alertMessage(1, "警告", "删除视频失败");        			
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  deletevideobyid 错误");            
+        	alertMessage(2, "异常", "ajax 函数  deletevideobyid 错误");        	        
           }  
     });
 }
@@ -1309,7 +1243,7 @@ function btn_addnav()
 					    	{isc=true;}
 					  });
 					if(isc)
-						{alert("分类名称已存在");}
+						{alertMessage(1, "警告", "分类名称已存在");}
 					else
 						{							
 							var navitem = $('#nav_pictype .active').removeClass('active');
@@ -1333,7 +1267,7 @@ function btn_addnav()
 					    	{isc=true;}
 					  });
 					if(isc)
-						{alert("分类名称已存在");}
+						{alertMessage(1, "警告", "分类名称已存在");}
 					else
 						{
 							var navitem = $('#nav_videotype .active').removeClass('active');
@@ -1364,7 +1298,7 @@ function btn_addnav()
 							    	{isc=true;}
 							  });
 							if(isc)
-							{alert("分类名称已存在");}
+							{alertMessage(1, "警告", "分类名称已存在");}
 							else
 							{
 								
@@ -1387,11 +1321,11 @@ function btn_addnav()
 							        		}
 							        	else
 							        		{
-							        			alert("修改分组名称失败");
+							        			alertMessage(1, "警告", "修改分组名称失败");							        			
 							        		}
 							        },  
 							        error: function() { 
-							        	alert("ajax 函数  updatebasemapclassify 错误");							            
+							        	alertMessage(2, "异常", "ajax 函数  updatebasemapclassify 错误");							        							            
 							          }  
 							    });
 							}
@@ -1413,7 +1347,7 @@ function btn_addnav()
 							    	{isc=true;}
 							  });
 							if(isc)
-							{alert("分类名称已存在");}
+							{alertMessage(1, "警告", "分类名称已存在");}
 							else
 							{
 								
@@ -1424,7 +1358,8 @@ function btn_addnav()
 							        	groupid:parseInt($("#grouplist").val()),
 							        	videotype:imgtype,
 							        	oldvideoclassify:oldclassifyname,
-							        	newvideoclassify:classifyname
+							        	newvideoclassify:classifyname,
+							        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 										},  
 							        type:"post",  
 							        dataType:"json", 
@@ -1436,12 +1371,12 @@ function btn_addnav()
 							        			$("#modal_picnav_add").modal('hide');
 							        		}
 							        	else
-							        		{
-							        			alert("修改分组名称失败");
+							        		{							        			
+							        			alertMessage(1, "警告", "修改分组名称失败");
 							        		}
 							        },  
-							        error: function() { 
-							        	alert("ajax 函数  updatevideoclassify 错误");							            
+							        error: function() {
+							        	alertMessage(2, "异常", "ajax 函数  updatevideoclassify 错误");							        							            
 							          }  
 							    });
 							}

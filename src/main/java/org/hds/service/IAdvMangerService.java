@@ -9,6 +9,7 @@ public interface IAdvMangerService {
 	public JSONArray getadvEditListbyGrpid(int Grpid);
 	public JSONObject getadvListDelbyGrpid(int Grpid,int pageNum, int pageSize);
 	public JSONArray getadvListbyGrpidState(int Grpid,int infoState);
+	public JSONObject GetImgbyGif(String gifString, int w, int h);
 	public JSONObject Creatinfo(String infoName,int groupid,String lifeAct,String lifeDie,String BackgroundStyle,int adminid);
 	public JSONObject CopyInfo(String infoName,int groupid,String lifeAct,String lifeDie,String BackgroundStyle,String itemlist);
 	public JSONObject DeleteInfobyid(int infoid,int adminid);

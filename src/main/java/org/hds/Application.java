@@ -16,8 +16,8 @@ public class Application {
 		SpringApplication.run(Application.class, args);		
 		
 		try {
-			NettyClient client=new NettyClient();
-			client.star();	
+			//NettyClient client=new NettyClient();
+			//client.star();	
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

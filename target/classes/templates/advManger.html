@@ -15,9 +15,7 @@
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
-	<!-- snap.svg 核心 JavaScript 文件 -->		
-	<script th:src="@{~/javascript/snap.svg.js}"></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>					
 	
 	<!-- bootstrap-colorpicker 核心 JavaScript 文件 -->
 	<link th:href="@{~/css/bootstrap-colorpicker.min.css}" rel="stylesheet" type="text/css">		
@@ -34,14 +32,15 @@
 	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>		
 	
 	<!-- ueditor 核心 JavaScript 文件 -->	
-	<link th:href="@{~/ueditor/themes/default/css/ueditor.css}" rel="stylesheet" type="text/css">
-    <!-- 配置文件 -->
-    <script type="text/javascript" th:src="@{~/ueditor/ueditor.config.js}"></script>
-    <!-- 编辑器源码文件 -->
+	<!-- 配置文件 -->
+	<!-- 编辑器源码文件 -->
+	<!-- 
+	<link th:href="@{~/ueditor/themes/default/css/ueditor.css}" rel="stylesheet" type="text/css">    
+    <script type="text/javascript" th:src="@{~/ueditor/ueditor.config.js}"></script>    
     <script type="text/javascript" th:src="@{~/ueditor/ueditor.all.js}"></script>    
     <script type="text/javascript" th:src="@{~/ueditor/lang/zh-cn/zh-cn.js}"></script>
     <script type="text/javascript" th:src="@{~/ueditor/ueditor.parse.js}"></script>
-    
+    -->
     <!-- 自定义 核心 JavaScript 文件 -->	
     <link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
     <link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
@@ -51,9 +50,21 @@
 	<script type="text/javascript" th:src="@{~/javascript/ledSvgEditer.js}"></script>		
 	<script type="text/javascript" th:src="@{~/javascript/createinfoModel.js}"></script>
 	<script type="text/javascript" th:src="@{~/javascript/DrawItembyCanvas.js}"></script>	
+	<script type="text/javascript" th:src="@{~/javascript/analogdisplay.js}"></script>	
 	<link th:href="@{~/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.min.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.zh-CN.js}" ></script>	
+	
+	<link th:href="@{~/tinymce/js/tinymce/skins/content/default/content.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/tinymce.min.js}"></script>	
+	
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/themes/silver/theme.min.js}"></script>
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/langs/zh_CN.js}"></script>	
+	<script type="text/javascript" th:src="@{~/javascript/tinymceConfig.js}" ></script>
+	<script type="text/javascript" th:src="@{~/gif.js-master/dist/gif.js}" ></script>
+	<script type="text/javascript" th:src="@{~/gif.js-master/dist/gif.worker.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	
 	
 </head>
 <body>
@@ -122,7 +133,7 @@
                             <li id='groupManger'><a href="groupManger">分组管理</a></li>
                             <li id='userManger'><a href="userManger">用户管理</a></li>
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->                          
                         </ul>
                     </div>                    
@@ -173,6 +184,7 @@
 			    <button id='info_copy' type="button" class="btn btn-primary"><i class="fa fa-copy"></i>复制</button>
 			    <button id='info_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
 			    <button id='info_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
+			    <button id='info_play' type="button" class="btn btn-primary"><i class="fa fa-play"></i>模拟显示</button>
 			   </div>
 			</div>
 		</div>
@@ -195,15 +207,25 @@
 		  <div class="card-header">广告编辑</div>
 		  <div class="card-body">					  
 	  	  	<div id="workarea" style="height:400px;">
-				<div id="divsvg"  style="border:1px solid;position:relative;box-shadow: 10px 10px 5px #888888;">
-				<canvas id="workarea_canvas"></canvas>	
+	  	  		
+				<div id="divsvg"  style="border:1px solid;position:relative;box-shadow: 10px 10px 5px #888888;background-color:#000000;">
+				<canvas id="workarea_canvas" style="background-color:#000000;"></canvas>	
 				
 				<span id = 'tooltip_xy' class="tooltiptext" style="pointer-events:none;">提示文本</span>
 				<span id = 'tooltip_w' class="tooltiptext" style="pointer-events:none;">提示文本</span>
 				<span id = 'tooltip_h' class="tooltiptext" style="pointer-events:none;">提示文本</span>
 							
-				</div>
+				</div>				
+			</div>
+			 
+			<!-- 
+			<div class="btn-group" style="width:100%;overflow:hidden;">
+			<a href="javascript:void(0)" id='pre'><i class="fa fa-chevron-left" style="font-size:50px;"></i></a>
+			<div id="layer_items" class="btn-group" style="width:100%;overflow:hidden;">			
 			</div>			
+			<a href="javascript:void(0)" id='next' style="float:right"><i class="fa fa-chevron-right" style="font-size:50px;"></i></a>				
+			</div>
+			 -->			
     	  </div> 								  
 		</div>
 													
@@ -367,6 +389,13 @@
 		    	停留时间<input type="number" class="form-control" oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=1;} if(value>600){value=600;}" id="svg_animation_MandatorytimeLength" step="1" placeholder="停留时间" value= "5" min=1 max=600/>		    			
 		    </div>		
 		    </div>	
+    	  	<!-- 
+    	  	<div class="row">
+    	  	<div class="col-md-12">
+    	  	<textarea id="tinymce"></textarea>
+    	  	</div>
+    	  	</div>
+    	  	-->
     	  </div> 								  
 		</div>
 		 		
@@ -404,7 +433,7 @@
 			      <div class="input-group-prepend">
 			        <span class="input-group-text">广告名称</span>
 			      </div>
-			       <input type="text" id="creat_infoname" class="form-control" maxlength="10">					    
+			       <input type="text" id="creat_infoname" class="form-control" maxlength="255">					    
 			    </div>
 			    
    		        <div class="input-group mb-3 input-group-sm">
@@ -479,7 +508,8 @@
 			    
 	      		<div id="div_tp">
 	      		<!-- 加载编辑器的容器 -->
-    			<script id="ueditor_context" name="content" type="text/plain"></script>
+    			<!-- <script id="ueditor_context" name="content" type="text/plain"></script>-->
+    			<textarea id="tinymce"></textarea>
     			</div>
     			
     			<div id="div_gif" style="display:none;">

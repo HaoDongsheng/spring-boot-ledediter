@@ -33,26 +33,21 @@ $(function(){
         	$('#infolist_table .changeColor').removeClass('changeColor');
         	$($element).addClass('changeColor');
         	rowIndex = $element[0].rowIndex;
-		}        
+		}  
+        $('#infolist_table').bootstrapTable('refresh');
 	});
 	
-	$('#infoitem_table').on('click-row.bs.table', function (e,row,$element) {        
-        if($($element).hasClass("changeColor"))
-        	{
-        	$($element).removeClass('changeColor');
-        	ptrowIndex=-1;        	
-        	}
-        else {
-        	$('#infoitem_table .changeColor').removeClass('changeColor');
-        	$($element).addClass('changeColor');
-        	ptrowIndex = $element[0].rowIndex;
-		} 
-        
-        infoSelectChange(row.infosn);
-        
-        refreshTableRowSelect();
-	});
+	$("#start_index").change(function(){					
+		mutiadditemtip();
+	  });
 	
+	$("#end_index").change(function(){					
+		mutiadditemtip();
+	  });
+	
+	$("#interval_index").change(function(){			
+		mutiadditemtip();
+	  });
 	$("#grouplist").change(function(){			
 		getInfoList(parseInt($("#grouplist").val()));	    
 	  });
@@ -64,8 +59,9 @@ $(function(){
 	$("#list_delete").click(function(){
 		if(selectplaylistid != 0)
 		{
-		var playlistid = selectplaylistid;
-		playlistDeletebyid(playlistid);
+			$("#modal_deleteitem .modal-body").text("是否删除此列表?");
+			$("#modal_deleteitem").attr("data-type","delete_list");
+			$('#modal_deleteitem').modal('show');
 		}
 	});
 	
@@ -106,11 +102,87 @@ $(function(){
 		
 	$("#playlist").change(function(){
 		playlistSelectChange(parseInt($("#playlist").val()));
-	});		
+	});	
 	
+	$("#btn_muti_add").click(function(){		
+		var endindex = parseInt($('#end_index').val());												
+		var startindex = parseInt($('#start_index').val());												
+		var intervalindex = parseInt($('#interval_index').val());					
+		
+		var dataval = JSON.parse($('#modal_mutiAddpt').attr('data-value'));
+		if(intervalindex!=0 && intervalindex<dataval.timelenght)
+			{
+			alertMessage(1, "警告", "间隔时间不为0时不能小于广告时长"+dataval.timelenght+"秒");
+			$('#interval_index').val(dataval.timelenght);
+			return;
+			}
+		var isS = false;
+		if(intervalindex==0)
+			{
+			for(var i=startindex;i<selectlistcycle;i++)
+				{
+					isS = addlistitem(dataval.infosn,i,dataval.timelenght);
+					if(isS){
+						alert("添加排期1条:"+i+"秒");
+						break;}
+				}
+			}
+		else {
+			var arrayitem = mutiladdlistitem(startindex,endindex,intervalindex,dataval.infosn,dataval.timelenght);
+			if(arrayitem.length>0)
+				{
+					isS=true;
+					alert("添加排期"+arrayitem.length+"条:"+arrayitem);					 					
+				}
+		}
+		
+		if(!isS)
+			{alertMessage(1, "警告", "没有容纳本条广告的空间");}
+		else {
+			$('#modal_mutiAddpt').modal('hide');
+		}
+		
+	});
+		
 	initBTabel();
 });
 
+function mutiadditemtip() {
+	var endindex = parseInt($('#end_index').val());												
+	var startindex = parseInt($('#start_index').val());												
+	var intervalindex = parseInt($('#interval_index').val());					
+	
+	var dataval = JSON.parse($('#modal_mutiAddpt').attr('data-value'));
+	if(intervalindex!=0 && intervalindex<dataval.timelenght)
+	{
+	alertMessage(1, "警告", "间隔时间不为0时不能小于广告时长"+dataval.timelenght+"秒");
+	$('#interval_index').val(dataval.timelenght);
+	return;
+	}
+	var isS = false;
+	if(intervalindex==0)
+		{
+		for(var i=startindex;i<selectlistcycle;i++)
+			{					
+				var isS = judgeitem(i,dataval.timelenght);
+				if(isS){						
+					alertMessage(1, "警告", '预计添加1条排期,排期时间:'+i+"秒"); 
+					break;
+				}
+			}
+		}
+	else {
+		var arrayitem = getmutiladdlistitem(startindex,endindex,intervalindex,dataval.infosn,dataval.timelenght);
+		
+		if(arrayitem.length>0)
+			{
+				isS=true;
+				alertMessage(1, "警告", '预计添加'+arrayitem.length+'条排期,排期时间:'+arrayitem.join(',')+"秒"); 					
+			}
+	}
+	if(!isS)
+	{alertMessage(1, "警告", '没有空间容纳本条广告!');}
+}
 //获取当前时间，格式YYYY-MM-DD
 function getNowFormatDate() {
     var date = new Date();
@@ -153,9 +225,21 @@ function initBTabel()
         showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
         cardView: false,                    //是否显示详细视图
         detailView: false,                   //是否显示父子表onEditableSave
+        rowStyle:function(row,index)
+        {        							
+        	if(row.infosn==selectinfoid)
+        		{
+	        	return { classes: 'infochangeColor'};
+        		}
+        	else {
+        		return {	        			
+        		};
+			}        	
+        },
         columns: [{
             title: '序号',
-            field: 'id',            
+            field: 'id',    
+            visible: true,
             formatter: function (value, row, index) {
                 var pageSize = $('#infolist_table').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
                 var pageNumber = $('#infolist_table').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
@@ -183,6 +267,11 @@ function initBTabel()
             title: '播放时长(秒)'
           
         }, {
+            field: 'indexNo',
+            title: '索引号',
+            visible: false
+          
+        }, {
         	field: 'operate',
         	title: '操作',
         	align: 'center',       
@@ -190,64 +279,7 @@ function initBTabel()
         	formatter: advoperateFormatter
         }]
     });    
-    
-    $('#infoitem_table').bootstrapTable({            
-        method: 'get',                      //请求方式（*）
-        //toolbar: '#toolbar',                //工具按钮用哪个容器
-        striped: true,                      //是否显示行间隔色       
-        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-        pagination: false,                   //是否显示分页（*）
-        sortable: true,                     //是否启用排序
-        sortOrder: "asc",                   //排序方式        
-        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
-        pageNumber:1,                       //初始化加载第一页，默认第一页
-        pageSize: 10,                       //每页的记录行数（*）
-        pageList: [10],        //可供选择的每页的行数（*）
-        search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-        strictSearch: false,
-        showColumns: false,                  //是否显示所有的列
-        showRefresh: false,                  //是否显示刷新按钮
-        minimumCountColumns: 2,             //最少允许的列数
-        clickToSelect: true,                //是否启用点击选中行
-        height: 200,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-        uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-        showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
-        cardView: false,                    //是否显示详细视图
-        detailView: false,                   //是否显示父子表onEditableSave
-        columns: [{
-            field: 'infosn',
-            title: '广告id',
-            visible: false
-            
-        }, {
-            field: 'infoname',
-            title: '广告名称'
-            
-        }, {
-            field: 'lifeAct',
-            title: '开始日期'
-         
-        }, {
-            field: 'lifeDie',
-            title: '结束日期'
-         
-        }, {
-            field: 'timelenght',
-            title: '播放时长(秒)'
-          
-        },  {
-            field: 'infopubid',
-            title: '发布id',
-            visible: false          
-        }, {
-        	field: 'operate',
-        	title: '操作',
-        	align: 'center',
-        	events: operateEvents,
-        	formatter: operateFormatter
-        }]
-    });
-    
+   
     $('#info_details_table').bootstrapTable({            
         method: 'get',                      //请求方式（*）
         toolbar: '#details_toolbar',                //工具按钮用哪个容器
@@ -305,143 +337,141 @@ function advoperateFormatter(value, row, index) {
 }
 
 window.advoperateEvents = {
-	'click .delete': function (e, value, row, index) {
-		var item={		        					
-				id:-1,
-		};
-		$("#infolist_table").bootstrapTable('updateRow', {index: index, row: item})
+	'click .delete': function (e, value, row, index) {	
+		$("#infolist_table").bootstrapTable("remove", {field: "indexNo",values: [row.indexNo]}); 
 		
-		$("#infolist_table").bootstrapTable("remove", {field: "id",values: [-1]}); 
+		itemlist.splice(row.indexNo, 1);
+		
+		var lifeAct = getNowFormatDate();
+		var lifeDie = getNowFormatDate();
+		if(selectinfoid!=0)
+			{
+				var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+				for(var i=0;i<infopubs.length;i++)
+				{
+					var infosn=infopubs[i].id;																	
+					if(infosn==selectinfoid)
+						{
+						lifeAct=infopubs[i].lifeAct;
+						lifeDie=infopubs[i].lifeDie;
+						break;
+						}
+				}
+			}
+		
+		refreshTablebyDate(lifeAct,lifeDie);
+		
     	itemChange();
     	
     	refreshTableRowSelect();
     }
 };
 
-function operateFormatter(value, row, index) {
-    return [
-    	'<a class="publish" href="javascript:void(0)" style="margin:0px 5px;" title="上架">',
-        '<i class="fa fa-plus"></i>上架',
-        '</a>'+
-        '<a class="details" href="javascript:void(0)" style="margin:0px 5px;" title="详情">',
-        '<i class="fa fa-exclamation-circle"></i>详情',
-        '</a>'+
-        '<a class="delete" href="javascript:void(0)" style="margin:0px 5px;" title="删除">',
-        '<i class="fa fa-trash-o"></i>删除',
-        '</a>'+
-        '<a class="copy" href="javascript:void(0)" style="margin:0px 5px;" title="复制">',
-        '<i class="fa fa-copy"></i>复制',
-        '</a>'+
-        '<a class="SerialPort" href="javascript:void(0)" style="margin:0px 5px;" title="串口显示">',
-        '<i class="fa fa-magnet"></i>串口显示',
-        '</a>'
-    ].join('');
-}
+function infopublish() {
+	var infoid = selectinfoid;
+	var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+	if(selectplaylistid==0) return;
+	for(var i=0;i<infopubs.length;i++)
+	{
+		var infosn=infopubs[i].id;	
+		var infoname=infopubs[i].Advname;
+		var lifeAct=infopubs[i].lifeAct;
+		var lifeDie=infopubs[i].lifeDie;
+		var playTimelength=infopubs[i].playTimelength;
+		var infopubid=infopubs[i].Pubidid;	
+		if(infosn==infoid)
+			{		        				
+			var item={    
+					infosn:infosn,
+					infoname:infoname,
+					lifeAct:lifeAct,
+					lifeDie:lifeDie,
+					timelenght:playTimelength
+				};   
+						
+			var Scheduletype = 1;
+			var listcycle=0;
+			var playlists= JSON.parse(sessionStorage.getItem('playlists'));
+	    	if(playlists!=null && playlists.length>0)//存在直接取数据    		
+			{
+	    		for(var i=0;i<playlists.length;i++)
+				{
+	    			var id = playlists[i].id;
+	    			if(id == selectplaylistid)
+	    				{
+	    				Scheduletype = parseInt(playlists[i].Scheduletype);
+	    				listcycle = JSON.parse(playlists[i].Timequantum).listcycle;
+	    				break;
+	    				}
+				}
+			}	
+	    	
+	    	switch (Scheduletype) {
+			case 1://模板
+				{
+				$('#end_index').attr('max',selectlistcycle);
+				$('#end_index').val(selectlistcycle);										
+				
+				$('#end_index').bind('input propertychange', function() { 
+					if(parseInt($('#end_index').val()) > parseInt(selectlistcycle))
+					{$('#end_index').val(parseInt(selectlistcycle));} 
+					});
+				
+				$('#start_index').attr('max',selectlistcycle);
+				$('#start_index').val(0);										
+				
+				$('#start_index').bind('input propertychange', function() { 
+					if(parseInt($('#start_index').val()) > parseInt(selectlistcycle))
+					{$('#start_index').val(parseInt(selectlistcycle));} 
+					});
+				
+				$('#interval_index').attr('max',selectlistcycle);				
+				$('#interval_index').val(0);										
+				
+				$('#interval_index').bind('input propertychange', function() { 
+					if(parseInt($('#interval_index').val()) > parseInt(selectlistcycle))
+					{$('#interval_index').val(parseInt(selectlistcycle));} 
+					});
+				var dataval={
+					infosn:item.infosn,
+					timelenght:item.timelenght
+				}
+				$('#modal_mutiAddpt').attr('data-value',JSON.stringify(dataval));
+				$('#modal_mutiAddpt').modal('show');
+				
+				};
+				break;
 
-window.operateEvents = {
-	'click .publish': function (e, value, row, index) {
-		var infoid = row.infosn;
-    	var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
-    	
-    	for(var i=0;i<infopubs.length;i++)
-		{
-			var infosn=infopubs[i].id;	
-			var infoname=infopubs[i].Advname;
-			var lifeAct=infopubs[i].lifeAct;
-			var lifeDie=infopubs[i].lifeDie;
-			var playTimelength=infopubs[i].playTimelength;
-			var infopubid=infopubs[i].Pubidid;	
-			if(infosn==infoid)
-				{		        				
-				var item={    
-						infosn:infosn,
-						infoname:infoname,
-						lifeAct:lifeAct,
-						lifeDie:lifeDie,
-						timelenght:playTimelength
-					};    				
+			case 2://顺序
+				{
 				if(rowIndex==-1)
-					{
-					$('#infolist_table').bootstrapTable('append', item);
-					}
+				{
+					itemlist.push(item);
+					item.indexNo=itemlist.length - 1;
+					$('#infolist_table').bootstrapTable('append', item);					 
+				}
 				else {
-					var params = {index:rowIndex, row:item};
-		    		$('#infolist_table').bootstrapTable('insertRow', params);
+					var bootdata = $("#infolist_table").bootstrapTable("getData");					
+					itemlist.splice(bootdata[rowIndex].indexNo,0,item);
+					//item.indexNo=bootdata[rowIndex].indexNo;
+					//var params = {index:rowIndex, row:item};
+		    		//$('#infolist_table').bootstrapTable('insertRow', params);
+		    		
+		    		refreshTablebyDate(lifeAct,lifeDie);
+		    		refreshTableRowSelect();
 				}
 				
-		    	itemlist = $("#infolist_table").bootstrapTable("getData");
+				alertMessage(0, "成功", "上架成功!"); 
+		    	//itemlist = $("#infolist_table").bootstrapTable("getData");
 		    	
-		    	itemChange();    		    	    		    	    		    	
+		    	itemChange();  
+				};
 				break;
-				}
-		}
-    	
-    	refreshTableRowSelect();
-    	window.event?window.event.cancelBubble=true:e.stopPropagation();
-    },
-    'click .details': function (e, value, row, index) {  
-    	$("#modal_details").attr("data-type",row.infosn);
-    	$("#modal_details").modal('show'); 
-    	getitem(row.infosn);
-    },
-    'click .delete': function (e, value, row, index) {  
-    	var infoid = row.infosn;
-    	var infopubid = row.infopubid;
-    	$.ajax({  
-	        url:"/deleteinfobyid",          
-	        type:"post",		        
-	        data:{
-	        	infosn:infoid,
-	        	groupid:parseInt($("#grouplist").val()),
-	        	infopubid:infopubid
-				},  
-	        dataType:"json", 
-	        success:function(data)  
-	        {       	        	
-	        	if(data.result=='success')
-				{
-	        		$("#infoitem_table").bootstrapTable("remove", {field: "infosn",values: [parseInt(infoid)]});
-				}
-			else
-				{alert(data.resultMessage);}
-	        },  
-	        error: function() {
-	        	alert("ajax 函数  deleteinfobyid 错误");            
-	          }  
-	    });
-    },
-    'click .copy': function (e, value, row, index) {
-    	var infoid = row.infosn;
-    	$.ajax({  
-	        url:"/CopyInfotodraft", 
-	        data:{
-	        	infosn:infoid,
-	        	groupid:parseInt($("#grouplist").val())
-				},  
-	        type:"post",  
-	        dataType:"json", 
-	        success:function(data)  
-	        {       	  
-	        	if(data.result=="success")
-	        		{
-	        			alert("复制成功");
-	        		}
-	        	else
-	        		{
-	        			alert(data.resultMessage);
-	        		}
-	        },  
-	        error: function() { 
-	        	alert("ajax 函数  CopyInfo 错误");	            
-	          }  
-	    });
-    },
-    'click .SerialPort': function (e, value, row, index) { 
-    	var infoid = row.infosn;
-    	infoSendSerialData(infoid);
-    }
-};
-
+			}		    			    			    	  		    	    		    	    		   
+			break;
+			}
+	}		
+}
 //界面初始化
 function initInfolist()
 {
@@ -457,10 +487,137 @@ function initInfolist()
 	
 	$('#btn_delete_item').click(function(){
 		
-		var layerid = $("#modal_deleteitem").attr("data-layerid");
-		var infoid=parseInt(layerid.substring(0,layerid.indexOf("offset")));
-		var st=parseInt(layerid.substring(layerid.indexOf("offset") + 6));
-		itemDeletebyst(infoid,st);
+		var datatype = $("#modal_deleteitem").attr("data-type");
+		switch (datatype) {
+		case "delete_list":{
+			var playlistid = selectplaylistid;
+			playlistDeletebyid(playlistid);
+		};break;
+		case "delete_modelInfo":{
+			var layerid = $("#modal_deleteitem").attr("data-layerid");
+			var infoid=parseInt(layerid.substring(0,layerid.indexOf("offset")));
+			var st=parseInt(layerid.substring(layerid.indexOf("offset") + 6));
+			itemDeletebyst(infoid,st);
+		};break;
+		case "removeAll_Info":{
+			var infosn = parseInt($("#modal_deleteitem").attr("data-infosn"));
+	    	var infopubid = parseInt($("#modal_deleteitem").attr("data-infopubid"));
+	    	
+	    	var Scheduletype = 1;
+			var listcycle=0;
+			var playlists= JSON.parse(sessionStorage.getItem('playlists'));
+	    	if(playlists!=null && playlists.length>0)//存在直接取数据    		
+			{
+	    		for(var i=0;i<playlists.length;i++)
+				{
+	    			var id = playlists[i].id;
+	    			if(id == selectplaylistid)
+	    				{
+	    				Scheduletype = parseInt(playlists[i].Scheduletype);
+	    				listcycle = JSON.parse(playlists[i].Timequantum).listcycle;
+	    				break;
+	    				}
+				}
+			}	
+	    	
+	    	switch (Scheduletype) {	
+		    	case 1://模板
+				{	
+		    		if(itemlist!=null && itemlist.length>0)
+			    	{
+			    		for(var l=0;l<itemlist.length;l++)
+			    		{
+			    			var item = itemlist[l];
+			    						
+			    			if(item.infoid==infosn)
+			    			{
+			    				for(var f=0;f<item.offsetlist.length;f++)
+			    					{
+			    					var st=item.offsetlist[f];
+			    					$('#info_canvas').removeLayerGroup(infosn+"offset"+st).drawLayers();		    						    				
+			    					}
+			    				itemlist.splice(l, 1);
+			    				itemChange();
+			    				break;				
+			    			}			
+			    		}
+			    	}
+				};
+				break;	
+			case 2://顺序
+				{
+				$("#infolist_table").bootstrapTable("remove", {field: "infosn",values: [infosn]});
+				
+				if(itemlist!=null && itemlist.length>0)
+		    	{
+		    		for(var l=0;l<itemlist.length;l++)
+		    		{
+		    			var item = itemlist[l];
+		    						
+		    			if(item.infosn==infosn)
+		    			{		    				
+		    				itemlist.splice(l, 1);
+		    				l=l-1;
+		    			}			
+		    		}
+		    	}
+				var lifeAct = getNowFormatDate();
+				var lifeDie = getNowFormatDate();
+				if(selectinfoid!=0)
+					{
+						var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+						for(var i=0;i<infopubs.length;i++)
+						{
+							var infosn=infopubs[i].id;																	
+							if(infosn==selectinfoid)
+								{
+								lifeAct=infopubs[i].lifeAct;
+								lifeDie=infopubs[i].lifeDie;
+								break;
+								}
+						}
+					}
+				
+				refreshTablebyDate(lifeAct,lifeDie);
+						
+		    	itemChange();
+		    			    	
+		    	refreshTableRowSelect();
+				};
+				break;
+			}		    			    			    	  		    	    		    	    		   				    		    		    			    		    	
+		};break;		
+		case "delete_tabeInfo":{
+			var infosn = parseInt($("#modal_deleteitem").attr("data-infosn"));
+	    	var infopubid = parseInt($("#modal_deleteitem").attr("data-infopubid"));
+			
+	    	$.ajax({  
+		        url:"/deleteinfobyid",          
+		        type:"post",		        
+		        data:{
+		        	infosn:infosn,
+		        	groupid:parseInt($("#grouplist").val()),
+		        	infopubid:infopubid,
+		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+					},  
+		        dataType:"json", 
+		        success:function(data)  
+		        {       	        	
+		        	if(data.result=='success')
+					{
+		        		$("#div_" + infosn).remove();		        		
+					}
+				else
+					{alertMessage(1, "警告", data.resultMessage);}
+		        },  
+		        error: function() {
+		        	alertMessage(2, "异常", "ajax 函数  deleteinfobyid 错误"); 		        	          
+		          }  
+		    });
+	    	
+		};break;
+		}		
 		
 		$('#modal_deleteitem').modal('hide');
 	});
@@ -469,7 +626,7 @@ function initInfolist()
 		var st = $('#playlist_StartTime').val();
 		var et = $('#playlist_EndTime').val();
 		if(st>et && et!='00:00')
-			{alert('开始时间不能大于结束时间');return;}
+			{alertMessage(1, "警告", "开始时间不能大于结束时间");return;}
 				
 		var optionCount = $('#creat_playlist_quantum option').length;
 		var isJoin=false;
@@ -494,12 +651,12 @@ function initInfolist()
 			}
 			 					
 		if(isJoin)
-			{alert('时间段不能和已存在的时间段存在交集');}
+			{alertMessage(1, "警告", "时间段不能和已存在的时间段存在交集");}
 		else
 			{			
 			var oisJ = isJionCreattime(st,et,$("#creat_playlist_level").val());
 			if(oisJ)
-				{alert('时间段不能和已存在的时间段存在交集');}
+				{alertMessage(1, "警告", "时间段不能和已存在的时间段存在交集");}
 			else
 				{
 				var txt = st+"---"+et;
@@ -541,8 +698,18 @@ function initInfolist()
 			}
 		else {			
 			$('#creat_playlist_type').parents('.row').css('display','block');
-			$('#creat_playlist_quantum').parents('.row').css('display','block');			
-			$('#creat_playlist_cycle').parents('.row').css('display','block');
+			$('#creat_playlist_quantum').parents('.row').css('display','block');
+			var playlist_type=parseInt($('#creat_playlist_type').val());
+			switch(playlist_type)
+			{
+				case 2:{
+					$('#creat_playlist_cycle').parents('.row').css('display','none');
+				};break;
+				
+				case 1:{
+					$('#creat_playlist_cycle').parents('.row').css('display','block');
+				};break;
+			}			
 		}
 	});
 	
@@ -559,6 +726,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        },
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
@@ -602,7 +772,7 @@ function getGroup()
 	        		}
 	        },  
 	        error: function() { 
-	        	alert("ajax 函数  getGroup 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误"); 	        	           
 	          } 
 		 });
 		}
@@ -644,12 +814,14 @@ function getGroup()
 //获取播放列表信息靠分组id
 function getInfoList(groupid)
 {
+	sessionStorage.setItem('playlists', "");
 	sessionStorage.setItem('selectgrpid', groupid);
 	$.ajax({  
         url:"/getInfoList",          
         type:"post", 
         data:{
-        	groupid:groupid
+        	groupid:groupid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -678,6 +850,7 @@ function getInfoList(groupid)
         		}
         	else
         	{
+        		        		
         		$("#infolist_table").bootstrapTable('removeAll');
         		
         		sessionStorage.setItem('playlists', "[]");
@@ -686,29 +859,40 @@ function getInfoList(groupid)
         	}
         },  
         error: function() {
-        	alert("ajax 函数  getInfoList 错误");            
+        	alertMessage(2, "异常", "ajax 函数  getInfoList 错误");         	          
           }  
     });	
+}
+//鼠标进入
+function mOver(obj){
+	//$(obj).css("background","#31b0d5");
+	//$(obj).css("color","#fff");		
+}
+//鼠标移除
+function mOut(obj){
+	//$(obj).css("background","#F7F7F7");
+	//$(obj).css("color","#000");	
 }
 //获取分组下已发布广告集合
 function GetInfopubsbygrpid(groupid)
 {
+	sessionStorage.setItem('infopubs', "");
 	$.ajax({  
         url:"/getInfopubs",          
         type:"post", 
         async:false, 
         data:{
-        	groupid:groupid
+        	groupid:groupid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
         {       	        	
         	$('#infolist_draft').empty();			
-			$('#badge_infolist').text(0);
-			
+			$('#badge_infolist').text(0);			
         	if(data!=null && data.length>0)    		
         		{        
-        			var ArrayTable = [];
+        			//var ArrayTable = [];
         			
 	        		for(var i=0;i<data.length;i++)
 					{
@@ -719,7 +903,7 @@ function GetInfopubsbygrpid(groupid)
 	        			var lifeDie=data[i].lifeDie;
 	        			var playTimelength=data[i].playTimelength;
 	        			var infopubid=data[i].Pubidid;	
-	        				    
+	        			/*	    
 	        			var item={
         					infosn:infosn,
         					infoname:infoname,
@@ -728,16 +912,36 @@ function GetInfopubsbygrpid(groupid)
         					timelenght:playTimelength,
         					infopubid:infopubid
 	        			};
-	        			ArrayTable.push(item);	        			
+	        			ArrayTable.push(item);
+	        			*/
+	        			if(lifeAct==""){lifeAct="永久";}
+	        			if(lifeDie==""){lifeDie="永久";}
+	        			var tooltip="生命周期:"+lifeAct+"---"+lifeDie;
+	        			tooltip+=" 时长"+playTimelength+"秒";
+	        			var pl="<a id='info_"+infosn+"'><span>"+infoname+"</span></a>";//<i class='fa fa-ellipsis-v' style='float:right;color:#00f'></i>
+	        			var div="<div id='div_"+infosn+"' data-pubid="+infopubid+" title='"+tooltip+"' style='text-align:center;background:#F7F7F7;' onclick='infoSelectChange("+infosn+",true)' class='list-group-item' onmouseover='mOver(this)' onmouseout='mOut(this)'>";
+	        			div=div+pl+"</div>";	        			
+	        			$('#infolist_draft').append(div);
+	        			var count = parseInt($('#badge_draft').text()) + 1;
+	        			$('#badge_draft').text(count);
 					}
 	        		
-					$("#infoitem_table").bootstrapTable('load', ArrayTable);
+					//$("#infoitem_table").bootstrapTable('load', ArrayTable);
 	        		
-	        		sessionStorage.setItem('infopubs', JSON.stringify(data));	        			        		
+	        		sessionStorage.setItem('infopubs', JSON.stringify(data));
+	        		
+	        		var divheight = $('#infolist_draft').parent('.col-md-2').height();
+	        		if(divheight>600)
+	        			{
+	        			$('#infolist_draft').parent('.col-md-2').css('height','600px');
+	        			$('#infolist_draft').parent('.col-md-2').css('overflow','auto');	        			
+	        			}
+	        		else
+	        			{$('#infolist_draft').parent('.col-md-2').css('overflow','hide');}
         		}
         },  
         error: function() {
-        	alert("ajax 函数  getInfopubs 错误");            
+        	alertMessage(2, "异常", "ajax 函数  getInfopubs 错误");         	          
           }  
     });
 }
@@ -787,7 +991,7 @@ function playlistSelectChange(playlistid)
 		$("#playlist option[value="+playlistid+"]").attr("selected","selected"); 		
 		
 		itemlist=[];
-		
+		selectplaylistid=playlistid;  
 		var playlists= JSON.parse(sessionStorage.getItem('playlists'));
     	if(playlists!=null && playlists.length>0)//存在直接取数据    		
 		{
@@ -813,13 +1017,7 @@ function playlistSelectChange(playlistid)
 						case 2:{
 							$("#pt_sort").css("display","inline");
 							$("#pt_template").css("display","none");
-							
-							var ArrayTable = [];
-							if(itemlist!=null && itemlist.length>0)
-							{		
-								ArrayTable=itemlist;
-							}
-							$("#infolist_table").bootstrapTable('load', ArrayTable);
+							refreshTablebyDate(getNowFormatDate(),getNowFormatDate());
 						};break;
 						case 1:{
 							$("#pt_sort").css("display","none");
@@ -828,23 +1026,29 @@ function playlistSelectChange(playlistid)
 							{DrawBackground(jsontq.listcycle);}
 							GetitemList('','');
 						};break;
-					}
+					}														
 					
-					refreshTablebyDate(getNowFormatDate(),'');					
-					
+					var divheight = $('#pt_sort').parent('.col-md-10').height();
+	        		if(divheight>600)
+	        			{
+	        			$('#pt_sort').parent('.col-md-10').css('height','600px');
+	        			$('#pt_sort').parent('.col-md-10').css('overflow','auto');	        			
+	        			}
+	        		else
+	        			{$('#pt_sort').parent('.col-md-10').css('overflow','hide');}
 					break;
     				}
 			}
 		}
     	else//不存在数据库重新取
-    		{alert("playlists=null");}
+    		{alertMessage(1, "警告", "playlists=null");}
     	
-    	selectplaylistid=playlistid;    	
+    	  	
 	}
 }
-
 //刷新选中列表
 function refreshTableRowSelect() {
+	
 	if(rowIndex != -1)
 		{
 		var trlist = $("#infolist_table tbody tr");
@@ -858,95 +1062,221 @@ function refreshTableRowSelect() {
 					}
 			}
 		}
+		
 }
-
+//
 function refreshTablebyDate(dts,dte)
-{
-	var slt = $("#infolist_table").bootstrapTable("getData");    		    	
-	if(slt.length>0)
-		{    	
-		if(dts==''){dts='1999-09-09';}
-		if(dte==''){dte='2100-09-09';}
-		for(var r=0;r<slt.length;r++)
-			{
-			var lifeAct = slt[r].lifeAct;
-			var lifeDie = slt[r].lifeDie;
-			if(lifeAct==''){lifeAct='1999-09-09';}
-			if(lifeDie==''){lifeDie='2100-09-09';}
-			var isjion = dtJion(dts,dte,lifeAct,lifeDie);//判断日期是否有交集
-			if(isjion)
-				{$("#infolist_table").bootstrapTable('showRow', {index:r});}
-			else {
-				$("#infolist_table").bootstrapTable('hideRow', {index:r});
-			}
-			}    			   		    		            
-		}
+{	
+	if(dts==''){dts='1999-09-09';}
+	if(dte==''){dte='2100-09-09';}
 	
-	clearlayeritem();
-	GetitemList(dts,dte);
+	var nowdate = getNowFormatDate();
+	if(dts<nowdate){dts=nowdate;}
+	$('#infolist_draft div').css("background","#F7F7F7");
+	$('#infolist_draft div').css("color","#000");
+	
+	var Scheduletype=2;
+	var playlists= JSON.parse(sessionStorage.getItem('playlists'));
+	if(playlists!=null && playlists.length>0)//存在直接取数据    		
+	{
+		for(var i=0;i<playlists.length;i++)
+		{
+			var id=playlists[i].id;
+			if(id==selectplaylistid)
+				{    				
+				var Scheduletype=parseInt(playlists[i].Scheduletype);
+				}
+		}
+	}
+	
+	switch(Scheduletype)
+	{
+		case 2:{
+			$('#infolist_table .changeColor').removeClass('changeColor');
+			var ArrayTable = [];
+			if(itemlist.length>0)
+				{
+					for(var r=0;r<itemlist.length;r++)
+					{
+					var lifeAct = itemlist[r].lifeAct;
+					var lifeDie = itemlist[r].lifeDie;
+					var infosn = parseInt(itemlist[r].infosn);
+					if(lifeAct==''){lifeAct='1999-09-09';}
+					if(lifeDie==''){lifeDie='2100-09-09';}
+					
+					var isjion = dtJion(dts,dte,lifeAct,lifeDie);//判断日期是否有交集
+					if(isjion)
+						{	
+						var item=itemlist[r];
+						item.indexNo=r;
+						ArrayTable.push(itemlist[r]);
+						
+						//$('#div_'+infosn).addClass("infochangeColor");
+						$('#div_'+infosn).css("background","#31b0d5");
+						$('#div_'+infosn).css("color","#fff");
+						}
+					}
+				}
+			$("#infolist_table").bootstrapTable('load', ArrayTable);
+		};break;
+		case 1:{
+			clearlayeritem();
+			GetitemList(dts,dte);
+		};break;
+	}					
 }
-
 //播放列表选择改变
-function infoSelectChange(infoid)
+function infoSelectChange(infoid,isCancle)
 {		
+	$('#infoMore').popover('hide');
+	$('#infoMore').remove();	
+	
 	if(selectinfoid != infoid)
 		{
 		selectinfoid=infoid;		
 			
 		var dts = '';
 		var dte = '';
+				
+		var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
 		
-		var slt = $("#infoitem_table").bootstrapTable("getData");    		    	
-		if(slt.length>0)
-			{    				
-			for(var r=0;r<slt.length;r++)
-				{
-				if(slt[r].infosn == infoid)
-					{
-					dts=slt[r].lifeAct;
-					dte=slt[r].lifeDie;
-					break;
-					}				
-				}    			   		    		            
-			}	
-	
-		refreshTablebyDate(dts,dte);
-		/*
-		var slt = $("#infolist_table").bootstrapTable("getData");    		    	
-    	if(slt.length>0)
-    		{    	
-    		if(dts==''){dts='1999-09-09';}
-    		if(dte==''){dte='2100-09-09';}
-    		for(var r=0;r<slt.length;r++)
-    			{
-    			var lifeAct = slt[r].lifeAct;
-    			var lifeDie = slt[r].lifeDie;
-    			if(lifeAct==''){lifeAct='1999-09-09';}
-    			if(lifeDie==''){lifeDie='2100-09-09';}
-    			var isjion = dtJion(dts,dte,lifeAct,lifeDie);//判断日期是否有交集
-				if(isjion)
-					{$("#infolist_table").bootstrapTable('showRow', {index:r});}
-				else {
-					$("#infolist_table").bootstrapTable('hideRow', {index:r});
+		for(var i=0;i<infopubs.length;i++)
+		{
+			var infosn=infopubs[i].id;	
+			var infoname=infopubs[i].Advname;
+			var lifeAct=infopubs[i].lifeAct;
+			var lifeDie=infopubs[i].lifeDie;
+			var playTimelength=infopubs[i].playTimelength;
+			var infopubid=infopubs[i].Pubidid;	
+			if(infosn==selectinfoid)
+				{						
+				dts=lifeAct;
+				dte=lifeDie;
+    			break;
 				}
-				}    			   		    		            
-    		}
-    		
-		clearlayeritem();
-		GetitemList(dts,dte);
-    	*/
+		}
+		var nowdate = getNowFormatDate();
+		if(dts<nowdate){dts=nowdate;}
+		
+		refreshTablebyDate(dts,dte);
+
     	refreshTableRowSelect();    		
-				        					        			
+				 
+    	$('#infolist_draft span').removeClass('mws-ic-16 ic-accept');		
+		
+		$("#div_"+selectinfoid+" span").addClass('mws-ic-16 ic-accept');
+		
+		$("#div_"+selectinfoid).append("<a id='infoMore' data-toggle='popover' style='float:right;color:#00f;font-size:16px'><i class='fa fa-ellipsis-v'></i></a>");
+		
+		
+		var html ='<div class="btn-group-vertical btn-group-sm"><span id="morepublish" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-plus"></i>上架</span>'+
+		'<span id="moreDownAll" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-remove"></i>下架</span>'+
+        '<span id="moredetails" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-exclamation-circle"></i>详情</span>'+
+        '<span id="moredelete" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-trash-o"></i>删除</span>'+
+        '<span id="morecopy" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-copy"></i>复制</span>'+
+        '<span id="moreserialPort" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-magnet"></i>串口</span></div>';
+		
+		$('[data-toggle="popover"]').each(function () {
+            var element = $(this);
+            element.popover({
+                trigger: 'manual',
+                placement: 'right', //top, bottom, left or right
+                title: '',
+                html: true,
+                content: html,
+            }).on("mouseenter", function () {
+                var _this = this;
+                $(this).popover("show");
+                $(this).siblings(".popover").on("mouseleave", function () {
+                    $(_this).popover('hide');
+                });
+                //上架
+                $('#morepublish').click(function() {
+                	$(_this).popover('hide');
+        			infopublish();
+        		});
+                //下架                
+                $('#moreDownAll').click(function() {
+                	$(_this).popover('hide');
+                	$("#modal_deleteitem .modal-body").text("是否下架此广告全部排期?");
+                	$("#modal_deleteitem").attr("data-type","removeAll_Info");
+                	$("#modal_deleteitem").attr("data-infosn",selectinfoid);                	                	
+                	$("#modal_deleteitem").attr("data-infopubid",parseInt($("#div_"+selectinfoid).attr("data-pubid")));
+            		$('#modal_deleteitem').modal('show');
+        		});
+                //详情
+                $('#moredetails').click(function() {
+                	$(_this).popover('hide');
+                	$("#modal_details").attr("data-type", selectinfoid);
+                	$("#modal_details").modal('show'); 
+                	getitem(selectinfoid);
+        		});
+                //删除
+                $('#moredelete').click(function() {
+                	$(_this).popover('hide');
+                	$("#modal_deleteitem .modal-body").text("删除此广告全部列表将下架此广告,是否下架此广告?");
+                	$("#modal_deleteitem").attr("data-type","delete_tabeInfo");
+                	$("#modal_deleteitem").attr("data-infosn",selectinfoid);                	                	
+                	$("#modal_deleteitem").attr("data-infopubid",parseInt($("#div_"+selectinfoid).attr("data-pubid")));
+            		$('#modal_deleteitem').modal('show');
+        		});
+                //复制
+                $('#morecopy').click(function() {
+                	$(_this).popover('hide');
+
+                	var infoid = selectinfoid;
+                	$.ajax({  
+            	        url:"/CopyInfotodraft", 
+            	        data:{
+            	        	infosn:infoid,
+            	        	groupid:parseInt($("#grouplist").val()),
+            	        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+            	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+            				},  
+            	        type:"post",  
+            	        dataType:"json", 
+            	        success:function(data)  
+            	        {       	  
+            	        	if(data.result=="success")
+            	        		{	        			
+            	        			alertMessage(0, "成功", "复制成功");
+            	        		}
+            	        	else
+            	        		{
+            	        			alertMessage(1, "警告", data.resultMessage);
+            	        		}
+            	        },  
+            	        error: function() { 
+            	        	alertMessage(2, "异常", "ajax 函数  CopyInfo 错误"); 	        	          
+            	          }  
+            	    });
+        		});
+                //下架串口
+                $('#moreserialPort').click(function() {
+                	$(_this).popover('hide');
+                	var infoid = selectinfoid;
+                	infoSendSerialData(infoid);
+        		});
+            }).on("mouseleave", function () {
+                var _this = this;
+                setTimeout(function () {
+                    if (!$(".popover:hover").length) {
+                        $(_this).popover("hide")
+                    }
+                }, 100);
+            });
+        });
+		
 		if(itemlist!=null && itemlist.length>0)
 		{
 		for(var l=0;l<itemlist.length;l++)
 			{
 				var item = itemlist[l];
 				
-				var itemColor = "#eeeeeeaa";
+				var itemColor = itembackColor;
 				if(item.infoid==selectinfoid)
 				{
-					itemColor = "#b3d4fdaa";
+					itemColor = itemSelectbackColor;
 				}
 				
 				var offsetlist = item.offsetlist;
@@ -966,11 +1296,11 @@ function infoSelectChange(infoid)
 			}
 		}
 	}
-	else
+	else if(isCancle)
 	{			
 	selectinfoid = 0;	
-	
-	refreshTablebyDate(getNowFormatDate(),'')	 
+	$('#infolist_draft span').removeClass('mws-ic-16 ic-accept');
+	refreshTablebyDate(getNowFormatDate(),getNowFormatDate())	 
 	}
 }
 //删除列表
@@ -980,7 +1310,9 @@ function playlistDeletebyid(playlistid)
         url:"/deleteplaylistbyid",          
         type:"post", 
         data:{
-        	playlistid:playlistid
+        	playlistid:playlistid,
+        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -1029,11 +1361,11 @@ function playlistDeletebyid(playlistid)
 						itemlist=[];
 					}
 	        		else
-					{alert(data.resultMessage);}
+					{alertMessage(1, "警告", data.resultMessage);}
         		}
         },  
         error: function() {  
-        	alert("ajax 函数  deleteplaylistbyid 错误");            
+        	alertMessage(2, "异常", "ajax 函数  deleteplaylistbyid 错误");        	          
           }  
     });
 }
@@ -1041,8 +1373,8 @@ function playlistDeletebyid(playlistid)
 function playlistPublishbyid(playlistid)
 {
 	if(itemlist == null || itemlist.length<=0)
-		{
-		alert("排期数据为空不能发布");
+		{		
+		alertMessage(1, "警告", "排期数据为空不能发布");
 		return;
 		}
 	
@@ -1218,13 +1550,13 @@ function playlist_creat()
 	var quantums={};			
 	
 	if(listname==null || listname=='')
-		{alert('列表名称不能为空');return;}
+		{alertMessage(1, "警告", "列表名称不能为空");return;}
 	
 	if(listlevel==null || listlevel=='')
-	{alert('列表类型不能为空');return;}
+	{alertMessage(1, "警告", "列表类型不能为空");return;}
 	
 	if(listcycle==null || listcycle=='' || listcycle==0)
-	{alert('列表周期不能为空');return;}
+	{alertMessage(1, "警告", "列表周期不能为空");return;}
 	
 	if(listlevel==0)
 	{
@@ -1238,7 +1570,7 @@ function playlist_creat()
 	}
 	else {
 		if(quantumcount<=0)
-		{alert('时间集合不能为空');return;}
+		{alertMessage(1, "警告", "时间集合不能为空");return;}
 		else
 			{
 			$("#creat_playlist_quantum option").each(function(){
@@ -1341,7 +1673,9 @@ function ajaxCreateInfoList(listname,listtype,quantums,ScheduleType)
 	    	listtype:listtype,
 	    	quantums:JSON.stringify(quantums),
 	    	ScheduleType:ScheduleType,
-	    	programlist:''
+	    	programlist:'',
+	    	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+	    	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
 	    dataType:"json", 
 	    success:function(data)  
@@ -1379,12 +1713,12 @@ function ajaxCreateInfoList(listname,listtype,quantums,ScheduleType)
 							$('#modal_addplaylist').modal('hide');
 	    				}
 	    			else
-	    				{alert(data.resultMessage);}
+	    				{alertMessage(1, "警告", data.resultMessage);}
 	    		}
-	    	else{alert("存储列表返回数据为null");}	        	   
+	    	else{alertMessage(1, "警告", "存储列表返回数据为null");}	        	   
 	    },  
-	    error: function() {  
-	    	alert("ajax 函数  CreatInfoList 错误");	        
+	    error: function() {
+	    	alertMessage(2, "异常", "ajax 函数  CreatInfoList 错误");	    		        
 	      }  
 	});
 }
@@ -1402,7 +1736,9 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
         	quantums:strquantums,
         	ScheduleType:ScheduleType,
         	programlist:JSON.stringify(itemlist),
-        	isPublish:isPublish
+        	isPublish:isPublish,
+        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
         success:function(data)  
@@ -1526,7 +1862,7 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 			    								}
 		    								}
 					    					}
-		    							alert('修改成功');
+					    				alertMessage(0, "成功", "修改成功");		    							
 					    				break;
 					    				}
 								}
@@ -1536,12 +1872,12 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 							$('#modal_addplaylist').modal('hide');
         				}
         			else
-        				{alert(data.resultMessage);}
+        				{alertMessage(1, "警告", data.resultMessage);}
         		}
-        	else{alert("存储列表返回数据为null");}	        	   
+        	else{alertMessage(1, "警告", "存储列表返回数据为null");}	        	   
         },  
         error: function() { 
-        	alert("ajax 函数  UpdateInfoList 错误");	            
+        	alertMessage(2, "异常", "ajax 函数  UpdateInfoList 错误");        	            
           }  
     });
 }
@@ -1553,7 +1889,9 @@ function ajaxUpdatePlaylistName(playlistid,listname)
 	    type:"post",  
 	    data:{
 	    	playlistid:playlistid,
-	    	listname:listname
+	    	listname:listname,
+	    	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+	    	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
 	    dataType:"json", 
 	    success:function(data)  
@@ -1580,12 +1918,12 @@ function ajaxUpdatePlaylistName(playlistid,listname)
 							$('#modal_addplaylist').modal('hide');
 	    				}
 	    			else
-	    				{alert(data.resultMessage);}
+	    				{alertMessage(1, "警告", data.resultMessage);}
 	    		}
-	    	else{alert("存储列表返回数据为null");}	        	   
+	    	else{alertMessage(1, "警告", "存储列表返回数据为null");}	        	   
 	    },  
 	    error: function() {  
-	    	alert("ajax 函数  UpdatePlaylistName 错误");	        
+	    	alertMessage(2, "异常", "ajax 函数  UpdatePlaylistName 错误");	    	        
 	      }  
 	});
 }
@@ -1608,8 +1946,8 @@ function SendCallback(SN,infocodelist,i)
 		    			command:"closeSerialPort",
 						commandSN:getSN()
 		    		};	        
-		        wssend(JSON.stringify(closeJsonObj));
-		    	alert("通讯不畅");
+		        wssend(JSON.stringify(closeJsonObj));		    	
+		    	alertMessage(1, "警告", "通讯不畅");
 		        clearInterval(interval); 
 		    	}
 		    
@@ -1638,8 +1976,8 @@ function playlistSerialPublishbyid(playlistid)
 	$('#progress').css('height','20px');
 					
 	if(itemlist == null || itemlist.length<=0)
-	{
-	alert("排期数据为空不能发布");
+	{	
+	alertMessage(1, "警告", "排期数据为空不能发布");
 	return;
 	}
 		
@@ -1668,7 +2006,8 @@ function playlistSerialPublishbyid(playlistid)
         	listtype:listtype,
         	quantums:strquantums,
         	ScheduleType:ScheduleType,
-        	programlist:JSON.stringify(itemlist)
+        	programlist:JSON.stringify(itemlist),
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1696,7 +2035,7 @@ function playlistSerialPublishbyid(playlistid)
 			    		};	        
 			        wssend(JSON.stringify(closeJsonObj));
 			        $('#progress').css('height','0px');
-	    			alert(data.resultMessage);        			
+	    			alertMessage(1, "警告", data.resultMessage);        			
         		}        	
         },  
         error: function() {  
@@ -1707,7 +2046,7 @@ function playlistSerialPublishbyid(playlistid)
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
 	        $('#progress').css('height','0px');
-        	alert("ajax 函数  getPublishInfobyid 错误");            
+	        alertMessage(2, "异常", "ajax 函数  getPublishInfobyid 错误");        	
           }  
     });    	 
 }
@@ -1753,8 +2092,8 @@ function SendSerialData(playlistid)
 	    		    			command:"closeSerialPort",
 	    						commandSN:SN
 	    		    		};	        
-	    		        wssend(JSON.stringify(closeJsonObj));
-	    		        alert("通讯不畅");
+	    		        wssend(JSON.stringify(closeJsonObj));	    		        
+	    		        alertMessage(1, "警告", "通讯不畅");
 	    		        clearInterval(interval);    		        
 	    		    }
 	    		    
@@ -1794,7 +2133,8 @@ function infoSerialPublishbyid(infoid)
 	$.ajax({  
         url:"/getinfoListbyinfoid", 
         data:{
-        	infosn:infoid
+        	infosn:infoid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1822,7 +2162,7 @@ function infoSerialPublishbyid(infoid)
 			    		};	        
 			        wssend(JSON.stringify(closeJsonObj));
 			        $('#progress').css('height','0px');
-	    			alert(data.resultMessage);        			
+	    			alertMessage(1, "警告", data.resultMessage);        			
         		}        	
         },  
         error: function() {  
@@ -1833,7 +2173,7 @@ function infoSerialPublishbyid(infoid)
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
 	        $('#progress').css('height','0px');
-        	alert("ajax 函数  getPublishInfobyid 错误");            
+	        alertMessage(2, "异常", "ajax 函数  getPublishInfobyid 错误");        	         
           }  
     });    	 
 }
@@ -1879,8 +2219,8 @@ function infoSendSerialData(infoid)
 	    		    			command:"closeSerialPort",
 	    						commandSN:SN
 	    		    		};	        
-	    		        wssend(JSON.stringify(closeJsonObj));
-	    		        alert("通讯不畅");
+	    		        wssend(JSON.stringify(closeJsonObj));	    		        
+	    		        alertMessage(1, "警告", "通讯不畅");
 	    		        clearInterval(interval);    		        
 	    		    }
 	    		    
@@ -1912,14 +2252,14 @@ function infoSendSerialData(infoid)
     	$("#modal_SerialPort").modal('show');
 		}				
 }
-
 //获取显示项
 function getitem(infoid)
 {	
 	$.ajax({  
         url:"/GetItem",         
         data:{
-        	infoid:infoid     	
+        	infoid:infoid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1962,20 +2302,21 @@ function getitem(infoid)
 										itemContext:jitem.itemcontext,
         								itemLocationSize:jitem.itemleft+","+jitem.itemtop+","+jitem.itemwidth+","+jitem.itemheight,
         								itemStyle:itemstyle		
-    								};        								
+    								};  
+    								ArrayTable.push(item);	
     								}
     						}
     				}
-    			ArrayTable.push(item);				
+    						
 				$("#info_details_table").bootstrapTable('load', ArrayTable);
         		}
         	else
         		{
-        			alert(data.resultMessage);
+        			alertMessage(1, "警告", data.resultMessage);
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  GetItem 错误");            
+        	alertMessage(2, "异常", "ajax 函数  GetItem 错误");        	          
           }  
     });
 }

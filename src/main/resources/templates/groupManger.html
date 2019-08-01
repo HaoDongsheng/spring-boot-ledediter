@@ -28,6 +28,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/groupManger.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -59,7 +60,7 @@
                             <li id='groupManger'><a class="menu-top-active" href="groupManger">分组管理</a></li>
                             <li id='userManger'><a href="userManger">用户管理</a></li>
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->
 
                         </ul>
@@ -127,13 +128,24 @@
 			       </div>				       
 			      </div>
 			      
+			      <div class="row">
+			       <div class="col-md-6">
+  						  <div class="input-group mb-3 input-group-sm">
+				      <div class="input-group-prepend">
+				        <span class="input-group-text">最大包长</span>
+				      </div>
+				      <input type="number" class="form-control" id="group_edit_packLength" placeholder="宽度" min=768 max=10240 value= "1024">				      		    
+				    </div>
+			       </div>
+			      </div>
+			      
 			       <div class="row">
 			       <div class="col-md-6">
   						  <div class="input-group mb-3 input-group-sm">
 				      <div class="input-group-prepend">
 				        <span class="input-group-text">屏幕宽度</span>
 				      </div>
-				      <input type="number" class="form-control" id="group_edit_width" step="8" placeholder="宽度">				      		    
+				      <input type="number" class="form-control" id="group_edit_width" step="8" placeholder="宽度" value= "144">				      		    
 				    </div>
 			       </div>
 			       <div class="col-md-6">
@@ -141,7 +153,7 @@
 				      <div class="input-group-prepend">
 				        <span class="input-group-text">屏幕高度</span>
 				      </div>
-				      <input type="number" class="form-control" id="group_edit_height" step="8" placeholder="高度">												    
+				      <input type="number" class="form-control" id="group_edit_height" step="8" placeholder="高度" value= "24">												    
 				    </div>
 			       </div>
 			      </div>
@@ -267,38 +279,38 @@
 				    <div class="row">
 				    	<div class="col-md-3">						  	
 					  	黎明					  	
-					  	<input id="brightness1" type="number" min=1 max=16 value=6 class="form-control">
+					  	<input id="brightness1" type="number" min=0 max=15 value=6 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	拂晓					  	
-					  	<input id="brightness2" type="number" min=1 max=16 value=9 class="form-control">
+					  	<input id="brightness2" type="number" min=0 max=15 value=9 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	早晨
-					  	<input id="brightness3" type="number" min=1 max=16 value=12 class="form-control">
+					  	<input id="brightness3" type="number" min=0 max=15 value=12 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	白天					  	
-					  	<input id="brightness4" type="number" min=1 max=16 value=16 class="form-control">
+					  	<input id="brightness4" type="number" min=0 max=15 value=15 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>						  		  					  	 	
 				  	</div>
 				  	
 				  	<div class="row">
 				    	<div class="col-md-3">						  	
 					  	黄昏					  	
-					  	<input id="brightness5" type="number" min=1 max=16 value=13 class="form-control">
+					  	<input id="brightness5" type="number" min=0 max=15 value=13 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	傍晚					  	
-					  	<input id="brightness6" type="number" min=1 max=16 value=10 class="form-control">
+					  	<input id="brightness6" type="number" min=0 max=15 value=10 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	晚上					  	
-					  	<input id="brightness7" type="number" min=1 max=16 value=7 class="form-control">
+					  	<input id="brightness7" type="number" min=0 max=15 value=7 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	夜间					  	
-					  	<input id="brightness8" type="number" min=1 max=16 value=4 class="form-control">
+					  	<input id="brightness8" type="number" min=0 max=15 value=4 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>						  		  					  	 	
 				  	</div>
 			      </div>				  			      
@@ -328,38 +340,38 @@
 				    <div class="row">
 				    	<div class="col-md-3">						  	
 					  	<input  id="time1" type="time" value='03:00' class="form-control">					  	
-					  	<input id="brightnessB1" type="number" min=1 max=16 value=6 class="form-control">
+					  	<input id="brightnessB1" type="number" min=0 max=15 value=6 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time2" type="time" value='05:00' class="form-control">					  	
-					  	<input id="brightnessB2" type="number" min=1 max=16 value=9 class="form-control">
+					  	<input id="brightnessB2" type="number" min=0 max=15 value=9 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time3" type="time" value='06:00' class="form-control">
-					  	<input id="brightnessB3" type="number" min=1 max=16 value=12 class="form-control">
+					  	<input id="brightnessB3" type="number" min=0 max=15 value=12 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time4" type="time" value='07:00' class="form-control">					  	
-					  	<input id="brightnessB4" type="number" min=1 max=16 value=16 class="form-control">
+					  	<input id="brightnessB4" type="number" min=0 max=15 value=15 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>						  		  					  	 	
 				  	</div>
 				  	
 				  	<div class="row">
 				    	<div class="col-md-3">						  	
 					  	<input  id="time5" type="time" value='16:00' class="form-control">					  	
-					  	<input id="brightnessB5" type="number" min=1 max=16 value=13 class="form-control">
+					  	<input id="brightnessB5" type="number" min=0 max=15 value=13 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time6" type="time" value='17:00' class="form-control">					  	
-					  	<input id="brightnessB6" type="number" min=1 max=16 value=10 class="form-control">
+					  	<input id="brightnessB6" type="number" min=0 max=15 value=10 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time7" type="time" value='19:00' class="form-control">					  	
-					  	<input id="brightnessB7" type="number" min=1 max=16 value=7 class="form-control">
+					  	<input id="brightnessB7" type="number" min=0 max=15 value=7 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>
 					  	<div class="col-md-3">						  	
 					  	<input  id="time8" type="time" value='21:00' class="form-control">					  	
-					  	<input id="brightnessB8" type="number" min=1 max=16 value=4 class="form-control">
+					  	<input id="brightnessB8" type="number" min=0 max=15 value=4 oninput="value=value.replace(/[^\d]/g,''); if(value<1){value=0;} if(value>15){value=15;}" class="form-control">
 					  	</div>						  		  					  	 	
 				  	</div>
 			      </div>				  			      

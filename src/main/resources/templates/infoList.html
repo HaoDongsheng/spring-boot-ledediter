@@ -15,7 +15,9 @@
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
+	<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>
+	<!-- <script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script> -->	
 	
 	<!-- jcanvas 核心 JavaScript 文件 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jcanvas.js}" ></script>		
@@ -27,7 +29,7 @@
 	<!-- bootstrap-table -->
 	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
-	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>			
 	
 	<!-- 自定义 核心 JavaScript 文件 -->	
 	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">	
@@ -37,7 +39,8 @@
 	<script type="text/javascript" th:src="@{~/javascript/DrawInfolistbyCanvas.js}" ></script>
 		
 	<link th:href="@{~/css/bootstrap-timepicker.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>		
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>		
 </head>
 <body>
    <header>
@@ -67,7 +70,7 @@
                             <li id='groupManger'><a href="groupManger">分组管理</a></li>
                             <li id='userManger'><a href="userManger">用户管理</a></li>
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li>  -->                         
                         </ul>
                     </div>                    
@@ -96,66 +99,20 @@
 		  	</div>
 			</div>
            </div>
-           </div>   
+           </div>                           
            
            <div class="row">
-           <div class="col-md-2">
-           <div id='input_group_grouplist'>
-           	<div class="input-group mb-3 input-group-sm">
-		      <div class="input-group-prepend">
-		        <span class="input-group-text">分组</span>
-		      </div>
-		      <select id="grouplist" class="form-control"></select>
-		    </div>
-	        </div>
-           </div>
-           <!-- 
-           <div class="col-md-2">
-           <div id='input_group_grouplist'>
-           	<div class="input-group mb-3 input-group-sm">
-		      <div class="input-group-prepend">
-		        <span class="input-group-text">列表</span>
-		      </div>
-		      <select id="playlist" class="form-control"></select>
-		    </div>
-	        </div>           
-           </div>
-           
-           <div class="col-md-8">
-	           <div class="btn-group btn-group-sm">	           		      	
-			    <button id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
-			    <button id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
-			    <button id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
-			    <button id='list_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
-			    <button id='list_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
-			   </div> 
-			   <div class="btn-group btn-group-sm">	           		      				    			    
-			    <button id='info_delete' type="button" class="btn btn-success"><i class="fa fa-trash-o"></i>广告删除</button>
-			    <button id='info_copy' type="button" class="btn btn-success"><i class="fa fa-copy"></i>广告复制</button>			    
-			    <button id='info_SerialPort' type="button" class="btn btn-success"><i class="fa fa-magnet"></i>广告串口发送</button>
-			   </div> 
-		   </div>
-		    -->
-		   </div>   
-           
-           <div class="row">
-           <div class="col-md-12"> 
-            <div id="adv_table" class="table">
-			  <table id="infoitem_table" class='table-sm table-striped thead-dark'>						    						    
-			  </table>
-			</div>  
-			</div>
-           </div>
-           
-           <div class="row">
-             <div class="col-md-12">
-             	<div class="form-inline page-head-line">
-                 <h4>播放列表</h4>                    
-                 </div>		   			
-             </div>
-           </div>
-           
-           <div class="row">
+	           <div class="col-md-2">
+	           <div id='input_group_grouplist'>
+	           	<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">分组</span>
+			      </div>
+			      <select id="grouplist" class="form-control"></select>
+			    </div>
+		        </div>
+	           </div>
+	           
 	           <div class="col-md-2">
 	           <div id='input_group_grouplist'>
 	           	<div class="input-group mb-3 input-group-sm">
@@ -180,20 +137,28 @@
 		    </div> 
            	
            <div class="row">
-           	<div class="col-md-12"> 	       			       
+           	<div class="col-md-2">
+           	<div class='list-group-item' style='text-align: center;background:#C36464;'>
+			<a class='text-white'>广告列表<span id='badge_draft' class="badge badge-light">0</span></a>
+			</div>
+			<div id='infolist_draft' class="list-group">
+			</div>
+           	</div>
+           	
+           	<div class="col-md-10"> 	       			       
 		    <div id="pt_sort" class="table">
 			  <table id="infolist_table" class='table-sm table-striped thead-dark'>						    						    
 			  </table>
-			</div> 
-			</div> 	  		       		     
-	   	   </div>	
-	   	   
-	   	   <div id="pt_template" class="row">		       	          
+			</div>
+			
+			<div id="pt_template" style="display:none;">		       	          
 				<div id="info_workarea"  style="border:1px solid;position:relative;box-shadow: 10px 10px 5px #888888;">							
 				<canvas id="info_canvas" width=800px height=400px></canvas>	
 				<span id = 'tooltip' class="tooltipT" style="pointer-events:none;">提示文本</span>										
 			  </div>	       
-	       </div>	
+	       </div> 
+			</div> 	  		       		     
+	   	   </div>		   	   	   	   	
 	     
     	</div>
     			
@@ -319,6 +284,50 @@
 		  		<!-- 模态框底部 -->
 		        <div class="modal-footer">
 		          <button id="btn_add_quantum" type="button" class="btn btn-primary">确定</button> 
+		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 模态框  批量排期-->
+		<div class="modal fade" data-backdrop="static" id="modal_mutiAddpt">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 
+		      <!-- 模态框头部 -->
+		      <div class="modal-header">
+		        <h4 class="modal-title">批量排期</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body">
+				<div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">开始时间(秒)</span>
+			      </div>
+					<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="start_index"  min="0" value= "0"/>								    
+			    </div>
+			    
+			    <div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">结束时间(秒)</span>
+			      </div>
+					<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="end_index"  min="0" value= "0"/>								    
+			    </div>
+			    
+			    <div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">时间间隔(秒)</span>
+			      </div>
+					<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="interval_index"  min="0" value= "0"/>								    
+			    </div>				    		  					  
+		      </div>				  			      
+		 
+		  		<!-- 模态框底部 -->
+		        <div class="modal-footer">
+		          <button id="btn_muti_add" type="button" class="btn btn-primary">确定</button> 
 		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 		        </div>
 		    </div>

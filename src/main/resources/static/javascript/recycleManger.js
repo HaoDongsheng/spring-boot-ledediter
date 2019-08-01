@@ -31,6 +31,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
@@ -72,7 +75,7 @@ function getGroup()
 	        		}
 	        },  
 	        error: function() { 
-	        	alert("ajax 函数  getGroup 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误"); 	        	            
 	          } 
 		 });
 		}
@@ -239,7 +242,8 @@ function queryParams(params) {
         pageSize: params.limit,                         //页面大小
         pageNum: (params.offset / params.limit) + 1,   //页码
         sort: params.sort,      //排序列名  
-        sortOrder: params.order //排位命令（desc，asc） 
+        sortOrder: params.order, //排位命令（desc，asc） 
+        adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
     };
     return temp;
 };
@@ -273,28 +277,30 @@ window.operateEvents = {
     	        url:"/CopyInfotodraft", 
     	        data:{
     	        	infosn:infoid,
-    	        	groupid:parseInt($("#grouplist").val())
+    	        	groupid:parseInt($("#grouplist").val()),
+    	        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+    	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
     				},  
     	        type:"post",  
     	        dataType:"json", 
     	        success:function(data)  
     	        {       	  
     	        	if(data.result=="success")
-    	        		{
-    	        			alert("复制成功");
+    	        		{    	        			
+    	        			alertMessage(0, "成功", "复制成功");
     	        		}
     	        	else
     	        		{
-    	        			alert(data.resultMessage);
+    	        			alertMessage(1, "警告", data.resultMessage);
     	        		}
     	        },  
     	        error: function() { 
-    	        	alert("ajax 函数  CopyInfo 错误");	            
+    	        	alertMessage(2, "异常", "ajax 函数  CopyInfo 错误");     	        	            
     	          }  
     	    });	
         },
-        'click .delete': function (e, value, row, index) {        
-        	alert("没做完等等");     
+        'click .delete': function (e, value, row, index) {                	
+        	alertMessage(1, "警告", "没做完等等");
         },
         'click .SerialPort': function (e, value, row, index) {   
         	
@@ -335,7 +341,7 @@ window.operateEvents = {
     	    						commandSN:SN
     	    		    		};	        
     	    		        wssend(JSON.stringify(closeJsonObj));
-    	    		        alert("通讯不畅");
+    	    		        alertMessage(1, "警告", "通讯不畅");    	    		        
     	    		        clearInterval(interval);    		        
     	    		    }
     	    		    
@@ -383,7 +389,7 @@ function SendCallback(SN,infocodelist,i)
 					commandSN:getSN()
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
-	    	alert("通讯不畅");
+	        alertMessage(1, "警告", "通讯不畅");
 	        clearInterval(interval);    		        
 	    }
 	    if(receiveMap[SN]!=null)
@@ -418,7 +424,8 @@ function getitem(infoid)
 	$.ajax({  
         url:"/GetItem",         
         data:{
-        	infoid:infoid     	
+        	infoid:infoid,        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -461,20 +468,21 @@ function getitem(infoid)
 										itemContext:jitem.itemcontext,
         								itemLocationSize:jitem.itemleft+","+jitem.itemtop+","+jitem.itemwidth+","+jitem.itemheight,
         								itemStyle:itemstyle		
-    								};        								
+    								}; 
+    								ArrayTable.push(item);	
     								}
     						}
     				}
-    			ArrayTable.push(item);				
+    						
 				$("#info_details_table").bootstrapTable('load', ArrayTable);
         		}
         	else
         		{
-        			alert(data.resultMessage);
+        			alertMessage(1, "警告", data.resultMessage);
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  GetItem 错误");            
+        	alertMessage(2, "异常", "ajax 函数  GetItem 错误");        	          
           }  
     });
 }

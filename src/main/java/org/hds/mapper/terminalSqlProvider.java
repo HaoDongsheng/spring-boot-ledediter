@@ -145,6 +145,18 @@ public class terminalSqlProvider {
             sql.VALUES("projectid", "#{projectid,jdbcType=VARCHAR}");
         }
         
+        if (record.getStarlevel() != null) {
+            sql.VALUES("StarLevel", "#{starlevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getStarlevelset() != null) {
+            sql.VALUES("StarLevelSet", "#{starlevelset,jdbcType=INTEGER}");
+        }
+        
+        if (record.getUpdaterate() != null) {
+            sql.VALUES("UpdateRate", "#{updaterate,jdbcType=DOUBLE}");
+        }
+        
         if (record.getAdidlist() != null) {
             sql.VALUES("AdIdList", "#{adidlist,jdbcType=LONGVARCHAR}");
         }
@@ -242,7 +254,7 @@ public class terminalSqlProvider {
         
         if (record.getLedversion() != null) {
             sql.SET("LedVersion = #{ledversion,jdbcType=VARCHAR}");
-        }        
+        }
         
         if (record.getStateledversion() != null) {
             sql.SET("StateLedVersion = #{stateledversion,jdbcType=VARCHAR}");
@@ -290,6 +302,18 @@ public class terminalSqlProvider {
         
         if (record.getProjectid() != null) {
             sql.SET("projectid = #{projectid,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getStarlevel() != null) {
+            sql.SET("StarLevel = #{starlevel,jdbcType=INTEGER}");
+        }
+        
+        if (record.getStarlevelset() != null) {
+            sql.SET("StarLevelSet = #{starlevelset,jdbcType=INTEGER}");
+        }
+        
+        if (record.getUpdaterate() != null) {
+            sql.SET("UpdateRate = #{updaterate,jdbcType=DOUBLE}");
         }
         
         if (record.getAdidlist() != null) {

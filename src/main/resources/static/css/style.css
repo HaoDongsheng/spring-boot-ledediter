@@ -340,3 +340,15 @@ footer {
      background-color: #31b0d5  !important;
      color: white;
  }
+ 
+ .infochangeColor{
+     background-color: #ff0000  !important;
+     color: white;
+ }
+
+.colStyle {
+	width:15%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+ }

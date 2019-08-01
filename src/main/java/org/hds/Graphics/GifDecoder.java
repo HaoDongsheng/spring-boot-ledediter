@@ -26,6 +26,7 @@ public class GifDecoder {
  protected int gctSize; // size of global color table
  protected int loopCount = 1; // iterations; 0 = repeat forever
  protected int[] gct; // global color table
+ protected byte[] colorTab; // global color table
  protected int[] lct; // local color table
  protected int[] act; // active color table
  protected int bgIndex; // background color index
@@ -66,6 +67,10 @@ public class GifDecoder {
   public BufferedImage image;
   public int delay;
  }
+ 
+ public byte[] getColorTab() {
+	  return colorTab;
+	 }
  /**
   * Gets display duration for specified frame.
   *
@@ -473,6 +478,7 @@ public class GifDecoder {
   int nbytes = 3 * ncolors;
   int[] tab = null;
   byte[] c = new byte[nbytes];
+  
   int n = 0;
   try {
    n = in.read(c);
@@ -481,12 +487,13 @@ public class GifDecoder {
   if (n < nbytes) {
    status = STATUS_FORMAT_ERROR;
   } else {
+   colorTab = c;
    tab = new int[256]; // max size to avoid bounds checks
    int i = 0;
    int j = 0;
    while (i < ncolors) {
-    int r = ((int) c[j++]) & 0xff;
-    int g = ((int) c[j++]) & 0xff;
+    int r = ((int) c[j++]) & 0xff;    
+    int g = ((int) c[j++]) & 0xff;    
     int b = ((int) c[j++]) & 0xff;
     tab[i++] = 0xff000000 | (r << 16) | (g << 8) | b;
    }
@@ -587,6 +594,7 @@ public class GifDecoder {
   iy = readShort();
   iw = readShort();
   ih = readShort();
+
   if(ix > width || iy > height || iw > width || ih > height)//当帧位置大小有问题佳毅不支持
   {status = STATUS_FORMAT_ERROR;}
   int packed = read();

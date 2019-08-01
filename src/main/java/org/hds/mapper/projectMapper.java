@@ -79,4 +79,31 @@ public interface projectMapper {
         "where projectId = #{projectid,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(project record);
+    
+    @Update({
+        "update t_project",
+        "set AdvertisementUpdateTime = #{1}",
+        "where projectId = #{0}"
+    })
+    int updateAdvUpdateTimeByPrimaryKey(String projectid, String AdvertisementUpdateTime);
+    
+    @Update({
+        "update t_project",
+        "set TerminalUpdateTime = #{1}",
+        "where projectId = #{0}"
+    })
+    int updateTerminalUpdateTimeByPrimaryKey(String projectid, String TerminalUpdateTime);
+    
+    @Update({
+        "update t_project",
+        "set TerminalUpdateTime = #{0}"        
+    })
+    int updateTerminalUpdateTimeByAll(String TerminalUpdateTime);
+    
+    @Update({
+        "update t_project",
+        "set ParameterUpdateTime = #{1}",
+        "where projectId = #{0}"
+    })
+    int updateParameterUpdateTimeByPrimaryKey(String projectid, String ParameterUpdateTime);
 }

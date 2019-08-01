@@ -37,6 +37,10 @@ public class userSqlProvider {
             sql.VALUES("projectid", "#{projectid,jdbcType=VARCHAR}");
         }
         
+        if (record.getGroupids() != null) {
+            sql.VALUES("groupids", "#{groupids,jdbcType=VARCHAR}");
+        }
+        
         if (record.getAdminlevel() != null) {
             sql.VALUES("adminLevel", "#{adminlevel,jdbcType=INTEGER}");
         }
@@ -94,6 +98,10 @@ public class userSqlProvider {
         
         if (record.getProjectid() != null) {
             sql.SET("projectid = #{projectid,jdbcType=VARCHAR}");
+        }
+        
+        if (record.getGroupids() != null) {
+            sql.SET("groupids = #{groupids,jdbcType=VARCHAR}");
         }
         
         if (record.getAdminlevel() != null) {

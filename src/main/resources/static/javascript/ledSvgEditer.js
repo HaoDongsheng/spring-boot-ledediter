@@ -7,18 +7,33 @@ var selectinfoid=0,selectpageid=0,selectitemid=0;
 var selectItem,selectGrip;
 var defaultFontsize=32;
 var ue;
+var scrollValue=0;
 
-$(function(){
-	
-	ue = UE.getEditor('ueditor_context');	
-	
-	//initUeditor();     	
+$(function(){		
+	//ue = UE.getEditor('ueditor_context');		   		
 	
 	getGroup();
 	
 	initSvgcanvas();
 	
-	initpage();		
+	initpage();	
+	
+	/*
+	$('#next').click(function() {
+		scrollValue += 100;
+		$('#layer_items').scrollLeft(scrollValue);
+		if($('#layer_items').scrollLeft() < scrollValue)
+			{
+			scrollValue=$('#layer_items').scrollLeft();
+			}
+	});
+	
+	$('#pre').click(function() {
+		scrollValue -= 100;
+		if(scrollValue<0){scrollValue=0;}
+		$('#layer_items').scrollLeft(scrollValue);
+	});
+	*/
 	 	 			
 });
 //自定义 图片
@@ -34,175 +49,6 @@ function ueditor_customImage()
 function ueditor_customSpecial()
 {
 	$('#modal_special_select').modal('show');
-}
-
-function initUeditor()
-{	      	
-     UE.registerUI('newimage', function(editor, uiName) {
-    	    //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-    	    editor.registerCommand(uiName, {
-    	        execCommand: function() {
-    	            alert('execCommand:' + uiName)
-    	        }
-    	    });
-    	    //创建一个button
-    	    var btn = new UE.ui.Button({
-    	        //按钮的名字
-    	        name: uiName,
-    	        //提示
-    	        title: '图片',
-    	        //添加额外样式，指定icon图标，这里默认使用一个重复的icon
-    	        cssRules: 'background-position: -726px -77px;',
-    	        //点击时执行的命令
-    	        onclick: function() {
-    	            //这里可以不用执行命令,做你自己的操作也可
-    	            //editor.execCommand(uiName);
-    	        	
-    	        	$('#modal_pic_select').attr("data-imgtype",1);
-
-    	        	initbasemap(1);
-    	        	
-    	        	$('#modal_pic_select').modal('show');
-    	        }
-    	    });
-    	    //当点到编辑内容上时，按钮要做的状态反射
-    	    editor.addListener('selectionchange', function() {
-    	        var state = editor.queryCommandState(uiName);
-    	        if (state == -1) {
-    	            btn.setDisabled(true);
-    	            btn.setChecked(false);
-    	        } else {
-    	            btn.setDisabled(false);
-    	            btn.setChecked(state);
-    	        }
-    	    });
-    	    //因为你是添加button,所以需要返回这个button
-    	    return btn;
-    	});
-     
-     UE.registerUI('newgif', function(editor, uiName) {
- 	    //注册按钮执行时的command命令，使用命令默认就会带有回退操作
- 	    editor.registerCommand(uiName, {
- 	        execCommand: function() {
- 	            alert('execCommand:' + uiName)
- 	        }
- 	    });
- 	    //创建一个button
- 	    var btn = new UE.ui.Button({
- 	        //按钮的名字
- 	        name: uiName,
- 	        //提示
- 	        title: '动画',
- 	        //添加额外样式，指定icon图标，这里默认使用一个重复的icon
- 	        cssRules: 'background-position: -60px -20px;',
- 	        //点击时执行的命令
- 	        onclick: function() {
- 	            //这里可以不用执行命令,做你自己的操作也可
- 	            //editor.execCommand(uiName);
- 	        	
- 	        	initgif();
- 	        	
- 	        	$('#modal_gif_select').modal('show');
- 	        	
- 	        	$('#myModalEdit').modal('hide'); 
- 	        }
- 	    });
- 	    //当点到编辑内容上时，按钮要做的状态反射
- 	    editor.addListener('selectionchange', function() {
- 	        var state = editor.queryCommandState(uiName);
- 	        if (state == -1) {
- 	            btn.setDisabled(true);
- 	            btn.setChecked(false);
- 	        } else {
- 	            btn.setDisabled(false);
- 	            btn.setChecked(state);
- 	        }
- 	    });
- 	    //因为你是添加button,所以需要返回这个button
- 	    return btn;
- 	});
-     
-     UE.registerUI('newvideo', function(editor, uiName) {
- 	    //注册按钮执行时的command命令，使用命令默认就会带有回退操作
- 	    editor.registerCommand(uiName, {
- 	        execCommand: function() {
- 	            alert('execCommand:' + uiName)
- 	        }
- 	    });
- 	    //创建一个button
- 	    var btn = new UE.ui.Button({
- 	        //按钮的名字
- 	        name: uiName,
- 	        //提示
- 	        title: '视频',
- 	        //添加额外样式，指定icon图标，这里默认使用一个重复的icon
- 	        cssRules: 'background-position: -320px -20px;',
- 	        //点击时执行的命令
- 	        onclick: function() {
- 	            //这里可以不用执行命令,做你自己的操作也可
- 	            //editor.execCommand(uiName); 	        	
- 	        	
- 	        	$('#modal_video_select').modal('show');
- 	        	
- 	        	initvideo(1);
- 	        	
- 	        	$('#myModalEdit').modal('hide'); 
- 	        }
- 	    });
- 	    //当点到编辑内容上时，按钮要做的状态反射
- 	    editor.addListener('selectionchange', function() {
- 	        var state = editor.queryCommandState(uiName);
- 	        if (state == -1) {
- 	            btn.setDisabled(true);
- 	            btn.setChecked(false);
- 	        } else {
- 	            btn.setDisabled(false);
- 	            btn.setChecked(state);
- 	        }
- 	    });
- 	    //因为你是添加button,所以需要返回这个button
- 	    return btn;
- 	});
-     
-     UE.registerUI('newspecial', function(editor, uiName) {
-  	    //注册按钮执行时的command命令，使用命令默认就会带有回退操作
-  	    editor.registerCommand(uiName, {
-  	        execCommand: function() {
-  	            alert('execCommand:' + uiName)
-  	        }
-  	    });
-  	    //创建一个button
-  	    var btn = new UE.ui.Button({
-  	        //按钮的名字
-  	        name: uiName,
-  	        //提示
-  	        title: '特效',
-  	        //添加额外样式，指定icon图标，这里默认使用一个重复的icon
-  	        cssRules: 'background-position: -640px -40px;',
-  	        //点击时执行的命令
-  	        onclick: function() {
-  	            //这里可以不用执行命令,做你自己的操作也可
-  	            //editor.execCommand(uiName); 	        	
-  	        	
-  	        	$('#modal_special_select').modal('show');
-  	        	
-  	        	//Draw_preview_canvas();
-  	        }
-  	    });
-  	    //当点到编辑内容上时，按钮要做的状态反射
-  	    editor.addListener('selectionchange', function() {
-  	        var state = editor.queryCommandState(uiName);
-  	        if (state == -1) {
-  	            btn.setDisabled(true);
-  	            btn.setChecked(false);
-  	        } else {
-  	            btn.setDisabled(false);
-  	            btn.setChecked(state);
-  	        }
-  	    });
-  	    //因为你是添加button,所以需要返回这个button
-  	    return btn;
-  	});
 }
 
 function initpage()
@@ -238,7 +84,9 @@ function initpage()
 		case 0/*图文*/:{
 			if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
 			{			
-			 updateitem(selectpageid,selectitemid,["itemtype","special","context"],[0,selectspecial,ue.getContent()]);
+			 var Content = tinymce.activeEditor.getContent();
+			 //var Content = ue.getContent();
+			 updateitem(selectpageid,selectitemid,["itemtype","special","context"],[0,selectspecial,Content]);
 			 updateCanvasItem(selectpageid,selectitemid,true,false);
 			 
 			 $("#myModalEdit").modal('hide');
@@ -270,39 +118,7 @@ function initpage()
 		}
 		
 	});
-	/*
-	$("#svg_position_X").change(function(){
-		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
-		{			
-			updateitem(selectpageid,selectitemid,["left"],[$("#svg_position_X").val()]);
-			updateCanvasItem(selectpageid,selectitemid,true,false);
-		}
-	});
-	
-	$("#svg_position_Y").change(function(){
-		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
-		{		
-			updateitem(selectpageid,selectitemid,["top"],[$("#svg_position_Y").val()]);
-			updateCanvasItem(selectpageid,selectitemid,true,false);			
-		}
-	});
-	
-	$("#svg_size_width").change(function(){
-		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
-		{			
-			updateitem(selectpageid,selectitemid,["width"],[$("#svg_size_width").val()]);
-			updateCanvasItem(selectpageid,selectitemid,true,false);				
-		}
-	});
-	
-	$("#svg_size_height").change(function(){
-		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
-		{			
-			updateitem(selectpageid,selectitemid,["height"],[$("#svg_size_height").val()]);
-			updateCanvasItem(selectpageid,selectitemid,true,false);	
-		}
-	});
-	*/
+
 	$("#svg_animation_linkmove").change(function(){
 		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
 		{			
@@ -323,14 +139,7 @@ function initpage()
 		 updateitem(selectpageid,selectitemid,["playspeed"],[$("#svg_animation_playspeed").val()]);		 
 		}
 	});
-	/*
-	$("#svg_animation_rollstop").change(function(){
-		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
-		{			
-			updateitem(selectpageid,selectitemid,["rollstop"],[$("#svg_animation_rollstop").val()]);
-		}
-	});
-	*/
+
 	$("#svg_animation_stoptime").change(function(){
 		if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
 		{
@@ -442,7 +251,28 @@ function initpage()
 		var infoid = selectinfoid;
 		SendSerialData(infoid);
 		}
-	});		
+	});	
+	
+	//模拟显示
+	$("#info_play").click(function(){
+		if(selectinfoid != 0)
+		{
+			if($('#info_play i').hasClass('fa-play'))
+				{
+				isStop= false;
+				$('#info_play i').removeClass('fa fa-play');		
+				
+				$('#info_play i').addClass('fa fa-stop');
+				play(itemmap);
+				}
+			else {
+				isStop=true;
+				$('#info_play i').removeClass('fa fa-stop');		
+				
+				$('#info_play i').addClass('fa fa-play');
+			}
+		}
+	});	
 }
 
 function getGroup()
@@ -455,6 +285,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
@@ -496,7 +329,7 @@ function getGroup()
 	        		}
 	        },  
 	        error: function() {  
-	        	alert("ajax 函数  getGroup 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误");	        			        
 	          }  
 	    });
 		}
@@ -745,13 +578,6 @@ function selectChangeItem(pageid,itemid)
 				var item=itemmap[pageid][i];
 				if(item.itemid==itemid)
 					{	
-						/*
-						$("#svg_position_X").val(item.left);
-						$("#svg_position_Y").val(item.top);
-						$("#svg_size_width").val(item.width);
-						$("#svg_size_height").val(item.height);
-						*/
-						
 				        $("#svg_color_fill").val(item.backcolor);
 						$("#svg_color_opacity").val(item.backopacity);	
 						var itemstyle=item.itemstyle;
@@ -864,7 +690,8 @@ function getadvListbyGrpid(grpid)
 	$.ajax({  
         url:"/getadvEditListbyGrpid", 
         data:{
-        	Grpid:grpid
+        	Grpid:grpid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",
         success:function(data)  
@@ -901,7 +728,7 @@ function getadvListbyGrpid(grpid)
         		}
         },  
         error: function() {  
-        	alert("ajax 函数  getadvListbyGrpid 错误");            
+        	alertMessage(2, "异常", "ajax 函数  getadvListbyGrpid 错误");        	          
           }  
     });
 }
@@ -1065,7 +892,9 @@ function saveitem(infoid)
 			        data:{
 			        	infoid:infoid,
 			        	infodata:JSON.stringify(infomap[infoid]),
-			        	arritem:jsonString      	
+			        	arritem:jsonString,
+			        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+			        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 						},  
 			        type:"post",  
 			        dataType:"json", 
@@ -1074,15 +903,15 @@ function saveitem(infoid)
 			        	if(data.result=="success")
 			        		{    
 			        			infomap[infoid].isSave=0;
-			        			alert("保存成功");
+			        			alertMessage(0, "成功", "保存成功");			        			
 			        		}
 			        	else
 			        		{
-			        			alert(data.resultMessage);
+			        			alertMessage(1, "异常", data.resultMessage);				        			
 			        		}
 			        },  
 			        error: function() { 
-			        	alert("ajax 函数  SaveItem 错误");		            
+			        	alertMessage(2, "异常", "ajax 函数  SaveItem 错误");			        	            
 			          }  
 			    });
 				}
@@ -1095,7 +924,8 @@ function getitem(infoid)
 	$.ajax({  
         url:"/GetItem",         
         data:{
-        	infoid:infoid     	
+        	infoid:infoid,        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1137,11 +967,11 @@ function getitem(infoid)
         		}
         	else
         		{
-        			alert(data.resultMessage);
+        			alertMessage(1, "警告", data.resultMessage);        			
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  GetItem 错误");            
+        	alertMessage(2, "异常", "ajax 函数  GetItem 错误");        	          
           }  
     });
 }
@@ -1178,25 +1008,11 @@ function additem(pageid,itemid,left,top,width,height,fontno,backcolor,backopacit
     	{
     	item.itemstyle = JSON.parse(itemstyle)
     	}
-    /*
-    var root = UE.htmlparser(item.context, true);
-	var arrNode = new Array();
-	for(var i=0;i<root.children.length;i++)
-	{
- 		var node=root.children[i];
- 		fontName='SimSun',fontSize=16,forecolor='#000000';
- 		arrNode.push(ParseNode(node));
-	}
-	var contextJson = JSON.stringify(arrNode);
-	item.contextJson=contextJson;
-	*/
 	 
 	var arrNode = updateitembfcolorReturnjson(item);
 	 
 	var contextJson = JSON.stringify(arrNode);
 	item.contextJson=contextJson;	//不改变item类型 											 
-	//var cj = updateJsonContext(item,contextJson);
-	//item.contextJson=JSON.stringify(cj);
 	 
 	if(itemmap.hasOwnProperty(pageid))
 	{		
@@ -1385,7 +1201,11 @@ function updateitem(pageid,itemid,proNames,values)
 //改变集合默认前景色背景色并返回json集合
 function updateitembfcolorReturnjson(item)
 {
-	 var root = UE.htmlparser(item.context, true);
+	 //var root = UE.htmlparser(item.context, true);
+	 var rootNode = tinymce.html.DomParser({validate: true}).parse(item.context);
+	 tinyarrNode= new Array();
+	 tinymceParseNode(rootNode,null);
+	 /*
 	 var arrNode = new Array();
 	 var isexit=0; //退出循环标示
 	 for(var j=0;j<root.children.length;j++)
@@ -1436,6 +1256,8 @@ function updateitembfcolorReturnjson(item)
 		 		arrNode.push(nodelist);
 		 }
 	 return arrNode;
+	 */
+	 return tinyarrNode;
 }
 //删除item
 function deleteitem(pageid,itemid)
@@ -1523,7 +1345,9 @@ function infoDeletebyid(infoid)
 	$.ajax({  
         url:"/DeleteInfobyid", 
         data:{
-        	infoid:parseInt(infoid)      	
+        	infoid:parseInt(infoid),
+        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -1546,11 +1370,11 @@ function infoDeletebyid(infoid)
         		}
         	else
         		{
-        			alert(data.resultMessage);
+        			alertMessage(1, "警告", data.resultMessage);        			
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  DeleteInfobyid 错误");            
+        	alertMessage(2, "异常", "ajax 函数  DeleteInfobyid 错误");          	         
             return false;
           }  
     });
@@ -1568,7 +1392,9 @@ function infoAuditbyid(infoid)
 		        data:{
 		        	infoid:infoid,
 		        	infodata:JSON.stringify(infomap[infoid]),
-		        	arritem:jsonString      	
+		        	arritem:jsonString,
+		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 					},  
 		        type:"post",  
 		        dataType:"json", 
@@ -1580,7 +1406,9 @@ function infoAuditbyid(infoid)
 		        			$.ajax({  
 		        		        url:"/AuditInfobyid", 
 		        		        data:{
-		        		        	infoid:parseInt(infoid)      	
+		        		        	infoid:parseInt(infoid),
+		        		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+		        		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 		        					},  
 		        		        type:"post",  
 		        		        dataType:"json", 
@@ -1600,25 +1428,26 @@ function infoAuditbyid(infoid)
 			    							selectinfoid=0;			    							
 			    							initSvgcanvas();
 			    							$("#layer_list").empty();
+			    							alertMessage(0, "成功", "送审核成功!");
 		        		        		}
 		        		        	else
 		        		        		{
-	        		        				alert(data.resultMessage);        			
+		        		        			alertMessage(1, "警告", data.resultMessage); 	        		        				     			
 		        		        		}
 		        		        },  
 		        		        error: function() { 
-		        		        	alert("ajax 函数  AuditInfobyid 错误");		        		            
+		        		        	alertMessage(2, "异常", "ajax 函数  AuditInfobyid 错误"); 		        		        		        		           
 		        		            return false;
 		        		          }  
 		        		    });
 		        		}
 		        	else
 		        		{
-		        			alert(data.resultMessage);
+		        			alertMessage(1, "警告", data.resultMessage); 		        			
 		        		}		        	
 		        },  
 		        error: function() { 
-		        	alert("ajax 函数  SaveItem 错误");		            
+		        	alertMessage(2, "异常", "ajax 函数  SaveItem 错误"); 		        		           
 		          }  
 		    });
 			}
@@ -1627,7 +1456,9 @@ function infoAuditbyid(infoid)
 			$.ajax({  
 		        url:"/AuditInfobyid", 
 		        data:{
-		        	infoid:parseInt(infoid)      	
+		        	infoid:parseInt(infoid),
+		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 					},  
 		        type:"post",  
 		        dataType:"json", 
@@ -1644,14 +1475,15 @@ function infoAuditbyid(infoid)
 							 {
 								delete infomap[infoid]; 
 							 }
+							alertMessage(0, "成功", "送审核成功!");
 		        		}
 		        	else
-		        		{
-		        			alert(data.resultMessage);        			
+		        		{		        			
+		        			alertMessage(1, "警告", data.resultMessage);
 		        		}
 		        },  
-		        error: function() {  
-		        	alert("ajax 函数  AuditInfobyid 错误");		            
+		        error: function() {  		        	
+		        	alertMessage(2, "异常", "ajax 函数  AuditInfobyid 错误"); 
 		            return false;
 		          }  
 		    });
@@ -1752,7 +1584,8 @@ function infoCopybyid(infoid)
 	        	lifeAct:lifeAct,
 	        	lifeDie:lifeDie,
 	        	BackgroundStyle:infomap[infoid].BackgroundStyle,
-	        	itemlist:JSON.stringify(itemmap)
+	        	itemlist:JSON.stringify(itemmap),
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        type:"post",  
 	        dataType:"json", 
@@ -1771,11 +1604,11 @@ function infoCopybyid(infoid)
 	        		}
 	        	else
 	        		{
-	        			alert(data.resultMessage);
+	        			alertMessage(1, "警告", data.resultMessage); 	        			
 	        		}
 	        },  
 	        error: function() { 
-	        	alert("ajax 函数  CopyInfo 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  CopyInfo 错误"); 	        	           
 	          }  
 	    });
 	 }
@@ -1809,8 +1642,8 @@ function getplaytime(pageid,itemid)
 									if(min<1){min=1;}
 									var max = Math.floor(parseFloat(1 * width));
 									if(item.itemstyle.MandatorytimeLength<min || item.itemstyle.MandatorytimeLength>max)
-										{
-										alert('当前显示项时间范围在'+min+'---'+max+'之间');
+										{										
+										alertMessage(1, "警告", "当前显示项时间范围在"+min+"---"+max+"之间");
 										item.itemstyle.MandatorytimeLength = min;
 										$('#svg_animation_MandatorytimeLength').val(min);
 										}
@@ -1984,7 +1817,7 @@ function getitemsize(itemw,contextJson,type)
 		{											
 			var rownode=contextJson[r];
 			var arrRow = new Array()
-			var rowwidth = 0,left =	totalw;
+			var rowwidth = 0,left =	0;
 			for(var i=0;i<rownode.length;i++)
 			{
 			var itemnode=rownode[i];			
@@ -2003,7 +1836,7 @@ function getitemsize(itemw,contextJson,type)
 				    }		
 				    
 				    charw = parseInt(charw * scaleX);
-				    if(Math.floor(left/itemw) != Math.floor((left + charw - 1)/itemw))
+				    if(left%itemw!=0 && Math.floor(left/itemw) != Math.floor((left + charw - 1)/itemw))
 		        	{			        		
 		        		left = Math.floor((left + charw)/itemw) * itemw + charw;
 		        	}
@@ -2017,7 +1850,7 @@ function getitemsize(itemw,contextJson,type)
 				{
 				var nodewidth = parseInt(itemnode.width);			
 				var w = nodewidth;
-				 if(Math.floor(left/itemw) != Math.floor((left + w - 1)/itemw))
+				 if(left%itemw!=0 && Math.floor(left/itemw) != Math.floor((left + w - 1)/itemw))
 		        	{				        	
 		        		left = Math.floor((left + w)/itemw)*itemw + w;
 		        	}
@@ -2040,7 +1873,7 @@ function getitemsize(itemw,contextJson,type)
 	};
 	return result;
 }
-
+//
 function SendCallback(SN,infocodelist,i)
 {
 	var timesRun = 0;
@@ -2054,8 +1887,8 @@ function SendCallback(SN,infocodelist,i)
 		    			command:"closeSerialPort",
 						commandSN:getSN()
 		    		};	        
-		        wssend(JSON.stringify(closeJsonObj));
-		    	alert("通讯不畅");
+		        wssend(JSON.stringify(closeJsonObj));		    	
+		    	alertMessage(1, "警告", "通讯不畅");
 		        clearInterval(interval);    		        
 		    }
 		    
@@ -2078,7 +1911,6 @@ function SendCallback(SN,infocodelist,i)
 		else{clearInterval(interval);}
 	}, 500);
 }
-
 //串口发布广告通过id
 function infoSerialPublishbyid(infoid)
 {				
@@ -2091,7 +1923,8 @@ function infoSerialPublishbyid(infoid)
         data:{
         	infoid:parseInt(infoid),         	
         	infodata:JSON.stringify(infomap[infoid]),
-        	arritem:jsonString
+        	arritem:jsonString,        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -2119,7 +1952,7 @@ function infoSerialPublishbyid(infoid)
 			    		};	        
 			        wssend(JSON.stringify(closeJsonObj));
 			        $('#progress').css('height','0px');
-	    			alert(data.resultMessage);        			
+			        alertMessage(1, "警告", data.resultMessage);	    			     		
         		}        	
         },  
         error: function() {  
@@ -2130,7 +1963,7 @@ function infoSerialPublishbyid(infoid)
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
 	        $('#progress').css('height','0px');
-        	alert("ajax 函数  getPublishInfobyid 错误");            
+	        alertMessage(2, "异常", "ajax 函数  getPublishInfobyid 错误");        	        
           }  
     });    	 
 }
@@ -2173,8 +2006,8 @@ function SendSerialData(infoid)
 	    		    			command:"closeSerialPort",
 	    						commandSN:SN
 	    		    		};	        
-	    		        wssend(JSON.stringify(closeJsonObj));
-	    		        alert("通讯不畅");
+	    		        wssend(JSON.stringify(closeJsonObj));	    		        
+	    		        alertMessage(1, "警告", "通讯不畅");
 	    		        clearInterval(interval);    		        
 	    		    }
 	    		    

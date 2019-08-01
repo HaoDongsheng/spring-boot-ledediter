@@ -48,6 +48,7 @@ public class AnimatedGifEncoder {
     protected int dispose = -1; // disposal code (-1 = use default)
     protected boolean closeStream = false; // close stream when finished
     protected boolean firstFrame = true;
+    protected boolean isSetColorTab = false;//自定义判断是否全局颜色列表外部赋值
     protected boolean sizeSet = false; // if false, get size from first frame
     protected int sample = 10; // default sample interval for quantizer
     /**
@@ -58,6 +59,11 @@ public class AnimatedGifEncoder {
      */
     public void setDelay(int ms) {
         delay = Math.round(ms / 10.0f);
+    }
+    
+    public void setColorTab(byte[] ColorTab) {
+    	colorTab = ColorTab;
+    	isSetColorTab = true;
     }
     /**
      * Sets the GIF frame disposal code for the last added frame
@@ -132,7 +138,7 @@ public class AnimatedGifEncoder {
             writeGraphicCtrlExt(); // write graphic control extension  写入图形控件扩展          
             writeImageDesc(); // image descriptor图像描述符
             if (!firstFrame) {
-                writePalette(); // local color table本地颜色表
+                //writePalette(); // local color table本地颜色表
             }
             writePixels(); // encode and write pixel data编码和写入像素数据
             firstFrame = false;
@@ -255,26 +261,43 @@ public class AnimatedGifEncoder {
         int len = pixels.length;
         int nPix = len / 3;
         indexedPixels = new byte[nPix];
-        NeuQuant nq = new NeuQuant(pixels, len, sample);
-        // initialize quantizer
-        colorTab = nq.process(); // create reduced palette
-        // convert map from BGR to RGB
-        for (int i = 0; i < colorTab.length; i += 3) {
-            byte temp = colorTab[i];
-            colorTab[i] = colorTab[i + 2];
-            colorTab[i + 2] = temp;
-            usedEntry[i / 3] = false;
+        if(isSetColorTab)
+        {
+        	for (int i = 0; i < colorTab.length; i += 3) {
+                usedEntry[i / 3] = false;
+            }
+            
+            // map image pixels to new palette            
+            for (int i = 0; i < nPix; i++) {
+                int index =getIndexbyColorTab(pixels[i*3],pixels[i*3 + 1],pixels[i*3 + 2]);                	
+                usedEntry[index] = true;
+                indexedPixels[i] = (byte) index;
+            }
         }
-        // map image pixels to new palette
-        int k = 0;
-        for (int i = 0; i < nPix; i++) {
-            int index =
-                    nq.map(pixels[k++] & 0xff,
-                            pixels[k++] & 0xff,
-                            pixels[k++] & 0xff);
-            usedEntry[index] = true;
-            indexedPixels[i] = (byte) index;
-        }
+        else {
+            //改成外部赋值全局颜色列表 colorTab外部取
+            NeuQuant nq = new NeuQuant(pixels, len, sample);
+            // initialize quantizer
+            colorTab = nq.process(); // create reduced palette7
+            // convert map from BGR to RGB            
+            for (int i = 0; i < colorTab.length; i += 3) {
+                byte temp = colorTab[i];
+                colorTab[i] = colorTab[i + 2];
+                colorTab[i + 2] = temp;
+                usedEntry[i / 3] = false;
+            }            
+            // map image pixels to new palette
+            int k = 0;
+            for (int i = 0; i < nPix; i++) {
+                int index =                	
+                        nq.map(pixels[k++] & 0xff,
+                                pixels[k++] & 0xff,
+                                pixels[k++] & 0xff);                
+                usedEntry[index] = true;
+                indexedPixels[i] = (byte) index;
+            }
+		}
+                        
         pixels = null;
         colorDepth = 8;
         palSize = 7;
@@ -283,6 +306,33 @@ public class AnimatedGifEncoder {
             transIndex = findClosest(transparent);
         }
     }
+    /*
+     * 自定义函数比对每点颜色值在全局颜色列表中的索引
+     */
+    protected int getIndexbyColorTab(byte r, byte g, byte b) {
+    	int index = -1;
+    	for(int i=0;i<colorTab.length;i+=3)
+    	{
+    		if(b == colorTab[i] && g == colorTab[i + 1] && r == colorTab[i + 2])
+    		{
+    			index = i;break;
+    		}
+    	}
+    	
+		if(index==-1)
+		{
+			byte interval = 3;
+			for(int i=0;i<colorTab.length;i+=3)
+			{
+	    		if((b >= colorTab[i] - interval && b <= colorTab[i] + interval) && (g >= colorTab[i + 1] - interval && g <= colorTab[i + 1] + interval) && (r >= colorTab[i + 2] - interval && r <= colorTab[i + 2] + interval))
+	    		{
+	    			index = i;break;
+	    		}
+			}
+		}
+    	
+		return index / 3;
+	}
     /**
      * Returns index of palette color closest to c
      *
@@ -329,7 +379,7 @@ public class AnimatedGifEncoder {
         pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
     }
     /**
-     * Writes Graphic Control Extension
+     * Writes Graphic Control Extension图形控制扩展
      */
     protected void writeGraphicCtrlExt() throws IOException {
         out.write(0x21); // extension introducer
@@ -347,7 +397,7 @@ public class AnimatedGifEncoder {
             disp = dispose & 7; // user override
         }
         disp <<= 2;
-        // packed fields
+        // packed fields压缩块
         out.write(0 | // 1:3 reserved
                 disp | // 4:6 disposal
                 0 | // 7   user input - 0 = none
@@ -357,26 +407,33 @@ public class AnimatedGifEncoder {
         out.write(0); // block terminator
     }
     /**
-     * Writes Image Descriptor
+     * Writes Image Descriptor图像描述
      */
     protected void writeImageDesc() throws IOException {
         out.write(0x2c); // image separator
-        writeShort(0); // image position x,y = 0,0
-        writeShort(0);
+        writeShort(0); // image position x,y = 0,0left
+        writeShort(0);//top
         writeShort(width); // image size
         writeShort(height);
-        // packed fields
-        if (firstFrame) {
-            // no LCT  - GCT is used for first (or only) frame
-            out.write(0);
-        } else {
-            // specify normal LCT
-            out.write(0x80 | // 1 local color table  1=yes
-                    0 | // 2 interlace - 0=no
-                    0 | // 3 sorted - 0=no
-                    0 | // 4-5 reserved
-                    palSize); // 6-8 size of color table
+        if(isSetColorTab)
+        {
+        	out.write(0);//不用局部颜色列表
         }
+        else {        	
+            // 使用局部颜色列表
+            // packed fields
+            if (firstFrame) {
+                // no LCT  - GCT is used for first (or only) frame
+                out.write(0);
+            } else {
+                // specify normal LCT
+                out.write(0x80 | // 1 local color table  1=yes
+                        0 | // 2 interlace - 0=no
+                        0 | // 3 sorted - 0=no
+                        0 | // 4-5 reserved
+                        palSize); // 6-8 size of color table
+            }            
+		}        
     }
     /**
      * Writes Logical Screen Descriptor
@@ -389,7 +446,7 @@ public class AnimatedGifEncoder {
         out.write((0x80 | // 1   : global color table flag = 1 (gct used)
                 0x70 | // 2-4 : color resolution = 7
                 0x00 | // 5   : gct sort flag = 0
-                palSize)); // 6-8 : gct size
+                palSize)); // 6-8 : gct size  3
         out.write(0); // background color index
         out.write(0); // pixel aspect ratio - assume 1:1
     }
@@ -411,7 +468,7 @@ public class AnimatedGifEncoder {
      * Writes color table
      */
     protected void writePalette() throws IOException {
-        out.write(colorTab, 0, colorTab.length);
+        out.write(colorTab, 0, colorTab.length);        
         int n = (3 * 256) - colorTab.length;
         for (int i = 0; i < n; i++) {
             out.write(0);

@@ -48,6 +48,6 @@
         <table tableName="t_project" domainObjectName="project" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="t_terminals" domainObjectName="terminal" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="t_statistics" domainObjectName="statistic" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>        
-        -->                
+        -->                        
     </context>
 </generatorConfiguration>

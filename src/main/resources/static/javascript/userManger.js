@@ -1,14 +1,27 @@
 var arrpms=["广告编辑","广告审核","广告发布","分组管理","用户管理","车辆管理"];
-
+var isDisplayProjectid=false;
 $(function(){
 	$( ".modal" ).draggable();
+	
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+	
+	if(adminInfo.adminlevel>=2)
+		{
+		$('#btn_table_add').css("display","none");
+		}
+	else {
+		$('#btn_table_add').css("display","block");
+	}
+	
+	if(adminInfo.issuperuser==1)
+		{isDisplayProjectid=true;}
 	
 	initBTabel();
 	
 	getprojectList();
 	
-	getuserList();
-	
+	getuserList();		
+		
 	//模态确定按钮
 	$('#btn_user_edit').click(function(){
 		 model_eidtuser();
@@ -20,7 +33,8 @@ $(function(){
 	        url:"/DeleteUser",          
 	        type:"post", 
 	        data:{	        	
-	        	adminid: parseInt($("#modal_user_delete").attr("data-type"))
+	        	adminid: parseInt($("#modal_user_delete").attr("data-type")),
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        dataType:"json", 
 	        success:function(data)  
@@ -33,11 +47,11 @@ $(function(){
 		        			$('#modal_user_delete').modal('hide');	
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
-	        error: function() {  
-	            alert("error");  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  DeleteUser 错误"); 	            
 	          }  
 	    });
 	});	
@@ -52,14 +66,20 @@ $(function(){
 		$('#user_edit_pm input').attr("checked", false);
 		
 		if($('#user_edit_project option').length > 1)
-		{$('#user_edit_project').parents('.row').css('display','inline');}
+		{$('#user_edit_project').parents('.row').css('display','block');}
 		else
 		{$('#user_edit_project').parents('.row').css('display','none');}
+		
+		$('#inherit').parent().css("display","block");
 		
 		$('#modal_user_edit').attr("data-type",0);
 		$('#modal_user_edit').modal('show');
 					
 	});	
+	
+	$('#user_edit_project').change(function () {
+		getGroup($('#user_edit_project').val(),null);
+	});
 	
 });
 
@@ -96,25 +116,111 @@ function initBTabel()
             title: '用户名'            
             
         }, {
+            field: 'projectid',
+            title: '项目id',
+            visible: isDisplayProjectid            
+        }, {
             field: 'user_pwd',
-            title: '密码'
-            
+            title: '密码',
+            visible: false            
         }, {
             field: 'user_level',
-            title: '用户级别'
-         
+            title: '用户级别',
+        	visible: false 
         }, {
             field: 'user_permission',
-            title: '权限'
-         
+            title: '权限',
+            formatter: function (value, row, index) {            	
+            	var permission = value;
+            	
+            	var option;            	
+            	   
+            	var pmArr=null;
+            	if(permission != null && permission!="")
+            		{
+            		pmArr = permission.split(",");
+            		}
+            	var headOption = "";            	    
+            	
+            	if(pmArr!=null)
+            		{
+	            	for(var i=0;i<pmArr.length;i++)
+	    			{
+	            		var txt=pmArr[i];
+		    			headOption = headOption + "<option value='"+txt+"'>"+txt+"</option>";                    			
+	    			}
+            		}
+            	option = '<select class="form-control">'+ headOption + '</select>';
+            	            	
+                return option;
+            }         
+        }, {
+            field: 'user_group',
+            title: '分组',
+            formatter: function (value, row, index) {            	
+            	var groups = value;
+            	
+            	var option;            	
+            	   
+            	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+            	
+            	var gpArr=null;
+            	if(groups != null && groups != "")
+            		{
+            		gpArr = groups.split(",");
+            		}
+            	var headOption = "";            	    
+            	
+            	if(gpArr!=null)
+        		{
+	            	for(var j=0;j<gpArr.length;j++)
+	    			{
+	            		for(var i=0;i<grpsinfo.length;i++)
+	        			{
+	        				var grpid=grpsinfo[i].grpid;
+	        				var grpname = grpsinfo[i].grpname;
+	        				var screenwidth = grpsinfo[i].screenwidth;
+	        				var screenheight = grpsinfo[i].screenheight;	
+	        				
+	        				if(gpArr[j]==grpid)
+	        				{
+	        					headOption = headOption + "<option value='"+grpid+"'>"+grpname+"</option>";
+	        				}					    			
+	        			}	                   			
+	    			}
+        		}
+            	else
+        		{
+            		for(var i=0;i<grpsinfo.length;i++)
+        			{
+        				var grpid=grpsinfo[i].grpid;
+        				var grpname = grpsinfo[i].grpname;
+        				var screenwidth = grpsinfo[i].screenwidth;
+        				var screenheight = grpsinfo[i].screenheight;	
+        				
+        				if(row.projectid==grpsinfo[i].projectid)
+        				{
+        					headOption = headOption + "<option value='"+grpid+"'>"+grpname+"</option>";
+        				}					    			
+        			}			
+        		}
+            	
+            	option = '<select class="form-control">'+ headOption + '</select>';
+            	            	
+                return option;
+            }         
         }, {
             field: 'user_status',
             title: '状态'
           
         } , {
             field: 'user_exp',
-            title: '到期时间'
-          
+            title: '到期时间',
+        	formatter: function (value, row, index) {
+        		if(value==null || value=="")
+        			{return "永久"}
+        		else{return value;}
+        	}
         } , {
         	field: 'operate',
         	title: '操作',
@@ -145,6 +251,7 @@ window.operateEvents = {
 			var level = row.user_level;
 			var pm = row.user_permission;			
 			var status = row.user_status;
+			var groups = row.user_group;
 			var exp = row.user_exp;        				        				
 			
 			$('#user_edit_name').val(name);
@@ -171,6 +278,9 @@ window.operateEvents = {
 								}
 						}
 				}
+			
+			getGroup(row.projectid,groups);
+			$('#inherit').parent().css("display","none");
 			$('#user_edit_project').parents('.row').css('display','none');
         	$('#modal_user_edit').attr("data-type",row.user_sn);
         	$('#modal_user_edit').attr("data-index",index);
@@ -181,6 +291,89 @@ window.operateEvents = {
         	$("#modal_user_delete").modal('show');	        	
         }
     };
+
+//获取分组
+function getGroup(projectid,groups)
+{
+	$('#user_edit_group').empty();
+	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+	if(grpsinfo==null || grpsinfo.length<=0)
+		{
+		$.ajax({  
+	        url:"/getGroup",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       
+	        	var ArrayTable = [];
+	        	if(data!=null && data.length>0)    		
+	        		{
+	        			sessionStorage.setItem('grpsinfo', JSON.stringify(data));	
+	        			
+	        			grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+	        			for(var i=0;i<grpsinfo.length;i++)
+	        			{
+	        				var grpid=grpsinfo[i].grpid;
+	        				var grpname = grpsinfo[i].grpname;
+	        				var screenwidth = grpsinfo[i].screenwidth;
+	        				var screenheight = grpsinfo[i].screenheight;
+	        				if(projectid==grpsinfo[i].projectid)
+        					{
+	        					var checked='';
+	        					if(groups==null || groups=="")
+	        						{checked='checked';}
+	        					else {
+	        						if(groups.split(",").indexOf(grpid.toString())>-1)
+	        							{checked='checked';}
+	        						else {
+	        							checked='';
+									}
+								}
+	        					var label ="<input type='checkbox' value='"+grpid+"' "+checked+" >"+grpname+"</input>";
+	        					$('#user_edit_group').append(label);
+        					}	        						        					        			
+	        			}	        			       			
+	        		}	        	
+	        },  
+	        error: function() {
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误");	            
+	          }  
+	    });
+		}
+	else
+		{
+		if(grpsinfo.length>0)
+			{
+			var ArrayTable = [];
+			for(var i=0;i<grpsinfo.length;i++)
+			{
+				var grpid=grpsinfo[i].grpid;
+				var grpname = grpsinfo[i].grpname;
+				var screenwidth = grpsinfo[i].screenwidth;
+				var screenheight = grpsinfo[i].screenheight;	
+				
+				if(projectid==grpsinfo[i].projectid)
+				{
+					var checked='';
+					if(groups==null || groups=="")
+						{checked='checked';}
+					else {
+						if(groups.split(",").indexOf(grpid.toString())>-1)
+							{checked='checked';}
+						else {
+							checked='';
+						}
+					}
+					var label ="<input type='checkbox' value='"+grpid+"' "+checked+" >"+grpname+"</input>";
+					$('#user_edit_group').append(label);
+				}					    			
+			}			
+			}		
+		}	
+}
 //获取项目列表
 function getprojectList()
 {
@@ -188,6 +381,9 @@ function getprojectList()
         url:"/getProjectList",          
         type:"post",  
         dataType:"json", 
+        data:{
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        	},
         success:function(data)  
         {       	  
         	if(data!=null && data.length>0)    		
@@ -201,7 +397,8 @@ function getprojectList()
 	        			var option="";
         				if(i==0)
 						{
-        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";						
+        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";
+        					getGroup(projectId,null);
 						}
         				else
 						{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
@@ -210,8 +407,8 @@ function getprojectList()
 					}	        		
         		}        	
         },  
-        error: function() {  
-            alert("error");  
+        error: function() {
+        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");              
           }  
     });
 }
@@ -222,6 +419,9 @@ function getuserList()
         url:"/getUserList",          
         type:"post",  
         dataType:"json", 
+        data:{
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        	},
         success:function(data)  
         {       	  
         	if(data!=null && data.length>0)    		
@@ -236,7 +436,7 @@ function getuserList()
 	        			var adminStatus=admin.adminstatus;
 	        			var expDate=admin.expdate;
 	        			var adminPermission=admin.adminpermission;
-	        			var adminGrps=admin.admingrps;
+	        			var adminGrps=admin.groupids;
 	        			var adminLevel=admin.adminlevel;
 	        			var parentId=admin.parentid;
 	        			var inherit=admin.inherit;
@@ -263,7 +463,7 @@ function getuserList()
 	        						        					
 	        					var pm=permissionvalue2String(adminPermission);
 	        					Permission=pm;
-	        					
+	        					grps=adminGrps;
 	    	        			if(adminStatus==0)
 	    	        				{Status="正常";}
 	    	        			else
@@ -283,9 +483,11 @@ function getuserList()
 	        			var item={
 	        					user_sn:sn,
 	        					user_name:name,
+	        					projectid:admin.projectid,
 	        					user_pwd:pwd,
 	        					user_level:level,
 	        					user_permission:Permission,
+	        					user_group:grps,
 	        					user_status:Status,
 	        					user_exp:expDate
 	        			};
@@ -298,12 +500,28 @@ function getuserList()
         		{$("#userManger_table").bootstrapTable('removeAll');}
         },  
         error: function() {  
-            alert("error");  
+        	alertMessage(2, "异常", "ajax 函数  getUserList 错误"); 
           }  
     });
 }
-//编辑
-
+//权限选择转字符串
+function groupinput2value()
+{
+	var adminGrps="";
+	
+	var grpinputs = $("#user_edit_group input[type=checkbox]:checked");	
+	
+	for(var g=0;g<grpinputs.length;g++)
+		{
+		var inputvalue = $(grpinputs[g]).val();
+		adminGrps+=inputvalue+",";
+		}
+	if(adminGrps.length>0)
+		{
+		adminGrps=adminGrps.substring(0,adminGrps.length - 1);
+		}
+	return adminGrps;
+}
 //权限选择转字符串
 function permissioninput2value()
 {
@@ -348,13 +566,19 @@ function model_eidtuser()
 		{inherit=1;}
 	var adminstatus=$('#user_edit_status').val();			
 	var expdate = $('#user_edit_exp').val();	
+	
+	var admingrps=groupinput2value();
+	
 	var adminpermission=permissioninput2value();
 	
 	if(adminname==null && adminname=='')
-		{alert("用户名不能为空！");return;}
+		{alertMessage(1, "警告", "用户名不能为空!");return;}
 	
 	if(adminpwd==null && adminpwd=='')
-	{alert("密码不能为空！");return;}		
+	{alertMessage(1, "警告", "密码不能为空!");return;}	
+	
+	if(admingrps==null && admingrps=='')
+	{alertMessage(1, "警告", "请选择分组!");return;}	
 			
 	var projectid=$('#user_edit_project').val();
 	
@@ -370,8 +594,10 @@ function model_eidtuser()
 	        	adminstatus:adminstatus,
 	        	expdate:expdate,
 	        	adminpermission:adminpermission,
+	        	admingrps:admingrps,
 	        	projectid:projectid,
-	        	inherit:inherit
+	        	inherit:inherit,
+	        	adminInfo:localStorage.getItem("adminInfo")
 				},  
 	        dataType:"json", 
 	        success:function(data)  
@@ -410,6 +636,7 @@ function model_eidtuser()
 		        					user_level:level,
 		        					user_permission:Permission,
 		        					user_status:Status,
+		        					user_group:admingrps,
 		        					user_exp:expDate
 		        			};
 		        			
@@ -418,11 +645,11 @@ function model_eidtuser()
 		        			$('#modal_user_edit').modal('hide');
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
 	        error: function() {  
-	            alert("error");  
+	        	alertMessage(2, "异常", "ajax 函数  CreatUser 错误");  
 	          }  
 	    });
 		}
@@ -437,8 +664,10 @@ function model_eidtuser()
 	        	adminpwd:adminpwd,
 	        	adminstatus:adminstatus,
 	        	expdate:expdate,
-	        	adminpermission:adminpermission,	        	
-	        	inherit:inherit
+	        	adminpermission:adminpermission,
+	        	admingrps:admingrps,
+	        	inherit:inherit,
+	        	padminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        dataType:"json", 
 	        success:function(data)  
@@ -455,6 +684,7 @@ function model_eidtuser()
 		        					user_pwd:adminpwd,		        					
 		        					user_permission:permissionvalue2String(adminpermission),
 		        					user_status:Status,
+		        					user_group:admingrps,
 		        					user_exp:expdate
 		        			};
 		        			var rowIndex = parseInt($('#modal_user_edit').attr("data-index"));
@@ -466,11 +696,11 @@ function model_eidtuser()
 		        			$('#modal_user_edit').modal('hide');
 						}
 		        		else
-						{alert(data.resultMessage);}
+						{alertMessage(1, "警告", data.resultMessage);}
 	        		}
 	        },  
-	        error: function() {  
-	            alert("error");  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  EditUser 错误"); 	            
 	          }  
 	    });
 		}

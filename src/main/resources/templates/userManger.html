@@ -28,6 +28,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/userManger.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -59,7 +60,7 @@
                             <li id='groupManger'><a href="groupManger">分组管理</a></li>
                             <li id='userManger'><a class="menu-top-active" href="userManger">用户管理</a></li>
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a href="projectManger">项目管理</a></li>
+                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> --> 
 
                         </ul>
@@ -81,7 +82,7 @@
 			 <div class="col-md-12">
                 <div class="table">           			 
 				     <div id="toolbar" class="btn-group">
-				            <button id="btn_table_add" type="button" class="btn  btn-success">
+				            <button id="btn_table_add" style="display:none;" type="button" class="btn  btn-success">
 				                <span class="fa fa-plus" aria-hidden="true"></span>创建用户
 				            </button>				           
 				        </div>
@@ -160,9 +161,9 @@
 				    </div>			       		
 			       </div>
 			      </div>
-			      
+			      			      
 			       <div class="row">			       
-			       <div class="col-md-12">
+			       <div class="col-md-6">
 			       		<div class="card">
 						  <div class="card-header">管理权限</div>
 						  <div id='user_edit_pm' class="card-body">								  
@@ -172,6 +173,14 @@
 					    	<label><input type="checkbox" value="分组管理" />分组管理</label>
 					    	<label><input type="checkbox" value="用户管理" />用户管理</label>
 					    	<label><input type="checkbox" value="车辆管理" />车辆管理</label> 						    	  
+				    	  </div> 								  
+						</div>
+			       </div>
+			       
+			       <div class="col-md-6">
+			       		<div class="card">
+						  <div class="card-header">分组权限</div>
+						  <div id='user_edit_group' class="card-body"> 						    	  
 				    	  </div> 								  
 						</div>
 			       </div>
@@ -190,28 +199,28 @@
 			
             <!-- 模态框  编辑用户-->
 			<div class="modal fade" data-backdrop="static" id="modal_user_delete">
-					  <div class="modal-dialog">
-					    <div class="modal-content">
-					 
-					      <!-- 模态框头部 -->
-					      <div class="modal-header">
-					        <h4 class="modal-title">用户编辑</h4>
-					        <button type="button" class="close" data-dismiss="modal">&times;</button>
-					      </div>
-					 
-					      <!-- 模态框主体 -->
-					      <div class="modal-body">	
-					      	是否确定删除用户？
-					      </div>				  			      
-					 
-					  		<!-- 模态框底部 -->
-					        <div class="modal-footer">
-					          <button id="btn_user_delete" type="button" class="btn btn-primary">确定</button> 
-					          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-					        </div>
-					    </div>
-					  </div>
-					</div>
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">用户编辑</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">	
+			      	是否确定删除用户？
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_user_delete" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->

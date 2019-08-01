@@ -23,9 +23,7 @@ public class MainController {
 	@RequestMapping("/main")    
     public String main(Model model,HttpServletRequest request){	
 		try
-		{
-			JSONObject adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			model.addAttribute("userName", adminInfoJsonObject.getString("adminName"));
+		{			
 			logger.info("/main Open");
 			return "main";
 		}
@@ -38,14 +36,10 @@ public class MainController {
 	@ResponseBody
 	@RequestMapping(value = "/GetStatisticsData", method = RequestMethod.POST)    
     public JSONObject GetStatisticsData(@RequestParam("projectid") String projectid,HttpServletRequest request){
-		try {
-			//int adminid = adminInfoJsonObject.getIntValue("adminid");
-			
-			JSONObject JObject = mainSer.GetStatisticsData(projectid);
-			//logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+		try {			
+			JSONObject JObject = mainSer.GetStatisticsData(projectid);			
 			return JObject;
-		} catch (Exception e) {
-			//logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
+		} catch (Exception e) {			
 			return null;
 		}		   
     }
@@ -54,33 +48,25 @@ public class MainController {
 	@RequestMapping(value = "/GetStatisticsDatabyDate", method = RequestMethod.POST)    
     public JSONObject GetStatisticsDatabyDate(@RequestParam("projectid") String projectid,@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,HttpServletRequest request){
 		try {
-			//int adminid = adminInfoJsonObject.getIntValue("adminid");
 			if(startDate.equals(""))
 			{startDate = "1999-09-09";}
 			if(endDate.equals(""))
 			{endDate = "2100-09-09";}
 			
-			JSONObject JObject = mainSer.GetStatisticsDatabyDate(projectid, startDate, endDate);
-			//logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			JSONObject JObject = mainSer.GetStatisticsDatabyDate(projectid, startDate, endDate);			
 			return JObject;
-		} catch (Exception e) {
-			//logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
+		} catch (Exception e) {			
 			return null;
 		}		   
     }
 		
 	@ResponseBody
 	@RequestMapping(value = "/GetUpdateRate", method = RequestMethod.POST)    
-    public JSONObject GetUpdateRate(@RequestParam("groupid") int groupid,HttpServletRequest request){
-		try {
-			//int adminid = adminInfoJsonObject.getIntValue("adminid");
-			JSONObject adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			String projectid = adminInfoJsonObject.getString("projectid");
-			JSONObject JObject = mainSer.GetUpdateRate(groupid,projectid);
-			//logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+    public JSONObject GetUpdateRate(@RequestParam("projectid") String projectid,@RequestParam("groupid") int groupid,HttpServletRequest request){
+		try {			
+			JSONObject JObject = mainSer.GetUpdateRate(groupid,projectid);			
 			return JObject;
 		} catch (Exception e) {
-			//logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }

@@ -23,6 +23,12 @@ public class project {
     
     private double UpdateRate;
     
+    private String AdvertisementUpdateTime;
+    
+    private String TerminalUpdateTime;
+    
+    private String ParameterUpdateTime;
+    
 	public Integer getAutoGroupTo() {
 		return AutoGroupTo;
 	}
@@ -111,6 +117,30 @@ public class project {
 	public void setUpdateRate(double updateRate) {
 		UpdateRate = updateRate;
 	}
+		
+	public String getAdvertisementUpdateTime() {
+		return AdvertisementUpdateTime;
+	}
 
-	    
+	public void setAdvertisementUpdateTime(String advertisementUpdateTime) {
+		AdvertisementUpdateTime = advertisementUpdateTime;
+	}
+
+	public String getTerminalUpdateTime() {
+		return TerminalUpdateTime;
+	}
+
+	public void setTerminalUpdateTime(String terminalUpdateTime) {
+		TerminalUpdateTime = terminalUpdateTime;
+	}
+
+	public String getParameterUpdateTime() {
+		return ParameterUpdateTime;
+	}
+
+	public void setParameterUpdateTime(String parameterUpdateTime) {
+		ParameterUpdateTime = parameterUpdateTime;
+	}
+	
+	
 }

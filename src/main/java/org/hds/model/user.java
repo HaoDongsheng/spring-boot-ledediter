@@ -14,6 +14,8 @@ public class user {
     private String adminpermission;
 
     private String projectid;
+    
+    private String groupids;
 
     private Integer adminlevel;
 
@@ -85,7 +87,16 @@ public class user {
         this.projectid = projectid == null ? null : projectid.trim();
     }
 
-    public Integer getAdminlevel() {
+    
+    public String getGroupids() {
+		return groupids;
+	}
+
+	public void setGroupids(String groupids) {
+		this.groupids = groupids;
+	}
+
+	public Integer getAdminlevel() {
         return adminlevel;
     }
 

@@ -21,15 +21,12 @@ public class auditMangerController {
 
 	@Autowired
 	IAdvMangerService advMangerSer;
-	final Logger logger=LoggerFactory.getLogger(this.getClass());
-	JSONObject adminInfoJsonObject;
+	final Logger logger=LoggerFactory.getLogger(this.getClass());	
 	
 	@RequestMapping("/auditManger")    
     public String auditManger(Model model,HttpServletRequest request){	
 		try
-		{
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			model.addAttribute("userName", adminInfoJsonObject.getString("adminName"));
+		{			
 			logger.info("/auditManger Open");
 			return "auditManger";
 		}
@@ -41,60 +38,56 @@ public class auditMangerController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getadvListbyGrpidState", method = RequestMethod.POST) 
-    public JSONArray getadvListbyGrpidState(@RequestParam("Grpid") int Grpid,HttpServletRequest request){		
+    public JSONArray getadvListbyGrpidState(@RequestParam("Grpid") int Grpid,@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
 		{						
 			JSONArray JsonArray = advMangerSer.getadvListbyGrpidState(Grpid,1);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvListbyGrpidState===");
+			logger.info("===用户:"+adminname+"/getadvListbyGrpidState===");
 			return JsonArray;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvListbyGrpidState 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getadvListbyGrpidState 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/PublishInfobyid", method = RequestMethod.POST)    
-    public JSONObject PublishInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
-		try {
-			int adminid = adminInfoJsonObject.getIntValue("adminid");
-			
+    public JSONObject PublishInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {			
 			JSONObject JObject =advMangerSer.Publishinfobyid(infoid,adminid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/RefuseInfobyid", method = RequestMethod.POST)    
-    public JSONObject RefuseInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
-		try {
-			int adminid = adminInfoJsonObject.getIntValue("adminid");
-			
+    public JSONObject RefuseInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {			
 			JSONObject JObject =advMangerSer.RefuseInfobyid(infoid,adminid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 拒绝广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 拒绝广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/RefuseInfobyid 拒绝广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/RefuseInfobyid 拒绝广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/getInfobytesbyid", method = RequestMethod.POST)    
-    public JSONObject getInfobytesbyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
+    public JSONObject getInfobytesbyid(@RequestParam("infoid") int infoid,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {			
 						
 			JSONObject JObject =advMangerSer.getbyteslistbyid(infoid);
 			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 获取编码广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 获取编码广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getInfobytesbyid 获取编码广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getInfobytesbyid 获取编码广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }

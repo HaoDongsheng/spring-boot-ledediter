@@ -113,8 +113,10 @@ function initBTabel()
                 	username:$('#user_name').val(),
                 	userpwd:$('#user_pwd').val(),
                 	groupname:$('#group_name').val(),
+                	packLength:parseInt($('#group_packLength').val()),
                 	groupwidth:parseInt($('#group_width').val()),
-                	groupheight:parseInt($('#group_height').val())
+                	groupheight:parseInt($('#group_height').val()),
+                	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
         			},  
                 type:"post",  
                 dataType:"json", 
@@ -135,8 +137,10 @@ function initBTabel()
             			};
                 		
                 		grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+                		if(grpsinfo==null)
+                			{grpsinfo=[];}
             			var grpitem={};
-            			grpitem.grpid=data.groupid;
+            			grpitem.grpid=data.Groupid;
             			grpitem.grpname=$('#group_name').val();
             			grpitem.screenwidth= data.groupwidth;
             			grpitem.screenheight=data.groupheight;
@@ -153,11 +157,11 @@ function initBTabel()
                 		}
                 	else
                 		{
-                			alert(data.resultMessage);        			
+                			alertMessage(1, "警告", data.resultMessage);        			
                 		}        	
                 },  
                 error: function() {  
-                	alert("ajax 函数  createProject 错误");            
+                	alertMessage(2, "异常", "ajax 函数  createProject 错误");                	          
                   }  
             });
     		}
@@ -168,7 +172,8 @@ function initBTabel()
                 	projectid:$('#project_id').val(),
                 	projectname:$('#project_name').val(),
                 	isOurModule:$('#select_our').val(),
-                	ConnectParameters:JSON.stringify(Protocal)
+                	ConnectParameters:JSON.stringify(Protocal),
+                	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
         			},  
                 type:"post",  
                 dataType:"json", 
@@ -191,11 +196,11 @@ function initBTabel()
                 		}
                 	else
                 		{
-                			alert(data.resultMessage);        			
+                			alertMessage(1, "警告", data.resultMessage);        			
                 		}        	
                 },  
                 error: function() {  
-                	alert("ajax 函数  createProject 错误");            
+                	alertMessage(2, "异常", "ajax 函数  updateProject 错误");                	           
                   }  
             });
 		}    	    	    	    
@@ -245,7 +250,8 @@ window.operateEvents = {
         	$.ajax({  
                 url:"/removeProject", 
                 data:{
-                	projectid:projectId
+                	projectid:projectId,
+                	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
         			},  
                 type:"post",  
                 dataType:"json", 
@@ -257,11 +263,11 @@ window.operateEvents = {
                 		}
                 	else
                 		{
-                			alert(data.resultMessage);        			
+                			alertMessage(1, "警告", data.resultMessage);        			
                 		}        	
                 },  
                 error: function() {  
-                	alert("ajax 函数  createProject 错误");            
+                	alertMessage(2, "异常", "ajax 函数  removeProject 错误");            
                   }  
             });
         }
@@ -273,6 +279,9 @@ function getProjectlist()
 	$.ajax({  
         url:"/getProjectlist",           
         type:"post",
+        data:{
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        },
         success:function(data)  
         {               				
         	if(data!=null && data.length>0)
@@ -313,7 +322,7 @@ function getProjectlist()
         		{$("#projectinfo_table").bootstrapTable('removeAll');}
         },  
         error: function() {  
-        	alert("ajax 函数  getProjectlist 错误");            
+        	alertMessage(2, "异常", "ajax 函数  getProjectlist 错误");         	           
           }  
     });
 }

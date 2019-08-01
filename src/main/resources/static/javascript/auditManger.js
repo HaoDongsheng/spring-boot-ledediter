@@ -237,8 +237,8 @@ window.operateEvents = {
     	    		    			command:"closeSerialPort",
     	    						commandSN:SN
     	    		    		};	        
-    	    		        wssend(JSON.stringify(closeJsonObj));
-    	    		        alert("通讯不畅");
+    	    		        wssend(JSON.stringify(closeJsonObj));    	    		        	    		        
+    	    		        alertMessage(1, "警告", "通讯不畅"); 
     	    		        clearInterval(interval);    		        
     	    		    }
     	    		    
@@ -286,7 +286,7 @@ function SendCallback(SN,infocodelist,i)
 					commandSN:getSN()
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
-	    	alert("通讯不畅");
+	        alertMessage(1, "警告", "通讯不畅");
 	        clearInterval(interval);    		        
 	    }
 	    if(receiveMap[SN]!=null)
@@ -316,7 +316,8 @@ function infoSerialPublishbyid(infoid)
 	$.ajax({  
         url:"/getInfobytesbyid", 
         data:{
-        	infoid:parseInt(infoid)      	
+        	infoid:parseInt(infoid),
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -336,8 +337,8 @@ function infoSerialPublishbyid(infoid)
         		sendinfoDataCallback(SN,sendArray,0,SendCallback(SN,sendArray,0));        		
         		}
         	else
-        		{
-        			alert(data.resultMessage);        			
+        		{        			
+        			alertMessage(1, "警告", data.resultMessage);
 			        var closeJsonObj={
 			    			command:"closeSerialPort",
 							commandSN:getSN()
@@ -353,7 +354,7 @@ function infoSerialPublishbyid(infoid)
 	    		};	        
 	        wssend(JSON.stringify(closeJsonObj));
 	        $('#progress').css('height','0px');
-        	alert("ajax 函数  getPublishInfobyid 错误");            
+	        alertMessage(2, "异常", "ajax 函数  getPublishInfobyid 错误");        	        
           }  
     });    	 
 }
@@ -368,6 +369,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
@@ -409,7 +413,7 @@ function getGroup()
 	        		}
 	        },  
 	        error: function() { 
-	        	alert("ajax 函数  getGroup 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误");	        	           
 	          } 
 		 });
 		}
@@ -460,7 +464,8 @@ function getadvListbyGrpid(grpid)
 	$.ajax({  
         url:"/getadvListbyGrpidState", 
         data:{
-        	Grpid:grpid,        	
+        	Grpid:grpid, 
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",
         success:function(data)  
@@ -496,7 +501,7 @@ function getadvListbyGrpid(grpid)
         		{$("#auditinfo_table").bootstrapTable('removeAll');}
         },  
         error: function() {  
-        	alert("ajax 函数  getadvListbyGrpidState 错误");            
+        	alertMessage(2, "异常", "ajax 函数  getadvListbyGrpidState 错误");        	          
           }  
     });
 }
@@ -509,7 +514,9 @@ function infoPublishbyid(infoid)
 	$.ajax({  
         url:"/PublishInfobyid", 
         data:{
-        	infoid:parseInt(infoid)      	
+        	infoid:parseInt(infoid),
+        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -520,15 +527,15 @@ function infoPublishbyid(infoid)
         		$("#auditinfo_table").bootstrapTable("remove", {field: "infosn",values: [parseInt(infoid)]}); 					 
         		}
         	else
-        		{
-        			alert(data.resultMessage);        			
+        		{        			
+        			alertMessage(1, "警告", data.resultMessage);
         		}
         	$('#modal_allow').modal('hide');
         	//关闭spinner  
             spinner.spin();
         },  
         error: function() {  
-        	alert("ajax 函数  PublishInfobyid 错误");		            
+        	alertMessage(2, "异常", "ajax 函数  PublishInfobyid 错误");        		            
             return false;
             $('#modal_allow').modal('hide');
           }  
@@ -540,7 +547,9 @@ function infoRefusebyid(infoid)
 	$.ajax({  
         url:"/RefuseInfobyid", 
         data:{
-        	infoid:parseInt(infoid)      	
+        	infoid:parseInt(infoid),
+        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -552,12 +561,12 @@ function infoRefusebyid(infoid)
         		}
         	else
         		{
-        			alert(data.resultMessage);        			
+        			alertMessage(1, "警告", data.resultMessage);      			
         		}
         	$('#modal_refuse').modal('hide');
         },  
         error: function() {  
-        	alert("ajax 函数  RefuseInfobyid 错误");		            
+        	alertMessage(2, "异常", "ajax 函数  RefuseInfobyid 错误");        		            
             return false;
             $('#modal_refuse').modal('hide');
           }  
@@ -569,7 +578,8 @@ function getitem(infoid)
 	$.ajax({  
         url:"/GetItem",         
         data:{
-        	infoid:infoid     	
+        	infoid:infoid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
         dataType:"json", 
@@ -612,20 +622,21 @@ function getitem(infoid)
 										itemContext:jitem.itemcontext,
         								itemLocationSize:jitem.itemleft+","+jitem.itemtop+","+jitem.itemwidth+","+jitem.itemheight,
         								itemStyle:itemstyle		
-    								};        								
+    								};    
+    								ArrayTable.push(item);		
     								}
     						}
     				}
-    			ArrayTable.push(item);				
+    					
 				$("#info_details_table").bootstrapTable('load', ArrayTable);
         		}
         	else
-        		{
-        			alert(data.resultMessage);
+        		{        			
+        			alertMessage(1, "警告", data.resultMessage);
         		}
         },  
         error: function() { 
-        	alert("ajax 函数  GetItem 错误");            
+        	alertMessage(2, "异常", "ajax 函数  GetItem 错误");        	         
           }  
     });
 }

@@ -47,30 +47,18 @@ public class advMangerController {
 	groupMapper taxigroupMapper;
 	@Autowired
 	ResourceLoader loader;
-	JSONObject adminInfoJsonObject;
+	
 	@RequestMapping("/advManger")    
     public String advManger(Model model,HttpServletRequest request){	
 		try
-		{						
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			
-			String adminname = adminInfoJsonObject.getString("adminname");
-			model.addAttribute("userName", adminname);						
-			
-			//NettyClient client = NettyClientList.getNettyClient(adminname);
-			//client.star();
-			//client.SendLoginData(adminname, adminname);
-			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/advManger Open===");
-			
+		{									
 			return "advManger";
 		}
-		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/advManger Open 异常:"+e.getMessage()+"===");
+		catch(Exception e){			
 			return null;
 		}
     }
-	
+	/*
 	@ResponseBody
 	@RequestMapping(value = "/getadvList", method = RequestMethod.POST) 
     public JSONArray getadvList(HttpServletRequest request){	
@@ -87,24 +75,22 @@ public class advMangerController {
 			return null;
 		}
     }
-	
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/getadvEditListbyGrpid", method = RequestMethod.POST) 
-    public JSONArray getadvListbyGrpid(@RequestParam("Grpid") int Grpid,HttpServletRequest request){	
+    public JSONArray getadvListbyGrpid(@RequestParam("Grpid") int Grpid,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{			
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{						
 			JSONArray JsonArray = advMangerSer.getadvEditListbyGrpid(Grpid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvListbyGrpid===");
+			logger.info("===用户:"+adminname+"/getadvListbyGrpid===");
 			return JsonArray;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getadvListbyGrpid 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getadvListbyGrpid 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
-	
+	/*
 	@ResponseBody
 	@RequestMapping(value = "/getbasemaplist", method = RequestMethod.POST) 
     public JSONArray getbasemaplist(HttpServletRequest request){	
@@ -121,14 +107,25 @@ public class advMangerController {
 			return null;
 		}
     }
-	
+	*/
+	/*
 	@ResponseBody
 	@RequestMapping(value = "/getbasemaptypebyprojectid", method = RequestMethod.POST) 
-    public JSONArray getbasemaptypebyprojectid(@RequestParam("projectid") String projectid,@RequestParam("imgtype") int imgtype,HttpServletRequest request){	
+    public JSONArray getbasemaptypebyprojectid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,HttpServletRequest request){	
 		try
 		{			
 			if(adminInfoJsonObject==null)
 			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+			
+			String projectid="";
+		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
+		    {
+		    	projectid=adminInfoJsonObject.getString("projectid");
+	    	}
+		    else {					    	
+		    	projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
+			}
+		    
 			JSONArray JsonArray = advMangerSer.getimgclassifybyprojectid(projectid, imgtype);
 			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemaptypebyprojectid==");
 			return JsonArray;
@@ -138,32 +135,24 @@ public class advMangerController {
 			return null;
 		}
     }
-	
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/getbasemapbyprojectid", method = RequestMethod.POST) 
-    public JSONArray getbasemapbyprojectid(@RequestParam("groupid") int groupid, @RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,HttpServletRequest request){	
+    public JSONArray getbasemapbyprojectid(@RequestParam("groupid") int groupid, @RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{			
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			String projectid="";
-		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
-		    {
-		    	projectid=adminInfoJsonObject.getString("projectid");
-	    	}
-		    else {					    	
-		    	projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
-			}
+		{						
+			String projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
+		    
 			JSONArray JsonArray = advMangerSer.getimgbyprojectid(projectid, imgtype,classify);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemapbyprojectid===");
+			logger.info("===用户:"+adminname+"/getbasemapbyprojectid===");
 			return JsonArray;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getbasemapbyprojectid 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getbasemapbyprojectid 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
-	
+	/*
 	@ResponseBody
 	@RequestMapping(value = "/getbasemapbyid", method = RequestMethod.POST) 
     public JSONObject getbasemapbyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
@@ -180,73 +169,68 @@ public class advMangerController {
 			return null;
 		}
     }
-	
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/deletebasemapbyid", method = RequestMethod.POST) 
-    public int deletebasemapbyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
+    public int deletebasemapbyid(@RequestParam("basemapid") int basemapid,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{					
 			int result= advMangerSer.deletebasemapbyid(basemapid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletebasemapbyid===");
+			logger.info("===用户:"+adminname+"/deletebasemapbyid===");
 			return result;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletebasemapbyid 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/deletebasemapbyid 异常:"+e.getMessage()+"===");
 			return 1;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/updatebasemapclassify", method = RequestMethod.POST) 
-    public int updatebasemapclassify(@RequestParam("groupid") Integer groupid,@RequestParam("imgtype") Integer imgtype,@RequestParam("oldbasemapclassify") String oldbasemapclassify,@RequestParam("newbasemapclassify") String newbasemapclassify,HttpServletRequest request){	
+    public int updatebasemapclassify(@RequestParam("groupid") Integer groupid,@RequestParam("imgtype") Integer imgtype,@RequestParam("oldbasemapclassify") String oldbasemapclassify,@RequestParam("newbasemapclassify") String newbasemapclassify,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			String projectid="";
-		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
-		    {
-		    	projectid=adminInfoJsonObject.getString("projectid");
-	    	}
-		    else {					    	
-		    	projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
-			}
+		{					
+			String projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
 			int result= advMangerSer.updatebasemapclassify(projectid, imgtype, oldbasemapclassify, newbasemapclassify);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/updatebasemapclassify===");
+			logger.info("===用户:"+adminname+"/updatebasemapclassify===");
 			return result;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/updatebasemapclassify 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/updatebasemapclassify 异常:"+e.getMessage()+"===");
 			return 1;
 		}
     }
 	
 	@ResponseBody
-	@RequestMapping(value = "/CreatInfo", method = RequestMethod.POST)    
-    public JSONObject CreatInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,HttpServletRequest request){
-		try {
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			int adminid=adminInfoJsonObject.getIntValue("adminid");
-			
-			JSONObject JObject =advMangerSer.Creatinfo(infoName,groupid,lifeAct,lifeDie,BackgroundStyle,adminid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 新建广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
+	@RequestMapping(value = "/GetImgbyGif", method = RequestMethod.POST)    
+    public JSONObject GetImgbyGif(@RequestParam("gifString") String gifString, int w, int h,HttpServletRequest request){
+		try {			
+			JSONObject JObject =advMangerSer.GetImgbyGif(gifString, w, h);
+			logger.info("=== 获取gif数据 GetImgbyGif 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/CreatInfo 新建广告:"+infoName+"异常:"+e.getMessage()+"===");
+			logger.error("=== 获取gif数据 返回结果 GetImgbyGif 异常:"+e.getMessage()+"===");
+			return null;
+		}		   
+    }
+	
+	@ResponseBody
+	@RequestMapping(value = "/CreatInfo", method = RequestMethod.POST)    
+    public JSONObject CreatInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {			
+			JSONObject JObject =advMangerSer.Creatinfo(infoName,groupid,lifeAct,lifeDie,BackgroundStyle,adminid);
+			logger.info("===用户:"+adminname+" 新建广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
+			return JObject;
+		} catch (Exception e) {
+			logger.error("===用户:"+adminname+"/CreatInfo 新建广告:"+infoName+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/UpdateInfo", method = RequestMethod.POST)    
-    public JSONObject UpdateInfo(@RequestParam("infoid") int infoid,@RequestParam("pubid") int pubid,@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,HttpServletRequest request){
+    public JSONObject UpdateInfo(@RequestParam("infoid") int infoid,@RequestParam("pubid") int pubid,@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {	
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			JSONObject JObject=new JSONObject();
 			if(pubid != 0)
 			{
@@ -293,88 +277,74 @@ public class advMangerController {
 				}
 			}
 			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 修改广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 修改广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/UpdateInfo 修改广告:"+infoName+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/UpdateInfo 修改广告:"+infoName+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/CopyInfo", method = RequestMethod.POST)    
-    public JSONObject CopyInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,@RequestParam("itemlist") String itemlist,HttpServletRequest request){
-		try {	
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+    public JSONObject CopyInfo(@RequestParam("infoName") String infoName,@RequestParam("groupid") int groupid,@RequestParam("lifeAct") String lifeAct,@RequestParam("lifeDie") String lifeDie,@RequestParam("BackgroundStyle") String BackgroundStyle,@RequestParam("itemlist") String itemlist,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {				
 			JSONObject JObject =advMangerSer.CopyInfo(infoName,groupid,lifeAct,lifeDie,BackgroundStyle,itemlist);			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 复制广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 复制广告:"+infoName+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/CopyInfo 复制广告:"+infoName+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/CopyInfo 复制广告:"+infoName+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/DeleteInfobyid", method = RequestMethod.POST)    
-    public JSONObject DeleteInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
+    public JSONObject DeleteInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			int adminid=adminInfoJsonObject.getIntValue("adminid");
 			JSONObject JObject =advMangerSer.DeleteInfobyid(infoid,adminid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 删除广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 删除广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/DeleteInfobyid 删除广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/DeleteInfobyid 删除广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/AuditInfobyid", method = RequestMethod.POST)    
-    public JSONObject AuditInfobyid(@RequestParam("infoid") int infoid,HttpServletRequest request){
-		try {
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			int adminid = adminInfoJsonObject.getIntValue("adminid");
-			
+    public JSONObject AuditInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {			
 			JSONObject JObject =advMangerSer.AuditInfobyid(infoid,adminid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 送审核广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 送审核广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/RefuseInfobyid 送审核广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/RefuseInfobyid 送审核广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/getPublishInfobyid", method = RequestMethod.POST)    
-    public JSONObject getPublishInfobyid(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,HttpServletRequest request){
-		try {			
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+    public JSONObject getPublishInfobyid(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {						
 			JSONObject jinfo = JSONObject.parseObject(infodata);
 			JSONObject jsoninfo = JSONObject.parseObject(arritem);
 			
 			JSONObject JObject =advMangerSer.getbyteslistbyTemp(infoid,jinfo,jsoninfo);
 			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 获取编码广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 获取编码广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getPublishInfobyid 获取编码广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getPublishInfobyid 获取编码广告id:"+infoid+"异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/SaveItem", method = RequestMethod.POST)    
-    public JSONObject SaveItem(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,HttpServletRequest request){
-		try {		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
-			int adminid=adminInfoJsonObject.getIntValue("adminid");
+    public JSONObject SaveItem(@RequestParam("infoid") int infoid,@RequestParam("infodata") String infodata,@RequestParam("arritem") String arritem,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {					
 			JSONObject jinfo = JSONObject.parseObject(infodata);	
 
 			if(jinfo.getIntValue("pubid") != 0)
@@ -418,40 +388,36 @@ public class advMangerController {
 				JSONObject jsoninfo=JSONObject.parseObject(arritem);
 				JSONObject JObject = advMangerSer.SaveItem(infoid, jsoninfo);								
 				
-				logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 广告id:"+infoid+"保存显示项返回结果:"+JObject.toJSONString()+"===");
+				logger.info("===用户:"+adminname+" 广告id:"+infoid+"保存显示项返回结果:"+JObject.toJSONString()+"===");
 				return JObject;
 				}
 				else {
-					logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+" 广告id:"+infoid+"保存显示项失败===");
+					logger.error("===用户:"+adminname+" 广告id:"+infoid+"保存显示项失败===");
 					return null;
 				}
 			}			
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/SaveItem 广告id:"+infoid+"保存显示项异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/SaveItem 广告id:"+infoid+"保存显示项异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/GetItem", method = RequestMethod.POST)    
-    public JSONObject GetItem(@RequestParam("infoid") int infoid,HttpServletRequest request){
-		try {		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+    public JSONObject GetItem(@RequestParam("infoid") int infoid,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		try {					
 			JSONObject JObject = advMangerSer.GetItembyid(infoid);			
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 广告id:"+infoid+"获取显示项返回结果:"+JObject.toJSONString()+"===");
+			logger.info("===用户:"+adminname+" 广告id:"+infoid+"获取显示项返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/GetItem 广告id:"+infoid+"获取显示项异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/GetItem 广告id:"+infoid+"获取显示项异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }	
 	
 	@ResponseBody
 	@RequestMapping(value = "/GetImg2DBbyBase64", method = RequestMethod.POST)    
-    public JSONObject GetImg2DBbyBase64(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,HttpServletRequest request){
-		if(adminInfoJsonObject==null)
-		{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+    public JSONObject GetImg2DBbyBase64(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		JSONObject JObject=new JSONObject();
 		try {			
 			String contentType = file.getContentType();
@@ -521,14 +487,8 @@ public class advMangerController {
 		    jsonObject.put("gifFramesCount", gifFramesCount);
 		    jsonObject.put("giftimelength", gtl);
 
-		    String projectid="";
-		    if(adminInfoJsonObject.getString("projectid")!=null && !adminInfoJsonObject.getString("projectid").equals(""))
-		    {
-		    	projectid=adminInfoJsonObject.getString("projectid");
-	    	}
-		    else {					    	
-		    	projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
-			}
+		    String projectid=taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
+		    
 		    int basemapid =advMangerSer.SaveBasemap(fileName, projectid, imgtype,classify,contentType,jsonObject.toJSONString(),base64Img);
 		    if(basemapid!=0)
 		    {
@@ -543,10 +503,10 @@ public class advMangerController {
 		    	JObject.put("result", "fail");
 			    JObject.put("resultMessage", "底图存储失败");
 			}
-		    logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"获取图片返回结果:"+JObject.toJSONString()+"===");
+		    logger.info("===用户:"+adminname+"获取图片返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/GetImg2DBbyBase64 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/GetImg2DBbyBase64 异常:"+e.getMessage()+"===");
 			JObject.put("result", "fail");
 		    JObject.put("resultMessage", e.getMessage());	
 			return JObject;
@@ -555,9 +515,8 @@ public class advMangerController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/uploadvideo", method = RequestMethod.POST)    
-    public JSONObject uploadvideo(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype, @RequestParam("duration") String duration,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,HttpServletRequest request){
-		if(adminInfoJsonObject==null)
-		{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+    public JSONObject uploadvideo(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype, @RequestParam("duration") String duration,@RequestParam("classify") String classify,@RequestParam("file") org.springframework.web.multipart.MultipartFile file,@RequestParam("adminname") String adminname,HttpServletRequest request){
+		
 		JSONObject JObject=new JSONObject();
 		try {			
 			String contentType = file.getContentType();
@@ -629,16 +588,16 @@ public class advMangerController {
 				JObject.put("result", "fail");
 			    JObject.put("resultMessage", "存储数据库失败");
 		    }
-		    logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"上传视频返回结果:"+JObject.toJSONString()+"===");
+		    logger.info("===用户:"+adminname+"上传视频返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/uploadvideo 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/uploadvideo 异常:"+e.getMessage()+"===");
 			JObject.put("result", "fail");
 		    JObject.put("resultMessage", e.getMessage());	
 			return JObject;
 		}		   
     }
-    
+    /*
 	@ResponseBody
 	@RequestMapping(value = "/getvideotypebygroupid", method = RequestMethod.POST) 
     public JSONArray getvideotypebygroupid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,HttpServletRequest request){	
@@ -655,54 +614,48 @@ public class advMangerController {
 			return null;
 		}
     }
-	
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/getvideobygroupid", method = RequestMethod.POST) 
-    public JSONArray getvideobygroupid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,HttpServletRequest request){	
+    public JSONArray getvideobygroupid(@RequestParam("groupid") int groupid,@RequestParam("imgtype") int imgtype,@RequestParam("classify") String classify,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{	
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{				
 			JSONArray JsonArray = advMangerSer.getvideobyGrpid(groupid, imgtype,classify);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getvideobygroupid===");
+			logger.info("===用户:"+adminname+"/getvideobygroupid===");
 			return JsonArray;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getvideobygroupid 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getvideobygroupid 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/updatevideoclassify", method = RequestMethod.POST) 
-    public int updatevideoclassify(@RequestParam("groupid") Integer groupid,@RequestParam("videotype") Integer videotype,@RequestParam("oldvideoclassify") String oldvideoclassify,@RequestParam("newvideoclassify") String newvideoclassify,HttpServletRequest request){	
+    public int updatevideoclassify(@RequestParam("groupid") Integer groupid,@RequestParam("videotype") Integer videotype,@RequestParam("oldvideoclassify") String oldvideoclassify,@RequestParam("newvideoclassify") String newvideoclassify,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{	
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{				
 			int result= advMangerSer.updatevideoclassify(groupid, videotype, oldvideoclassify, newvideoclassify);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/updatevideoclassify===");
+			logger.info("===用户:"+adminname+"/updatevideoclassify===");
 			return result;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/updatevideoclassify 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/updatevideoclassify 异常:"+e.getMessage()+"===");
 			return 1;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/deletevideobyid", method = RequestMethod.POST) 
-    public int deletevideobyid(@RequestParam("basemapid") int basemapid,HttpServletRequest request){	
+    public int deletevideobyid(@RequestParam("basemapid") int basemapid,@RequestParam("adminname") String adminname,HttpServletRequest request){	
 		try
-		{		
-			if(adminInfoJsonObject==null)
-			{adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");}
+		{					
 			int result= advMangerSer.deletevideobyid(basemapid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletevideobyid===");
+			logger.info("===用户:"+adminname+"/deletevideobyid===");
 			return result;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/deletevideobyid 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/deletevideobyid 异常:"+e.getMessage()+"===");
 			return 1;
 		}
     }

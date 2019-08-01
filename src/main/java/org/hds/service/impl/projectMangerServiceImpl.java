@@ -1,5 +1,7 @@
 package org.hds.service.impl;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.hds.GJ_coding.GJ_Set1cls;
@@ -28,6 +30,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 	groupMapper groupMapper;
 	@Autowired
 	userMapper userMapper;
+	
 	@Override
 	public JSONArray getProjectlist()
 	{
@@ -79,7 +82,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 	}
 	
 	@Override
-	public JSONObject createProject(String projectid, String projectname, int isOurModule, String ConnectParameters, String username, String userpwd, String groupname, int groupwidth, int groupheight)
+	public JSONObject createProject(String projectid, String projectname, int isOurModule, String ConnectParameters, String username, String userpwd, String groupname, int packLength, int groupwidth, int groupheight)
 	{
 		JSONObject jObject=new JSONObject();
 		try {						
@@ -159,6 +162,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			group.setPara1_Basic(setPara1);
 			group.setPara2_User(setPara2);
 			group.setPara3_TimeLight(setPara3);
+			group.setMaxPackLength(packLength);
 			group.setscreenheight(groupheight);
 			group.setscreenwidth(groupwidth);
 			group.setProjectid(projectid);
@@ -197,6 +201,11 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			record.setConnectParameters(ConnectParameters);
 			projectMapper.updateByPrimaryKeySelective(record);
 									
+			Date now = new Date(); 				       
+			DateFormat d1 = DateFormat.getDateTimeInstance();
+			//写入项目表，发布广告改动时间数据
+			projectMapper.updateParameterUpdateTimeByPrimaryKey(projectid, d1.format(now));
+			
 			jObject.put("result", "success");			
 			
 			return jObject;

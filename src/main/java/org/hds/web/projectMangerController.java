@@ -22,15 +22,12 @@ public class projectMangerController {
 
 	@Autowired	
 	IprojectMangerService projectMangerSer;
-	final Logger logger=LoggerFactory.getLogger(this.getClass());
-	JSONObject adminInfoJsonObject;
+	final Logger logger=LoggerFactory.getLogger(this.getClass());	
 	
 	@RequestMapping("/projectManger")    
     public String projectManger(Model model,HttpServletRequest request){	
 		try
-		{
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			model.addAttribute("userName", adminInfoJsonObject.getString("adminName"));
+		{			
 			logger.info("/projectManger Open");
 			return "projectManger";
 		}
@@ -42,62 +39,61 @@ public class projectMangerController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/getProjectlist", method = RequestMethod.POST) 
-    public JSONArray getProjectlist(HttpServletRequest request){		
+    public JSONArray getProjectlist(@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
 		{						
 			JSONArray JsonArray = projectMangerSer.getProjectlist();
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/getProjectlist===");
+			logger.info("===用户:"+adminname+"/getProjectlist===");
 			return JsonArray;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/getProjectlist 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/getProjectlist 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/createProject", method = RequestMethod.POST) 
-    public JSONObject createProject(@RequestParam("projectid") String projectid,@RequestParam("projectname") String projectname, @RequestParam("isOurModule") int isOurModule, @RequestParam("ConnectParameters") String ConnectParameters,@RequestParam("username") String username,@RequestParam("userpwd") String userpwd,@RequestParam("groupname") String groupname,@RequestParam("groupwidth") int groupwidth,@RequestParam("groupheight") int groupheight,HttpServletRequest request){		
+    public JSONObject createProject(@RequestParam("projectid") String projectid,@RequestParam("projectname") String projectname, @RequestParam("isOurModule") int isOurModule, @RequestParam("ConnectParameters") String ConnectParameters,@RequestParam("username") String username,@RequestParam("userpwd") String userpwd,@RequestParam("groupname") String groupname,@RequestParam("packLength") int packLength,@RequestParam("groupwidth") int groupwidth,@RequestParam("groupheight") int groupheight,@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
-		{						
-			//String projectid, String projectname, String username, String userpwd, String groupname, int groupwidth, int groupheight
-			JSONObject jsonObject = projectMangerSer.createProject(projectid, projectname, isOurModule, ConnectParameters, username, userpwd, groupname, groupwidth, groupheight);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/createProject===");
+		{									
+			JSONObject jsonObject = projectMangerSer.createProject(projectid, projectname, isOurModule, ConnectParameters, username, userpwd, groupname, packLength, groupwidth, groupheight);
+			logger.info("===用户:"+adminname+"/createProject===");
 			return jsonObject;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/createProject 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/createProject 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/updateProject", method = RequestMethod.POST) 
-    public JSONObject updateProject(@RequestParam("projectid") String projectid,@RequestParam("projectname") String projectname, @RequestParam("isOurModule") int isOurModule, @RequestParam("ConnectParameters") String ConnectParameters,HttpServletRequest request){		
+    public JSONObject updateProject(@RequestParam("projectid") String projectid,@RequestParam("projectname") String projectname, @RequestParam("isOurModule") int isOurModule, @RequestParam("ConnectParameters") String ConnectParameters,@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
 		{									
 			JSONObject jsonObject = projectMangerSer.updateProject(projectid, projectname, isOurModule, ConnectParameters);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/createProject===");
+			logger.info("===用户:"+adminname+"/createProject===");
 			return jsonObject;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/createProject 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/createProject 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/removeProject", method = RequestMethod.POST) 
-    public JSONObject removeProject(@RequestParam("projectid") String projectid,HttpServletRequest request){		
+    public JSONObject removeProject(@RequestParam("projectid") String projectid,@RequestParam("adminname") String adminname,HttpServletRequest request){		
 		try
 		{						
 			//String projectid, String projectname, String username, String userpwd, String groupname, int groupwidth, int groupheight
 			JSONObject jsonObject = projectMangerSer.removeProject(projectid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/removeProject===");
+			logger.info("===用户:"+adminname+"/removeProject===");
 			return jsonObject;
 		}
 		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/removeProject 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/removeProject 异常:"+e.getMessage()+"===");
 			return null;
 		}
     }

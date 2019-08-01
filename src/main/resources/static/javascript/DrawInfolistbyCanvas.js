@@ -1,9 +1,16 @@
 var marginLeft=20;marginTop=20;
 var pointW=20,pointH=20;
-var colCount=0,rowCount=0;
+var colCount=30,rowCount=0;
 var selectlistcycle=0;
 var itemlist=[];
 var selectinfoid=0;
+var backColor='#DAD7DB';//'#515151';
+var strokeColor='#FFFFFF';
+var strokeW=0.5;
+var itembackColor='#505052';//'#9D91A2';//'#FFEFD5AA';//'#8F8F8FAA';
+var itemSelectbackColor='#48D2CA';//'#287FD3';//'#B3D4FDAA';
+var linestrokeStyle ='#CD8500';
+var lineWidth =2;
 
 function tooltipshow(x,y,txt)
 {
@@ -22,7 +29,8 @@ function DrawBackground(listcycle)
 {	
 	selectlistcycle=listcycle;
 	var canvasWidth = $('#info_workarea').width();
-	colCount=parseInt((canvasWidth - 2*marginLeft)/pointW);
+	//colCount=parseInt((canvasWidth - 2*marginLeft)/pointW);
+	pointW=parseInt((canvasWidth - 2*marginLeft)/colCount);
 	rowCount=Math.ceil(listcycle/colCount);
 	var canvasHeight=rowCount*pointH + 2*marginTop;
 	$('#info_canvas').attr('width',canvasWidth);
@@ -35,7 +43,7 @@ function DrawBackground(listcycle)
 		  layer: true,
 		  name:'backgroundrect',
 		  groups: ['background'],
-		  fillStyle: '#808080',
+		  fillStyle: backColor,
 		  x: marginLeft, y: marginTop,
 		  width: colCount * pointW,
 		  height: rowCount * pointH,		  
@@ -46,14 +54,14 @@ function DrawBackground(listcycle)
 			    distY = layer.eventY - layer.y;	
 			    
 			    var stratIndex = point2Int(distX,distY);
-			    
+			    /*
 			    var hh = parseInt(stratIndex / 3600);
 				var mm = parseInt(stratIndex % 3600 / 60);
 				var ss = parseInt(stratIndex % 3600 % 60);
 				
 				var tt = hh + "小时" + mm + "分" + ss + "秒";
-				//$('#item_msg').text('开始时间:' + tt);
-				
+				*/
+				tt = stratIndex + "秒";
 				tooltipshow(distX,distY,'开始时间:' + tt);
 			  },
 		  mouseout: function(layer) {
@@ -93,7 +101,7 @@ function DrawBackground(listcycle)
 	        var top=t*pointH +marginTop ;
 
 	        if((t + 1)%5==0 && t!=0)
-	        {
+	        {	 
 	        	//画列文字
 				$('#info_canvas').drawText({
 					  layer: true,	
@@ -102,7 +110,7 @@ function DrawBackground(listcycle)
 					  x: marginLeft - 20, y: top + pointH,
 					  fontSize: '12px',
 					  fontFamily: 'Arial',
-					  text: t * colCount,
+					  text: t * colCount + 's',
 					  fromCenter: false,
 					  rotate: 270
 					});			
@@ -111,8 +119,8 @@ function DrawBackground(listcycle)
 				$('#info_canvas').drawLine({
 					  layer: true,	
 					  groups: ['background'],
-					  strokeStyle: '#fff',
-					  strokeWidth: 0.5,
+					  strokeStyle: strokeColor,
+					  strokeWidth: strokeW*2,
 					  x1: marginLeft, y1: top + pointH,
 					  x2: marginLeft + colCount * pointW, y2: top + pointH,
 					  fromCenter: false
@@ -123,62 +131,15 @@ function DrawBackground(listcycle)
 	        	$('#info_canvas').drawLine({
 					  layer: true,	
 					  groups: ['background'],
-					  strokeStyle: '#fff',
-					  strokeWidth: 0.2,
+					  strokeDash: [1],
+					  strokeDashOffset: 1,
+					  strokeStyle: strokeColor,
+					  strokeWidth: strokeW,
 					  x1: marginLeft, y1: top + pointH,
 					  x2: marginLeft + colCount * pointW, y2: top + pointH,
 					  fromCenter: false
 					});			
-	        	}
-	        for(var l=0;l<colCount;l++)
-	        {
-	        	if(l==0)
-	        		{continue;}
-	            if(l%5==0)
-	            {	
-					if(t==0)
-						{
-						//画列文字
-						$('#info_canvas').drawText({
-							  layer: true,
-							  groups: ['background'],
-							  fillStyle: '#9cf',
-							  x: l * pointW + 2 + marginLeft, y: marginTop - 20,
-							  fontSize: '12px',
-							  fontFamily: 'Arial',
-							  text: l,
-							  fromCenter: false
-							});
-						}
-					else
-						{
-						//画线	
-						$('#info_canvas').drawLine({
-							  layer: true,	
-							  groups: ['background'],
-							  strokeStyle: '#fff',
-							  strokeWidth: 0.5,
-							  x1: l * pointW + 2 + marginLeft, y1: marginTop,
-							  x2: l * pointW + 2 + marginLeft, y2: marginTop + rowCount * pointH,
-							  fromCenter: false
-							});	
-						}
-					
-	            }
-	            else
-	            	{
-	            	//画线		
-	            	$('#info_canvas').drawLine({
-						  layer: true,	
-						  groups: ['background'],
-						  strokeStyle: '#fff',
-						  strokeWidth: 0.2,
-						  x1: l * pointW + 2 + marginLeft, y1: marginTop,
-						  x2: l * pointW + 2 + marginLeft, y2: marginTop + rowCount * pointH,
-						  fromCenter: false
-						});        	
-	            	}
-	        }
+	        	}	        
 	        
 	        if(t + 1==rowCount){
 	        	var lastrowcount = listcycle%colCount;
@@ -197,12 +158,61 @@ function DrawBackground(listcycle)
 	        	continue;
 	        }
 	    }
+	 
+	 
+     for(var l=0;l<=colCount;l++)
+     {
+     	//if(l==0)
+     	//	{continue;}
+         if(l%5==0)
+         {	
+			//画列文字
+			$('#info_canvas').drawText({
+				  layer: true,
+				  groups: ['background'],
+				  fillStyle: '#9cf',
+				  x: l * pointW + 2 + marginLeft, y: marginTop - 20,
+				  fontSize: '12px',
+				  fontFamily: 'Arial',
+				  text: l + 's',
+				  fromCenter: false
+				});
+			//画线	
+			$('#info_canvas').drawLine({
+				  layer: true,	
+				  groups: ['background'],
+				  strokeStyle: strokeColor,
+				  strokeWidth: strokeW*2,
+				  x1: l * pointW + 2 + marginLeft, y1: marginTop,
+				  x2: l * pointW + 2 + marginLeft, y2: marginTop + rowCount * pointH,
+				  fromCenter: false
+				});										
+         }
+         else
+         	{
+         	//画线		
+         	$('#info_canvas').drawLine({
+			  layer: true,	
+			  groups: ['background'],
+			  strokeDash: [1],
+			  strokeDashOffset: 1,
+			  strokeStyle: strokeColor,
+			  strokeWidth: strokeW,
+			  x1: l * pointW + 2 + marginLeft, y1: marginTop,
+			  x2: l * pointW + 2 + marginLeft, y2: marginTop + rowCount * pointH,
+			  fromCenter: false
+			});        	
+         	}
+     }
+     
 }
 //获取指定时间 内的排期数据并绘制
 function GetitemList(dts,dte)
 {
 	if(dts==''){dts='1999-09-09';}
 	if(dte==''){dte='2100-09-09';}
+	$('#infolist_draft div').css("background","#F7F7F7");
+	$('#infolist_draft div').css("color","#000");
 	if(itemlist!=null && itemlist!="")
 	{
 		var jsonpl = itemlist;
@@ -226,12 +236,15 @@ function GetitemList(dts,dte)
 	        			if(lifeAct==''){lifeAct='1999-09-09';}
 	        			if(lifeDie==''){lifeDie='2100-09-09';}
 	        			var playTimelength=infopubs[i].playTimelength;
-	        			var infopubid=infopubs[i].Pubidid;	
+	        			var infopubid=infopubs[i].Pubidid;		        			
+	    				
 	        			if(infosn==infoid)
 	        				{
 	        				var isjion = dtJion(dts,dte,lifeAct,lifeDie);//判断日期是否有交集
 	        				if(isjion)
 	        					{
+		        					$('#div_'+infosn).css("background","#31b0d5");
+		    	    				$('#div_'+infosn).css("color","#fff");
 		        					if(offsetlist!=null && offsetlist.length>0)
 		    						{
 		    						for(var f=0;f<offsetlist.length;f++)
@@ -344,9 +357,9 @@ function judgeitem(offsetvalue,timelenght)
 //画排期条目
 function Drawlistitem(infoid,offsetvalue,timelenght)
 {		
-	var itemColor = "#eeeeeeaa";
+	var itemColor = itembackColor;
 	if(infoid==selectinfoid)
-	{itemColor = "#b3d4fdaa";}
+	{itemColor = itemSelectbackColor;}
 	var rowIndex = parseInt(offsetvalue/colCount);
 	var colIndex = offsetvalue%colCount;
 		
@@ -371,6 +384,8 @@ function Drawlistitem(infoid,offsetvalue,timelenght)
 			  click: function(layer) {
 				  itemclick(layer);
 			  },
+			  strokeStyle: linestrokeStyle,
+			  strokeWidth: lineWidth,
 			  fillStyle: itemColor,
 			  x: left, y: top,
 			  width: timelenght*pointW,
@@ -397,6 +412,8 @@ function Drawlistitem(infoid,offsetvalue,timelenght)
 							  click: function(layer) {
 								  itemclick(layer);
 							  },
+							  strokeStyle: linestrokeStyle,
+							  strokeWidth: lineWidth,
 							  fillStyle: itemColor,
 							  x: left, y: top,
 							  width: (colCount -  colIndex) * pointW,
@@ -421,6 +438,8 @@ function Drawlistitem(infoid,offsetvalue,timelenght)
 								  click: function(layer) {
 									  itemclick(layer);
 								  },
+								  strokeStyle: linestrokeStyle,
+								  strokeWidth: lineWidth,
 								  fillStyle: itemColor,
 								  x: marginLeft, y: top + i * pointH,
 								  width: colCount * pointW,
@@ -443,6 +462,8 @@ function Drawlistitem(infoid,offsetvalue,timelenght)
 								  click: function(layer) {
 									  itemclick(layer);
 								  },
+								  strokeStyle: linestrokeStyle,
+								  strokeWidth: lineWidth,
 								  fillStyle: itemColor,
 								  x: marginLeft, y: top + i * pointH,
 								  width: (timelenght - (colCount - colIndex)) % colCount * pointW,
@@ -505,7 +526,69 @@ function addlistitem(infoid,offsetvalue,timelenght)
 		adddatalistitem(infoid,offsetvalue,timelenght);
 		
 		itemChange();
+		return true;
 	}	
+	else {
+		return false;
+	}
+}
+
+//添加条目
+function mutiladdlistitem(startindex,endindex,interval,infoid,timelenght)
+{	
+	var arrayitem=[];
+	for(var i=startindex;i<=endindex-timelenght;i=i+interval)
+	{
+		var offsetvalue = i;
+		var isst = judgeitem(offsetvalue,timelenght);
+		if(isst){
+			Drawlistitem(infoid,offsetvalue,timelenght);
+			adddatalistitem(infoid,offsetvalue,timelenght);				
+			arrayitem.push(offsetvalue);
+		}	
+		else {
+			for(var j=i;j<=i+interval-timelenght;j++)
+				{
+					var isst = judgeitem(j,timelenght);
+					if(isst){
+						Drawlistitem(infoid,j,timelenght);
+						adddatalistitem(infoid,j,timelenght);						
+						arrayitem.push(j);
+						break;
+					}
+				}
+		}
+	}
+	if(arrayitem.length>0)
+	{itemChange();}
+	return arrayitem;
+}
+
+//添加条目
+function getmutiladdlistitem(startindex,endindex,interval,infoid,timelenght)
+{	
+	var arrayitem=[];
+	for(var i=startindex;i<=endindex-timelenght;i=i+interval)
+	{
+		var offsetvalue = i;
+		var isst = judgeitem(offsetvalue,timelenght);
+		if(isst){						
+			arrayitem.push(offsetvalue);
+		}	
+		else {
+			for(var j=i;j<=i+interval-timelenght;j++)
+				{
+					var isst = judgeitem(j,timelenght);
+					if(isst){												
+						arrayitem.push(j);
+						break;
+					}
+				}
+		}
+	}
+	if(arrayitem.length>0)
+	{itemChange();}
+	return arrayitem;
 }
 //鼠标进入
 function itemmouseover(layer)
@@ -529,21 +612,22 @@ function itemmouseover(layer)
 		if(infosn==infoid)
 			{	
 			
-			$('#infolist_draft div').css("background","#F7F7F7");
-			$('#divinfo_'+ infoid).css("background","#007BFF");			
+			//$('#infolist_draft div').css("background","#F7F7F7");
+			//$('#divinfo_'+ infoid).css("background","#007BFF");			
 			
 			var hh = parseInt(offset / 3600);
 			var mm = parseInt(offset % 3600 / 60);
 			var ss = parseInt(offset % 3600 % 60);
 			
-			var tt = hh + "小时" + mm + "分" + ss + "秒";
-			//$('#item_msg').text('开始时间:' + tt + ",播放时长:" + playTimelength + "秒");
+			//var tt = hh + "小时" + mm + "分" + ss + "秒";
+			var tt = offset + "秒";
+
 			tooltipshow(layer.x,layer.y,'广告名称:' + infoname +'开始时间:' + tt + ",播放时长:" + playTimelength + "秒")
 			var layerid=layer.groups[0];
 			
 			$('#info_canvas').setLayerGroup(layerid, {				  
 				  strokeStyle: "#083",
-				  strokeWidth: 1
+				  strokeWidth: lineWidth
 				})
 				.drawLayers();
 			}
@@ -554,8 +638,8 @@ function itemmouseout(layer)
 {			
 	var layerid=layer.groups[0];
 	$('#info_canvas').setLayerGroup(layerid, {		  
-		  strokeStyle: "#eeeeeeff",
-		  strokeWidth: 0
+		  strokeStyle: linestrokeStyle,
+		  strokeWidth: lineWidth
 		})
 		.drawLayers();	
 }
@@ -563,7 +647,12 @@ function itemmouseout(layer)
 function itemclick(layer)
 {
 	var layerid=layer.groups[0];
-	
-	$("#modal_deleteitem").attr("data-layerid",layerid);
-	$('#modal_deleteitem').modal('show');
+	var infoid=parseInt(layerid.substring(0,layerid.indexOf("offset")));
+	if(infoid==selectinfoid)
+		{
+		$("#modal_deleteitem .modal-body").text("是否删除此排期?");
+		$("#modal_deleteitem").attr("data-type","delete_modelInfo");
+		$("#modal_deleteitem").attr("data-layerid",layerid);
+		$('#modal_deleteitem').modal('show');
+		}
 }

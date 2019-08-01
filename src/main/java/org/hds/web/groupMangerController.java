@@ -32,61 +32,57 @@ final Logger logger=LoggerFactory.getLogger(this.getClass());
 	@RequestMapping("/groupManger")    
     public String groupManger(Model model,HttpServletRequest request){	
 		try
-		{
-			adminInfoJsonObject = (JSONObject)request.getSession().getAttribute("adminInfo");
-			model.addAttribute("userName", adminInfoJsonObject.getString("adminName"));
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+"/groupManger Open===");			
+		{						
 			return "groupManger";
 		}
-		catch(Exception e){
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/groupManger Open 异常:"+e.getMessage()+"===");
+		catch(Exception e){			
 			return null;
 		}
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/CreatGroup", method = RequestMethod.POST)    
-    public JSONObject CreatGroup(@RequestParam("grpname") String grpname,@RequestParam("projectid") String projectid,@RequestParam("grpwidth") int grpwidth,@RequestParam("grpheight") int grpheight,HttpServletRequest request){
+    public JSONObject CreatGroup(@RequestParam("grpname") String grpname,@RequestParam("projectid") String projectid,@RequestParam("packLength") int packLength,@RequestParam("grpwidth") int grpwidth,@RequestParam("grpheight") int grpheight,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {
-			JSONObject JObject = groupMangerSer.CreatGroup(grpname, projectid, grpwidth, grpheight);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 新建分组:"+grpname+" 返回结果:"+JObject.toJSONString()+"===");
+			JSONObject JObject = groupMangerSer.CreatGroup(grpname, projectid, packLength, grpwidth, grpheight);
+			logger.info("===用户:"+adminname+" 新建分组:"+grpname+" 返回结果:"+JObject.toJSONString()+"===");
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/CreatGroup 新建分组:"+grpname+" 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/CreatGroup 新建分组:"+grpname+" 异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/EditGroup", method = RequestMethod.POST)    
-    public JSONObject EditGroup(@RequestParam("grpid") int grpid,@RequestParam("grpname") String grpname,@RequestParam("grpwidth") int grpwidth,@RequestParam("grpheight") int grpheight,HttpServletRequest request){
+    public JSONObject EditGroup(@RequestParam("grpid") int grpid,@RequestParam("grpname") String grpname,@RequestParam("packLength") int packLength,@RequestParam("grpwidth") int grpwidth,@RequestParam("grpheight") int grpheight,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {
 						
-			JSONObject JObject = groupMangerSer.EditGroup(grpid, grpname, grpwidth, grpheight);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 编辑分组:"+grpname+" 返回结果:"+JObject.toJSONString());
+			JSONObject JObject = groupMangerSer.EditGroup(grpid, grpname, packLength, grpwidth, grpheight);
+			logger.info("===用户:"+adminname+" 编辑分组:"+grpname+" 返回结果:"+JObject.toJSONString());
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/EditGroup 编辑分组:"+grpname+" 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/EditGroup 编辑分组:"+grpname+" 异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/DeleteGroup", method = RequestMethod.POST)    
-    public JSONObject DeleteGroup(@RequestParam("grpid") int grpid,HttpServletRequest request){
+    public JSONObject DeleteGroup(@RequestParam("grpid") int grpid,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		try {			
 			JSONObject JObject = groupMangerSer.DeleteGroup(grpid);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 删除分组id:"+grpid+" 返回结果:"+JObject.toJSONString());
+			logger.info("===用户:"+adminname+" 删除分组id:"+grpid+" 返回结果:"+JObject.toJSONString());
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/DeleteGroup 删除分组id:"+grpid+" 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/DeleteGroup 删除分组id:"+grpid+" 异常:"+e.getMessage()+"===");
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/GetProvinceList", method = RequestMethod.POST)    
-    public JSONObject GetProvinceList(HttpServletRequest request){
+    public JSONObject GetProvinceList(@RequestParam("adminname") String adminname,HttpServletRequest request){
 		JSONObject jsonObject=new JSONObject();		
 		try {									
 			//获取跟目录			
@@ -109,10 +105,10 @@ final Logger logger=LoggerFactory.getLogger(this.getClass());
 			
 			jsonObject.put("result", "success");
 			jsonObject.put("ProvinceList", strProvinceList);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 获取省份 返回结果:"+jsonObject.toJSONString());
+			logger.info("===用户:"+adminname+" 获取省份 返回结果:"+jsonObject.toJSONString());
 			return jsonObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/GetProvinceList 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/GetProvinceList 异常:"+e.getMessage()+"===");
 			jsonObject.put("result", "fail");
 			jsonObject.put("resultMessage", e.toString());
 			
@@ -122,7 +118,7 @@ final Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	@ResponseBody
 	@RequestMapping(value = "/GetCityList", method = RequestMethod.POST)    
-    public JSONObject GetCityList(@RequestParam("ProvinceName") String ProvinceName,HttpServletRequest request){
+    public JSONObject GetCityList(@RequestParam("ProvinceName") String ProvinceName,@RequestParam("adminname") String adminname,HttpServletRequest request){
 		JSONObject jsonObject=new JSONObject();		
 		try {									
 			//获取跟目录
@@ -143,10 +139,10 @@ final Logger logger=LoggerFactory.getLogger(this.getClass());
 			
 			jsonObject.put("result", "success");
 			jsonObject.put("CityList", strCityList);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 获取城市 返回结果:"+jsonObject.toJSONString());
+			logger.info("===用户:"+adminname+" 获取城市 返回结果:"+jsonObject.toJSONString());
 			return jsonObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/GetCityList 异常:"+e.getMessage()+"===");
+			logger.error("===用户:"+adminname+"/GetCityList 异常:"+e.getMessage()+"===");
 			jsonObject.put("result", "fail");
 			jsonObject.put("resultMessage", e.toString());
 			
@@ -156,26 +152,26 @@ final Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	@ResponseBody
 	@RequestMapping(value = "/Set_parameter", method = RequestMethod.POST)    
-    public JSONObject Set_parameter(@RequestParam("parameter") String parameter,HttpServletRequest request){			
+    public JSONObject Set_parameter(@RequestParam("parameter") String parameter,@RequestParam("adminname") String adminname,HttpServletRequest request){			
 		try {									
 			JSONObject jsonObject = groupMangerSer.Set_parameter(parameter);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 设置参数 返回结果:"+jsonObject.toJSONString());
+			logger.info("===用户:"+adminname+" 设置参数 返回结果:"+jsonObject.toJSONString());
 			return jsonObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/Set_parameter 异常:"+e.getMessage()+"===");			
+			logger.error("===用户:"+adminname+"/Set_parameter 异常:"+e.getMessage()+"===");			
 			return null;
 		}		   
     }
 	
 	@ResponseBody
 	@RequestMapping(value = "/Get_parameter", method = RequestMethod.POST)    
-    public JSONObject Get_parameter(@RequestParam("parameter") String parameter,HttpServletRequest request){			
+    public JSONObject Get_parameter(@RequestParam("parameter") String parameter,@RequestParam("adminname") String adminname,HttpServletRequest request){			
 		try {									
 			JSONObject jsonObject = groupMangerSer.Get_parameter(parameter);
-			logger.info("===用户:"+adminInfoJsonObject.getString("adminname")+" 获取参数 返回结果:"+jsonObject.toJSONString());
+			logger.info("===用户:"+adminname+" 获取参数 返回结果:"+jsonObject.toJSONString());
 			return jsonObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminInfoJsonObject.getString("adminname")+"/Get_parameter 异常:"+e.getMessage()+"===");			
+			logger.error("===用户:"+adminname+"/Get_parameter 异常:"+e.getMessage()+"===");			
 			return null;
 		}		   
     }

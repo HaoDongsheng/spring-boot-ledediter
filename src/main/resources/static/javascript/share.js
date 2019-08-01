@@ -5,6 +5,44 @@ $(function(){
 	mainClick();
 });
 
+function alertMessage(messageType, title, message) {	
+	var icon='fa fa-check';
+	var type='success';
+	switch (messageType) {
+	case 0:
+		var icon='fa fa-check';
+		var type='success';
+		break;
+	case 1:
+		var icon='fa fa-exclamation';
+		var type='warning';
+		break;
+	case 2:
+		var icon='fa fa-warning';
+		var type='danger';
+		break;
+	
+	}
+	
+	$.notify({		
+		icon: icon,
+		title: "<strong>"+title+"</strong> ",				
+		message: message,		
+	},{
+		allow_dismiss: true,
+		type: type,
+		delay: 3000,
+		placement: {
+			from: "bottom",
+			align: "right"
+		},
+		animate: {
+			enter: 'animated fadeInRight',
+			exit: 'animated fadeOutRight'
+		}
+	});
+}
+
 function mainClick()
 {
 	$('.bk-clr-one').click(function() {
@@ -130,6 +168,7 @@ function adminpermission()
 			$('.bk-clr-seven').parent().css("display","inline");
 		}
 }
+
 var ws;
 var commandSN=0;
 var receiveMap = {};

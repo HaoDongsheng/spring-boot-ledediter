@@ -99,7 +99,14 @@ $(function() {
 		var loginJson = JSON.parse(loginInfo);
 		$("#login_username").val(loginJson.adminname); 
 		$("#login_password").val(loginJson.adminpwd); 
+		var remember = $('#remember').prop("checked","checked");
 		}
+	
+	 $(document).keydown(function (event) {
+	        if (event.keyCode == 13) {
+	          $('#sign_in').triggerHandler('click');
+	        }
+	      });
 	
 	$("#sign_in").click(function() {
 		var adminName = $("#login_username").val(); 
@@ -134,8 +141,10 @@ $(function() {
 	            		window.location.href="main";
 	            		localStorage.setItem("adminInfo",JSON.stringify(data.adminInfo));
 	            		sessionStorage.setItem('grpsinfo', null);
+	            		sessionStorage.setItem('selectgrpid',0);
+	            		//var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
 	            	}
-	            else{alert(data.resultMessage);}
+	            else{alertMessage(1, "警告", data.resultMessage);}
 	        }
 	    });   
 	});

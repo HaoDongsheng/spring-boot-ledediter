@@ -31,14 +31,14 @@ public interface userMapper {
         "insert into t_user (adminID, adminName, ",
         "adminPwd, adminStatus, ",
         "expDate, adminPermission, ",
-        "projectid, adminLevel, ",
+        "projectid, groupids, adminLevel, ",
         "parentId, inherit, ",
         "GrpCount, adminCount, ",
         "isSuperuser, DelIndex)",
         "values (#{adminid,jdbcType=INTEGER}, #{adminname,jdbcType=VARCHAR}, ",
         "#{adminpwd,jdbcType=VARCHAR}, #{adminstatus,jdbcType=INTEGER}, ",
         "#{expdate,jdbcType=VARCHAR}, #{adminpermission,jdbcType=VARCHAR}, ",
-        "#{projectid,jdbcType=VARCHAR}, #{adminlevel,jdbcType=INTEGER}, ",
+        "#{projectid,jdbcType=VARCHAR}, #{groupids,jdbcType=VARCHAR}, #{adminlevel,jdbcType=INTEGER}, ",
         "#{parentid,jdbcType=INTEGER}, #{inherit,jdbcType=INTEGER}, ",
         "#{grpcount,jdbcType=INTEGER}, #{admincount,jdbcType=INTEGER}, ",
         "#{issuperuser,jdbcType=INTEGER}, #{delindex,jdbcType=INTEGER})"
@@ -51,7 +51,7 @@ public interface userMapper {
 
     @Select({
         "select",
-        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, ",
+        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, groupids,",
         "adminLevel, parentId, inherit, GrpCount, adminCount, isSuperuser, DelIndex",
         "from t_user",
         "where adminID = #{adminid,jdbcType=INTEGER}"
@@ -64,6 +64,7 @@ public interface userMapper {
         @Result(column="expDate", property="expdate", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminPermission", property="adminpermission", jdbcType=JdbcType.VARCHAR),
         @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="groupids", property="groupids", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminLevel", property="adminlevel", jdbcType=JdbcType.INTEGER),
         @Result(column="parentId", property="parentid", jdbcType=JdbcType.INTEGER),
         @Result(column="inherit", property="inherit", jdbcType=JdbcType.INTEGER),
@@ -76,7 +77,7 @@ public interface userMapper {
 
     @Select({
         "select",
-        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, ",
+        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, groupids,",
         "adminLevel, parentId, inherit, GrpCount, adminCount, isSuperuser, DelIndex",
         "from t_user",
         "where (parentId = #{parentId,jdbcType=INTEGER} or adminID=#{parentId,jdbcType=INTEGER}) and DelIndex=0"
@@ -89,6 +90,7 @@ public interface userMapper {
         @Result(column="expDate", property="expdate", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminPermission", property="adminpermission", jdbcType=JdbcType.VARCHAR),
         @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="groupids", property="groupids", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminLevel", property="adminlevel", jdbcType=JdbcType.INTEGER),
         @Result(column="parentId", property="parentid", jdbcType=JdbcType.INTEGER),
         @Result(column="inherit", property="inherit", jdbcType=JdbcType.INTEGER),
@@ -101,7 +103,7 @@ public interface userMapper {
     
     @Select({
         "select",
-        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, ",
+        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, groupids,",
         "adminLevel, parentId, inherit, GrpCount, adminCount, isSuperuser, DelIndex",
         "from t_user",
         "where projectid = #{0} and DelIndex=0"
@@ -114,6 +116,7 @@ public interface userMapper {
         @Result(column="expDate", property="expdate", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminPermission", property="adminpermission", jdbcType=JdbcType.VARCHAR),
         @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="groupids", property="groupids", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminLevel", property="adminlevel", jdbcType=JdbcType.INTEGER),
         @Result(column="parentId", property="parentid", jdbcType=JdbcType.INTEGER),
         @Result(column="inherit", property="inherit", jdbcType=JdbcType.INTEGER),
@@ -126,7 +129,7 @@ public interface userMapper {
     
     @Select({
         "select",
-        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, ",
+        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, groupids,",
         "adminLevel, parentId, inherit, GrpCount, adminCount, isSuperuser, DelIndex",
         "from t_user",
         "where adminName = #{adminName,jdbcType=VARCHAR}"
@@ -139,6 +142,7 @@ public interface userMapper {
         @Result(column="expDate", property="expdate", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminPermission", property="adminpermission", jdbcType=JdbcType.VARCHAR),
         @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="groupids", property="groupids", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminLevel", property="adminlevel", jdbcType=JdbcType.INTEGER),
         @Result(column="parentId", property="parentid", jdbcType=JdbcType.INTEGER),
         @Result(column="inherit", property="inherit", jdbcType=JdbcType.INTEGER),
@@ -167,7 +171,7 @@ public interface userMapper {
     
     @Select({
         "select",
-        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, ",
+        "adminID, adminName, adminPwd, adminStatus, expDate, adminPermission, projectid, groupids,",
         "adminLevel, parentId, inherit, GrpCount, adminCount, isSuperuser, DelIndex",
         "from t_user",
         "where DelIndex = 0"
@@ -180,6 +184,7 @@ public interface userMapper {
         @Result(column="expDate", property="expdate", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminPermission", property="adminpermission", jdbcType=JdbcType.VARCHAR),
         @Result(column="projectid", property="projectid", jdbcType=JdbcType.VARCHAR),
+        @Result(column="groupids", property="groupids", jdbcType=JdbcType.VARCHAR),
         @Result(column="adminLevel", property="adminlevel", jdbcType=JdbcType.INTEGER),
         @Result(column="parentId", property="parentid", jdbcType=JdbcType.INTEGER),
         @Result(column="inherit", property="inherit", jdbcType=JdbcType.INTEGER),
@@ -201,6 +206,7 @@ public interface userMapper {
           "expDate = #{expdate,jdbcType=VARCHAR},",
           "adminPermission = #{adminpermission,jdbcType=VARCHAR},",
           "projectid = #{projectid,jdbcType=VARCHAR},",
+          "groupids = #{groupids,jdbcType=VARCHAR},",
           "adminLevel = #{adminlevel,jdbcType=INTEGER},",
           "parentId = #{parentid,jdbcType=INTEGER},",
           "inherit = #{inherit,jdbcType=INTEGER},",

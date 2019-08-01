@@ -215,7 +215,7 @@ function list_additem(obj)
 	{				
 		var rect = getRect();
 		if(rect.x==-1 || rect.y==-1 || rect.w<16 || rect.h<16)
-			{alert('没有空余空间添加显示项,显示项最小大小为16*16!');return;}
+			{alertMessage(1, "警告", "没有空余空间添加显示项,显示项最小大小为16*16!");return;}
 		var itemid=0;
 		for(var i=0;i<itemmap[selectpageid].length;i++)
 		{
@@ -272,7 +272,7 @@ function list_deleteitem(obj)
 		
 		var returndata = deleteitem(selectpageid,selectitemid)
 		 if(returndata.isSucess==1)
-			 {alert("只有一个显示项不能删除");}
+			 {alertMessage(1, "警告", "只有一个显示项不能删除");}
 		 else
 			 {
 				 $('#workarea_canvas').removeLayer('item'+selectitemid);
@@ -318,14 +318,19 @@ function addlayer(pageid,itemlist,isSelect)
 	$("#page_collapse_"+pageid).append(divfooter);
 		   	
     var scale = ($("#tool_right").width()-10) / screenw;
+    //scale=2;
 	var w =screenw*scale;
 	var h =screenh*scale;
 	
 	var scaleone = ($("#tool_right").width()-30) / screenw;
+	//scaleone=2;
 	var wo =screenw*scaleone;
 	var ho =screenh*scaleone;
-	var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='border:2px outset;'></canvas>"
+	var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='border:2px outset;'></canvas>";	
 	$("#page_header_"+pageid).append(page);
+	//var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='margin:5px 5px;'></canvas>";
+	//$("#layer_items").append(page);
+	
 	
 	updatalistbackground('list_page_'+pageid,selectinfoid);
 	

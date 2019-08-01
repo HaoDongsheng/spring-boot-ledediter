@@ -2,12 +2,15 @@ package org.hds.service.impl;
 
 import java.io.File;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import org.hds.GJ_coding.GJ_Set1cls;
 import org.hds.GJ_coding.GJ_Set2cls;
 import org.hds.GJ_coding.GJ_Set3cls;
 import org.hds.mapper.groupMapper;
+import org.hds.mapper.projectMapper;
 import org.hds.model.user;
 import org.hds.model.group;
 import org.hds.service.IgroupMangerService;
@@ -23,9 +26,11 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 
 	@Autowired	
 	groupMapper taxigroupMapper;
+	@Autowired
+	projectMapper projectMapper;
 	
 	@Override
-	public JSONObject CreatGroup(String grpname,String projectid,int width,int height)
+	public JSONObject CreatGroup(String grpname,String projectid,int packLength,int width,int height)
 	{
 		JSONObject jObject=new JSONObject();
 		try {
@@ -92,7 +97,7 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 				group record=new group();
 				record.setGroupname(grpname);
 				record.setProjectid(projectid);
-				record.setMaxPackLength(1024);
+				record.setMaxPackLength(packLength);
 				record.setscreenwidth(width);
 				record.setscreenheight(height);
 				record.setPara1_Basic(setPara1);
@@ -107,6 +112,11 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 				if(rowCount>0)
 				{
 					int groupid=record.getGroupid();
+					
+					Date now = new Date(); 				       
+					DateFormat d1 = DateFormat.getDateTimeInstance();
+					//写入项目表，发布广告改动时间数据
+					projectMapper.updateParameterUpdateTimeByPrimaryKey(taxigroupMapper.selectByPrimaryKey(groupid).getProjectid(), d1.format(now));
 					
 					jObject.put("result", "success");
 					jObject.put("groupid", groupid);					
@@ -126,7 +136,7 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 	}
 	
 	@Override
-	public JSONObject EditGroup(int grpid,String grpname,int width,int height)
+	public JSONObject EditGroup(int grpid,String grpname,int packLength,int width,int height)
 	{
 		JSONObject jObject=new JSONObject();
 		try {
@@ -141,6 +151,7 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 				group record=new group();
 				record.setGroupid(grpid);
 				record.setGroupname(grpname);
+				record.setMaxPackLength(packLength);				
 				record.setscreenwidth(width);
 				record.setscreenheight(height);
 	
@@ -169,10 +180,16 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 	{
 		JSONObject jObject=new JSONObject();
 		try {
+			String projectid = taxigroupMapper.selectByPrimaryKey(grpid).getProjectid();
 			int rowCount = taxigroupMapper.deleteByPrimaryKey(grpid);	
 			
 			if(rowCount>0)
-			{				
+			{			
+				Date now = new Date(); 				       
+				DateFormat d1 = DateFormat.getDateTimeInstance();
+				//写入项目表，发布广告改动时间数据
+				projectMapper.updateParameterUpdateTimeByPrimaryKey(projectid, d1.format(now));
+				
 				jObject.put("result", "success");	
 			}
 			else {
@@ -267,6 +284,11 @@ public class groupMangerServiceImpl implements IgroupMangerService{
 
 					String setPara3 = JSONObject.toJSONString(set3cls);
 					record.setPara3_TimeLight(setPara3);
+					
+					Date now = new Date(); 				       
+					DateFormat d1 = DateFormat.getDateTimeInstance();
+					//写入项目表，发布广告改动时间数据
+					projectMapper.updateParameterUpdateTimeByPrimaryKey(taxigroupMapper.selectByPrimaryKey(Jparameter.getIntValue("groupid")).getProjectid(), d1.format(now));
 				};break;
 				case "basic":{
 					GJ_Set1cls set1cls=new GJ_Set1cls();

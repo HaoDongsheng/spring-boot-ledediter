@@ -29,6 +29,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/projectManger.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -62,7 +63,6 @@
                             <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
                             <li id='projectManger'><a class="menu-top-active" href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->
-
                         </ul>
                     </div>
                 </div>
@@ -196,11 +196,54 @@
 	        </div>
 	        <div class="col-md-8">
 	        	<select id="protocal_type" class="form-control">
-			      <option selected value='博海科技XML1.0'>博海科技XML1.0</option>
-			      <option value='博海科技XML1.0'>博海科技XML2.0</option>
-			      <option value='中国交通部部标V1.0'>中国交通部部标V1.0</option>
-			      <option value='深圳星安'>深圳星安</option>
-			      <option value='星网锐捷'>星网锐捷</option>
+			      <option selected value='BHKJ_XML1.0'>博海科技XML1.0</option>
+			      <option value='BHKJ_XML2.0'>博海科技XML2.0</option>
+		      	  <option value='XMYX'>厦门雅迅</option>
+                    <option value='JTB1.0'>中国交通部部标V1.0</option>
+                    <option value='SZXA'>深圳星安</option>
+                    <option value='SZYW'>深圳有为</option>
+                    <option value='SZSH'>深圳首航</option>
+                    <option value='SZDH'>神舟导航</option>
+                    <option value='SZBSJ'>深圳博实结</option>
+                    <option value='SZLHT'>深圳领航通</option>
+                    <option value='ZGBG'>中国兵工</option>
+                    <option value='FSLPD'>佛山丽普盾</option>
+                    <option value='BJMYD'>北京明易达</option>
+                    <option value='FJXWRJ'>福建星网锐捷</option>
+                    <option value='SHFT'>上海飞田</option>
+                    <option value='SZHQ'>深圳华强</option>
+                    <option value='DLHC'>大连海创</option>
+                    <option value='AHFHT'>安徽烽火台</option>
+                    <option value='FJXDL'>福建新大陆</option>
+                    <option value='SHYJ'>上海亿径</option>
+                    <option value='AHKL'>安徽科力</option>                    
+                    <option value='SHDZ'>上海大众</option>
+                    <option value='SZYST'>深圳赢时通</option>
+                    <option value='NJTY'>南京通用</option>
+                    <option value='BHKJ_GPRS_Server'>博海科技</option>
+                    <option value='BJJL'>北京聚利</option>
+                    <option value='BKXT'>博科星通</option>
+                    <option value='CCQM'>长春启明</option>
+                    <option value='BJTH'>北京天合</option>
+                    <option value='YTKJ'>易特科技</option>
+                    <option value='SPD'>诗普达</option>
+                    <option value='TYX'>天禹星GPS系统</option>
+                    <option value='SZHZB'>深圳海振邦</option>
+                    <option value='JNHKDZ'>济南航科电子</option>
+                    <option value='SZSGDH'>深圳赛格导航</option>
+                    <option value='SZSBKJ'>深圳苏北科技</option>
+                    <option value='SZWKP'>深圳威康普</option>
+                    <option value='SZTTX'>深圳通天星</option>
+                    <option value='SZWDF'>深圳沃达孚</option>
+                    <option value='EXLIVE'>北京世纪百速（EXLIVE）</option>
+                    <option value='BJWWXT'>北京微网信通</option>
+                    <option value='SZFLY'>深圳法莱茵</option>
+                    <option value='HKWS'>海康威视</option>
+                    <option value='HZHS'>杭州航盛</option>
+                    <option value='JTX'>甲天行</option>
+                    <option value='RMSX'>锐明视讯</option>
+                    <option value='SZHST'>深圳慧视通</option>
+		      
 			    </select> 
 	        </div>
 	        </div>			
@@ -255,14 +298,23 @@
 		        
 		        <div class="row">
 		        <div class="col-md-4">
+		        	最大包长
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="number" id="group_packLength" class="form-control" min=768 max=10240 value= "1024">		        	
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
 		        	屏幕大小
 		        </div>
 		        <div class="col-md-4">
-		        	<input type="number" id="group_width" class="form-control" value= "128"> 
+		        	<input type="number" id="group_width" class="form-control" value= "144"> 
 		        </div>
 		        
 		        <div class="col-md-4">
-		        	<input type="number" id="group_height" class="form-control" value= "21"> 
+		        	<input type="number" id="group_height" class="form-control" value= "24"> 
 		        </div>
 		        </div>			
 	    	  </div> 								  

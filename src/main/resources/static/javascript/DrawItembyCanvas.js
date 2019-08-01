@@ -136,6 +136,189 @@ function ParseNode(node) {
 	 }
 	return arrNode;
 }
+
+var tinyarrNode= new Array()
+//获取JSON数据
+function tinymceParseNode(node,arrNode) {
+	var firstChild = node.firstChild;
+	var name = node.name;
+	var attributes = node.attributes;
+	var next = node.next;	
+	switch(name)
+	{
+		case "span":{
+			attributes
+		};break;
+		case "p":{
+			arrNode= new Array();
+			tinyarrNode.push(arrNode);
+		};break;
+		case "#text":{
+			var styleJson={
+				fontName:'',
+				fontSize:0,
+				foreColor:'',
+				backColor:''
+			};
+			styleJson = tinymceGetStyle(node,styleJson)
+			var fontName=styleJson.fontName;
+			var fontSize=styleJson.fontSize;
+			var foreColor=styleJson.foreColor;
+			var backColor=styleJson.backColor;
+			if(fontName=='')
+			{fontName='SimSun';}
+			if(fontSize==0)
+			{fontSize=16;}
+			if(foreColor=='')
+			{foreColor='#ff0000';}
+			if(backColor=='')
+			{backColor='#000000';}
+			
+			var data={	
+				fontName:fontName,
+				fontSize:fontSize,
+				foreColor:foreColor,
+				backColor:backColor,
+				itemType:0,
+				value:node.value	 						
+			};
+			arrNode.push(data);
+		};break;
+		case "img":{
+			var src="",mapstyle="";
+			var width=0,height=0;
+			for(var i=0;i<attributes.length;i++)
+				{
+					switch (attributes[i].name) {
+					case "src":
+					{src = attributes[i].value;};
+					break;
+					case "data-mapstyle":
+					{mapstyle = attributes[i].value;};
+					break;
+					case "width":
+					{width = attributes[i].value;};
+					break;
+					case "height":
+					{height = attributes[i].value;};					
+					break;				
+					}
+				}
+			
+			
+			var strmapstyle = escape2Html(mapstyle);
+
+			var mapstyle = JSON.parse(strmapstyle);
+			
+			var gifFramesCount = mapstyle.gifFramesCount;
+			var giftimelength = mapstyle.giftimelength;
+			
+			if(width==0)
+			{width=mapstyle.imgwidth;}			
+			
+			if(height==0)
+			{height=mapstyle.imgheight;}			
+			
+			var imgtype=mapstyle.imgtype;
+			
+			var data={	 						
+					itemType:imgtype,
+					width:width,
+					height:height,
+					gifFramesCount:gifFramesCount,
+					giftimelength:giftimelength,					
+					value:src				
+			};
+			arrNode.push(data);
+		};break;
+	}
+	
+	if(firstChild!=null)
+		{
+			arrNode = tinymceParseNode(firstChild,arrNode);
+		}
+	if(next!=null)
+		{
+			arrNode = tinymceParseNode(next,arrNode);
+		}
+	
+	return arrNode;
+}
+//获取文字样式
+function tinymceGetStyle(node,styleJson) {
+	var parent = node.parent;
+	var name = node.name;
+	var attributes = node.attributes;	
+	switch(name)
+	{
+		case "span":{			
+			var style = escape2Html(attributes.map.style);
+			var ArraySl = style.split(";"); 
+			for(var s=0;s<ArraySl.length;s++)
+				{
+					var attr =ArraySl[s].trim();
+					if(attr.trim()!="")
+						{
+						 	var attrArr =attr.split(":");
+						 	if(attrArr.length>=2)
+						 		{
+						 			var attrName=attrArr[0];
+						 			switch(attrName.trim())
+						 			{
+						 			case 'font-family':{
+						 				var fontName='SimSun';
+						 				var arrfn=attrArr[1].split(",");
+						 				if(arrfn.length>0)
+						 					{fontName=arrfn[0].trim();}
+						 				if(styleJson.fontName=='')
+						 				{styleJson.fontName=fontName;}		
+						 			};break;
+                                 case 'font-size':{
+                                	var fontSize=16;
+                                 	if(attrArr[1]!=null && attrArr[1]!="")
+                                 	{fontSize=parseInt(attrArr[1].replace("px", ""));} 
+                                 	if(styleJson.fontSize==0)
+                                 	{styleJson.fontSize=fontSize;}
+                                 };break;
+                                 case 'color':{
+                                	var forecolor='#ff0000';
+                                 	if(attrArr[1]!=null && attrArr[1]!="")
+                                 	{forecolor=attrArr[1].trim();}   
+                                 	if(forecolor.indexOf('rgb')>-1)
+                                 		{
+                                 			forecolor=colorRGB2Hex(forecolor);
+                                 		}
+                                 	if(styleJson.foreColor=='')
+                                 	{styleJson.foreColor=forecolor;}
+                                 };break;
+                                 case 'background-color':{
+                                	var backcolor='#000000';
+                                 	if(attrArr[1]!=null && attrArr[1]!="")
+                                 	{backcolor=attrArr[1].trim();}   
+                                 	if(backcolor.indexOf('rgb')>-1)
+                             		{
+                                 		backcolor=colorRGB2Hex(backcolor);
+                             		}
+                                 	if(styleJson.backColor=='')
+                                 	{styleJson.backColor=backcolor;}
+                                 	};break; 	                                       
+						 			}
+						 		}
+						}
+				}
+		};break;
+		case "p":{
+			return styleJson;
+		};break;
+	}
+	
+	if(parent!=null)
+		{
+		styleJson = tinymceGetStyle(parent,styleJson);
+		}
+	
+	return styleJson;
+}
 //itemlist转src集合
 function item2Src(item)
 {		
@@ -155,6 +338,16 @@ function item2Src(item)
 	    	  fromCenter: false
 	    	});
    	}
+    else {
+    	$(canvas).drawRect({
+	    	  layer: true,
+	    	  fillStyle: '#000000',
+	    	  x: 0, y: 0,	    	  
+	    	  width: canvas.width,
+	    	  height: canvas.height,
+	    	  fromCenter: false
+	    	});
+	}
     
     var special = item.itemstyle.special;
     var sketch=null,shadow=null,gradient=null,txtscale=null;
@@ -200,7 +393,7 @@ function item2Src(item)
 	 				    
 	 					$(canvas).drawText({	
 	 						  layer: true,
-	 						  name: 'myText' + i,
+	 						  name: 'myText'+ r + i,
 							  fillStyle: itemnode.foreColor,
 							  x: left, y: top + linespace,
 							  fontSize: itemnode.fontSize * intiScale + 'px',
@@ -209,9 +402,9 @@ function item2Src(item)
 							  fromCenter: false,
 							});
 
-	 					var mytextw=$(canvas).measureText('myText' + i).width * scaleX;
+	 					var mytextw=$(canvas).measureText('myText'+ r + i).width * scaleX;
 	 					var mytexth=item.height * intiScale;//$(canvas).measureText('myText').height;
-	 					
+	 					$(canvas).removeLayer('myText'+ r + i);
 	 					$(canvas).drawRect({
 	 				    	  layer: true,
 	 				    	  fillStyle: itemnode.backColor,
@@ -220,7 +413,7 @@ function item2Src(item)
 	 				    	  height: mytexth,
 	 				    	  fromCenter: false
 	 				    	}).drawLayers();
-	 					$(canvas).removeLayer('myText' + i);
+	 					$(canvas).removeLayer('myText'+ r + i);
 	 					/*
 	 					$(canvas).drawText({	
 	 						  layer: true,
@@ -233,22 +426,23 @@ function item2Src(item)
 							  fromCenter: false,
 							}).drawLayers();
 	 					*/
+	 					///*
 	 					$(canvas).drawText({	
 	 						  layer: true,
-	 						  name: 'myText' + i,
+	 						  name: 'myText'+ r + i,
 							  fillStyle: itemnode.foreColor,
 							  x: left + mytextw/2, y: top + mytexth/2,
 							  fontSize: itemnode.fontSize * intiScale + 'px',
 							  fontFamily: itemnode.fontName,
 							  text: itemnode.value,
 							  scaleX: scaleX, scaleY: scaleY,
-							  fromCenter: true,
+							  fromCenter: true
 							}).drawLayers();
-	 					
+	 					//*/
 	 					//描边	 					
 	 					 if(sketch!=null)
 	 					 {			 
-	 						$(canvas).setLayer('myText' + i, {
+	 						$(canvas).setLayer('myText'+ r + i, {
 	 						 strokeStyle: sketch.strokeStyle,
 	 						 strokeWidth: sketch.strokeWidth * intiScale
 	 						})
@@ -256,7 +450,7 @@ function item2Src(item)
 	 					 }
 	 					 else
 	 					 {
-	 					 	$(canvas).setLayer('myText' + i, {	 						 
+	 					 	$(canvas).setLayer('myText'+ r + i, {	 						 
 	 						 strokeWidth: 0
 	 						})
 	 						.drawLayers();
@@ -264,7 +458,7 @@ function item2Src(item)
 	 					 //阴影
 	 					if(shadow!=null)
 	 					 {			 
-	 						$(canvas).setLayer('myText' + i, {
+	 						$(canvas).setLayer('myText'+ r + i, {
 	 				 		  shadowColor: shadow.shadowColor,
 	 						  shadowBlur: shadow.shadowBlur * intiScale,
 	 						  shadowX: shadow.shadowBlur * intiScale, shadowY: shadow.shadowBlur * intiScale
@@ -273,7 +467,7 @@ function item2Src(item)
 	 					 }
 	 					else
 	 					 {
-	 						$(canvas).setLayer('myText' + i, {	 				 		  
+	 						$(canvas).setLayer('myText'+ r + i, {	 				 		  
 	 						  shadowBlur: 0,
 	 						  shadowX: 0, shadowY: 0
 	 						})
@@ -313,14 +507,14 @@ function item2Src(item)
 	 					 	}
 	 			
 	 					 
-	 					 	$(canvas).setLayer('myText' + i, {
+	 					 	$(canvas).setLayer('myText'+ r + i, {
 	 				 		 fillStyle: linear
 	 						})
 	 						.drawLayers();			    
 	 				 	}
 	 				 	else
 	 					 {
-	 				 		$(canvas).setLayer('myText' + i, {
+	 				 		$(canvas).setLayer('myText'+ r + i, {
 	 				 		 fillStyle: itemnode.foreColor
 	 						})
 	 						.drawLayers();		
@@ -647,7 +841,7 @@ function pointVlimit(layer,y) {
 		}
 }
 //画显示项
-function DrawDisplayItem(pageid,itemid,isCreat,itemleft,itemtop,width,height,imgItem)
+function DrawDisplayItem(pageid,itemid,isCreat,isSelect,itemleft,itemtop,width,height,imgItem)
 {	    	    
 	var parentid="workarea_canvas";
 	var itemname="item"+itemid;
@@ -702,7 +896,7 @@ function DrawDisplayItem(pageid,itemid,isCreat,itemleft,itemtop,width,height,img
 				  window.event.cancelBubble = true; 
 				  },
 			  dblclick: function(layer) {
-				    
+				  	
 				    if(itemmap.hasOwnProperty(pageid))
 					{
 						for(var i=0;i<itemmap[pageid].length;i++)
@@ -718,7 +912,8 @@ function DrawDisplayItem(pageid,itemid,isCreat,itemleft,itemtop,width,height,img
 										$("#select_div").val("0");
 										$("#div_tp").css("display","inline");
 										$("#div_gif").css("display","none");
-										ue.setContent(item.context);										
+										//ue.setContent(item.context);
+										tinymce.activeEditor.setContent(item.context);
 										initspecial(item.itemstyle.special);
 									};break;
 									case 3:{
@@ -743,7 +938,8 @@ function DrawDisplayItem(pageid,itemid,isCreat,itemleft,itemtop,width,height,img
 					}			    
 				  }
 			}).drawLayers();
-		 DrawControl('#'+parentid,cx,cy,cw,ch);
+		 if(isSelect)
+		 {DrawControl('#'+parentid,cx,cy,cw,ch);}
 		}
 	else
 		{
@@ -770,6 +966,8 @@ function DrawListItem(pageid,itemid,isCreat,itemleft,itemtop,width,height,imgIte
 {	
 	var parentid="list_page_"+pageid;
 	var itemscale = ($("#tool_right").width()-10) / screenw;
+	
+	//itemscale=2;
 	var itemname="item"+itemid;	
 	
 	var cw=width * itemscale,ch=height * itemscale;	
@@ -802,6 +1000,7 @@ function DrawListItemone(pageid,itemid,isCreat,itemleft,itemtop,width,height,img
 {	
 	var parentid="list_page"+pageid+"_item"+itemid;
 	var itemscale = ($("#tool_right").width()-30) / screenw;
+	//itemscale=2;
 	var itemname="item"+itemid;	
 	
 	var cw=width * itemscale,ch=height * itemscale;	
@@ -1310,9 +1509,11 @@ function DrawDisplay(dataSrc)
 			
 	DrawListItem(pageid,itemid,isCreat,left,top,width,height,itemsrc);
 	DrawListItemone(pageid,itemid,isCreat,left,top,width,height,itemsrc);
-	
+	/*
 	if(isSelect)
 	{DrawDisplayItem(pageid,itemid,isCreat,left,top,width,height,itemsrc);}
+	*/
+	DrawDisplayItem(pageid,itemid,isCreat,isSelect,left,top,width,height,itemsrc);
 }
 //更新显示item
 function updateCanvasItem(pageid,itemid,isSelect,isCreat)
@@ -1325,8 +1526,8 @@ function updateCanvasItem(pageid,itemid,isSelect,isCreat)
 					if(item.itemid==itemid)
 						{
 						var canvasitem = item2Src(item);
-						var im = canvasitem.getCanvasImage('png');
-						var contextJson = JSON.parse(item.contextJson);
+						//var im = canvasitem.getCanvasImage('png');
+						//var contextJson = JSON.parse(item.contextJson);
 						dataSrc={	
 								itemid:itemid,
 							 	pageid:pageid,

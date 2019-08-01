@@ -1,4 +1,4 @@
-var myChart,myChartPie;
+var myChart, myChartPie;
 var minDate='',maxDate='';
 var interval = null;
 $(function(){	
@@ -7,23 +7,23 @@ $(function(){
 	initPie();
 	initLine();
         
-	getUpdateRate();
-	
-    $('#charts_lifeAct').change(function(){		
-    	var startDate = $('#charts_lifeAct').val();
-    	var endDate = $('#charts_lifeDie').val();
-    	if(endDate!='')
-    		{endDate = endDate + ' 23:59:59'}
-    	getStatisticsDatabyDate('zhaotong',startDate,endDate);	    
-	  });
+	getUpdateRate();	
     
-    $('#charts_lifeDie').change(function(){			
+    $('#btn_select_date').click(function(){
     	var startDate = $('#charts_lifeAct').val();
     	var endDate = $('#charts_lifeDie').val();
     	if(endDate!='')
     		{endDate = endDate + ' 23:59:59'}
-    	getStatisticsDatabyDate('zhaotong',startDate,endDate);    
-	  });
+    	var projectid = JSON.parse(localStorage.getItem("adminInfo")).projectid;
+    	getStatisticsDatabyDate(projectid,startDate,endDate); 
+    	
+    	$('#modal_select_date').modal('hide');
+    });
+    
+    $('#btn_select_group').click(function(){
+    	getUpdateRate();
+    	$('#modal_select_group').modal('hide');
+    });        
     
     $('#charts_lifeAct').val(getNowFormatDate());
     $('#charts_lifeDie').val(getNowFormatDate());
@@ -46,16 +46,25 @@ $(function(){
         todayBtn: true,
         language: 'zh-CN',
         pickerPosition: "bottom-left"
+	});		
+	
+	myChart.on('restore',function(){
+		$('#charts_lifeAct').val(getNowFormatDate());
+	    $('#charts_lifeDie').val(getNowFormatDate());
+	    
+	    getStatisticsDatabyDate(projectid,$('#charts_lifeAct').val(),$('#charts_lifeDie').val() + ' 23:59:59');
 	});
 	
-	$('#charts_select_group').change(function(){			
-		getUpdateRate();	    
-	  });
-	
+	myChartPie.on('restore',function(){
+		$('#charts_select_group').val(0);
+		getUpdateRate();
+	});
 	
 	var intervalpie = setInterval("getUpdateRate()",60000);
     
-    getStatisticsDatabyDate('zhaotong',$('#charts_lifeAct').val(),$('#charts_lifeDie').val() + ' 23:59:59');        
+	var projectid = JSON.parse(localStorage.getItem("adminInfo")).projectid;
+	
+    getStatisticsDatabyDate(projectid,$('#charts_lifeAct').val(),$('#charts_lifeDie').val() + ' 23:59:59');        
 });
 
 function initLine()
@@ -65,13 +74,26 @@ function initLine()
     
     option = {
     	    tooltip : {
-    	        trigger: 'axis'
+    	        trigger: 'axis',
+    	        axisPointer: {
+    	            type: 'cross'
+    	        }
     	    },
     	    legend: {
-    	        data:['总数','DTU在线','LED在线','已更新','待更新']
+    	        data:['总数','DTU在线','LED在线','已更新','待更新','更新率']
     	    },
     	    toolbox: {
     	        feature: {
+    	        	restore:{},
+    	        	myTool:{//自定义按钮 danielinbiti,这里增加，selfbuttons可以随便取名字  
+    	                   show:true,//是否显示  
+    	                   title:'选择日期', //鼠标移动上去显示的文字  
+    	                   //icon:'image://http://echarts.baidu.com/images/favicon.png', //图标
+    	                   icon:'path://M20,8 L20,5 L18,5 L18,6 L16,6 L16,5 L8,5 L8,6 L6,6 L6,5 L4,5 L4,8 L20,8 Z M20,10 L4,10 L4,20 L20,20 L20,10 Z M18,3 L20,3 C21.1045695,3 22,3.8954305 22,5 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,5 C2,3.8954305 2.8954305,3 4,3 L6,3 L6,2 L8,2 L8,3 L16,3 L16,2 L18,2 L18,3 Z M9,14 L7,14 L7,12 L9,12 L9,14 Z M13,14 L11,14 L11,12 L13,12 L13,14 Z M17,14 L15,14 L15,12 L17,12 L17,14 Z M9,18 L7,18 L7,16 L9,16 L9,18 Z M13,18 L11,18 L11,16 L13,16 L13,18 Z', //图标
+    	                   onclick:function() {      	                         
+    	                         $('#modal_select_date').modal('show');
+    	                         }  
+    	                    },    	
     	            saveAsImage: {}
     	        }
     	    },
@@ -90,7 +112,12 @@ function initLine()
     	    ],
     	    yAxis : [
     	        {
+    	        	name: '数值',
     	            type : 'value'
+    	        },{
+    	            name: '更新率(%)', 
+    	            max: 100,
+    	            type: 'value'    	            
     	        }
     	    ],
     	    series : [
@@ -118,12 +145,17 @@ function initLine()
     	            name:'总数',
     	            type:'line',    	               	            
     	            data:[]
+    	        },
+    	        {
+    	            name:'更新率',
+    	            type:'line',    	               	            
+    	            data:[]
     	        }
     	    ]
     	};
     
     // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart.setOption(option);    
 }
 
 function initPie()
@@ -132,41 +164,29 @@ function initPie()
 	var optionPie = {
 		    tooltip: {
 		        trigger: 'item',
-		        formatter: "{a} <br/>{b}: {c} ({d}%)"
+		        formatter: "{a} <br/>{b} : {c}%"
 		    },
-		    legend: {
-		        //orient: 'vertical',
-		        //x: 'left',
-		        data:['已更新','未更新']
+		    toolbox: {
+		        feature: {
+		            restore: {},
+		            myTool:{//自定义按钮 danielinbiti,这里增加，selfbuttons可以随便取名字  
+ 	                   show:true,//是否显示  
+ 	                   title:'选择分组', //鼠标移动上去显示的文字  
+ 	                   //icon:'image://http://echarts.baidu.com/images/favicon.png', //图标
+ 	                   icon:'path://M373.4,133.65H46.1c-25.4,0-46.1,20.7-46.1,46.1v199.4c0,25.4,20.7,46.1,46.1,46.1h327.3c25.4,0,46.1-20.7,46.1-46.1v-199.4C419.5,154.35,398.8,133.65,373.4,133.65z M383.5,379.25c0,5.5-4.5,10.1-10.1,10.1H46.1c-5.6,0-10.1-4.5-10.1-10.1v-145.7h347.5V379.25z M383.5,197.55H36v-17.8c0-5.6,4.5-10.1,10.1-10.1h327.3c5.6,0,10.1,4.5,10.1,10.1V197.55z', //图标
+ 	                   onclick:function() {      	                         
+ 	                         $('#modal_select_group').modal('show');
+ 	                         }  
+ 	                    },    	
+		            saveAsImage: {}
+		        }
 		    },
 		    series: [
 		        {
-		            name:'访问来源',
-		            type:'pie',
-		            radius: ['50%', '70%'],
-		            avoidLabelOverlap: false,
-		            label: {
-		                normal: {
-		                    show: false,
-		                    position: 'center'
-		                },
-		                emphasis: {
-		                    show: true,
-		                    textStyle: {
-		                        fontSize: '30',
-		                        fontWeight: 'bold'
-		                    }
-		                }
-		            },
-		            labelLine: {
-		                normal: {
-		                    show: false
-		                }
-		            },
-		            data:[
-		                {value:85, name:'已更新'},
-		                {value:15, name:'未更新'}
-		            ]
+		        	 name: '完成率',
+		             type: 'gauge',
+		             detail: {formatter:'{value}%'},
+		             data: [{value: 50, name: '完成率'}]
 		        }
 		    ]
 		};
@@ -185,6 +205,9 @@ function getGroup()
 	        url:"/getGroup",          
 	        type:"post",  
 	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
@@ -208,7 +231,7 @@ function getGroup()
 	        		}
 	        },  
 	        error: function() {  
-	        	alert("ajax 函数  getGroup 错误");	            
+	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误"); 	        	           
 	          }  
 	    });
 		}
@@ -229,81 +252,6 @@ function getGroup()
 			{$('#charts_select_group').css("display","none");}
 		}
 }
-
-function getStatisticsData(projectid)
-{
-	$.ajax({  
-        url:"/GetStatisticsData", 
-        data:{
-        	projectid:projectid    	
-			},  
-        type:"post",  
-        dataType:"json", 
-        success:function(data)  
-        {       	  
-        	if(data.result=="success")
-        		{     
-        		 myChart.setOption({        	    	    
-        	    	    legend: {
-        	    	        data:['总数','DTU在线','LED在线','已更新','待更新']
-        	    	    },   
-        	    	    dataZoom: [{
-        	                startValue: '2019/3/16 8:45:13'
-        	            }, {
-        	                type: 'inside'
-        	            }],
-        	    	    xAxis : [
-        	    	        {
-        	    	            type : 'category',
-        	    	            boundaryGap : false,
-        	    	            data : data.recordingtimeArr
-        	    	        }
-        	    	    ],
-        	    	    yAxis : [
-        	    	        {
-        	    	            type : 'value'
-        	    	        }
-        	    	    ],
-        	    	    series : [
-        	    	        {
-        	    	            name:'DTU在线',
-        	    	            type:'line',        	    	                 	    	            
-        	    	            data:data.DtuArr
-        	    	        },
-        	    	        {
-        	    	            name:'LED在线',
-        	    	            type:'line',
-        	    	            data:data.LedArr
-        	    	        },
-        	    	        {
-        	    	            name:'已更新',
-        	    	            type:'line',        	    	                    	    	            
-        	    	            data:data.UpdatedArr
-        	    	        },
-        	    	        {
-        	    	            name:'待更新',
-        	    	            type:'line',        	    	               	    	            
-        	    	            data:data.WaitingArr
-        	    	        },
-        	    	        {
-        	    	            name:'总数',
-        	    	            type:'line',        	    	                	    	
-        	    	            data:data.TotalArr
-        	    	        }
-        	    	    ]
-        	    	});
-        		}
-        	else
-        		{
-        			alert(data.resultMessage);        			
-        		}        	
-        },  
-        error: function() {  
-        	alert("ajax 函数  GetStatisticsData 错误");                        
-          }  
-    });	
-}
-
 //获取当前时间，格式YYYY-MM-DD
 function getNowFormatDate() {
     var date = new Date();
@@ -340,9 +288,9 @@ function getStatisticsDatabyDate(projectid,startDate,endDate)
         		maxDate = data.maxDate;
         		 myChart.setOption({        	    	    
         	    	    legend: {
-        	    	        data:['总数','DTU在线','LED在线','已更新','待更新']
+        	    	        data:['总数','DTU在线','LED在线','已更新','待更新','更新率']
         	    	    }, dataZoom: [{
-        	                startValue: 'startDate'
+        	                startValue: startDate
         	            }, {
         	                type: 'inside'
         	            }],
@@ -351,11 +299,6 @@ function getStatisticsDatabyDate(projectid,startDate,endDate)
         	    	            type : 'category',
         	    	            boundaryGap : false,
         	    	            data : data.recordingtimeArr
-        	    	        }
-        	    	    ],
-        	    	    yAxis : [
-        	    	        {
-        	    	            type : 'value'
         	    	        }
         	    	    ],
         	    	    series : [
@@ -383,12 +326,19 @@ function getStatisticsDatabyDate(projectid,startDate,endDate)
         	    	            name:'总数',
         	    	            type:'line',        	    	                	    	
         	    	            data:data.TotalArr
-        	    	        }
+        	    	        },{
+         	    	            name:'更新率',
+         	    	            type:'line',   
+         	    	            yAxisIndex: 1,
+         	    	            data:data.UpdateRateArr
+         	    	        }
         	    	    ]
-        	    	});
+        	    	});        		
+        		 
         		 if(endDate=='' || endDate >= getNowFormatDate())
         			 {
-        			 interval = setInterval("getAppendDatabyDate('zhaotong')",60000);
+        			 var projectid = JSON.parse(localStorage.getItem("adminInfo")).projectid;
+        			 interval = setInterval("getAppendDatabyDate('"+projectid+"')",60000);
         			 }
         		 else {
         			 clearInterval(interval);//停止        		 
@@ -403,6 +353,7 @@ function getStatisticsDatabyDate(projectid,startDate,endDate)
         	    var dataUpdated = option.series[2].data;
         	    var dataWaiting = option.series[3].data;
         	    var dataTotal = option.series[4].data;
+        	    var UpdateRate = option.series[5].data;
         	    
         		dataDTU.shift();
          	    option.series[0].data = [];
@@ -414,17 +365,19 @@ function getStatisticsDatabyDate(projectid,startDate,endDate)
          	    option.series[3].data = [];
          	    dataTotal.shift();
          	    option.series[4].data = [];
+         	    UpdateRate.shift();
+         	    option.series[5].data = [];
          	    
          	    option.xAxis[0].data.shift();
          	    option.xAxis[0].data = [];
          	    
          	    myChart.setOption(option);
          	    
-         	   clearInterval(interval);//停止 
+         	    clearInterval(interval);//停止 
         		}        	
         },  
         error: function() {  
-        	alert("ajax 函数  GetStatisticsDatabyDate 错误");                        
+        	alertMessage(2, "异常", "ajax 函数  GetStatisticsDatabyDate 错误");         	                       
           }  
     });	
 }
@@ -453,6 +406,7 @@ function getAppendDatabyDate(projectid)
         	    var dataUpdated = option.series[2].data;
         	    var dataWaiting = option.series[3].data;
         	    var dataTotal = option.series[4].data;
+        	    var UpdateRate = option.series[5].data;
         	    
         	    dataDTU.shift();
         	    option.series[0].data = dataDTU.concat(data.DtuArr);
@@ -464,16 +418,17 @@ function getAppendDatabyDate(projectid)
         	    option.series[3].data = dataWaiting.concat(data.WaitingArr);
         	    dataTotal.shift();
         	    option.series[4].data = dataTotal.concat(data.TotalArr);
+        	    UpdateRate.shift();
+        	    option.series[5].data = UpdateRate.concat(data.UpdateRateArr);
         	    
         	    option.xAxis[0].data.shift();
         	    option.xAxis[0].data = option.xAxis[0].data.concat(data.recordingtimeArr);
         	    
         	    myChart.setOption(option);
-     
         		}        	
         },  
         error: function() {  
-        	alert("ajax 函数  GetStatisticsDatabyDate 错误");                        
+        	alertMessage(2, "异常", "ajax 函数  GetStatisticsDatabyDate 错误");         	                     
           }  
     });
 }
@@ -481,9 +436,11 @@ function getAppendDatabyDate(projectid)
 function getUpdateRate()
 {
 	var groupid = parseInt($("#charts_select_group").val())
+	var projectid = JSON.parse(localStorage.getItem("adminInfo")).projectid;
 	$.ajax({  
         url:"/GetUpdateRate", 
         data:{
+        	projectid:projectid,
         	groupid:groupid
 			},  
         type:"post",  
@@ -496,32 +453,10 @@ function getUpdateRate()
         		var unUpdateRate = 100 - data.UpdateRate;
         		myChartPie.setOption({        	    	    
     			 series: [{
-			            name:'访问来源',
-			            type:'pie',
-			            radius: ['50%', '70%'],
-			            avoidLabelOverlap: false,
-			            label: {
-			                normal: {
-			                    show: false,
-			                    position: 'center'
-			                },
-			                emphasis: {
-			                    show: true,
-			                    textStyle: {
-			                        fontSize: '30',
-			                        fontWeight: 'bold'
-			                    }
-			                }
-			            },
-			            labelLine: {
-			                normal: {
-			                    show: false
-			                }
-			            },
-			            data:[
-			                {value:UpdateRate, name:'已更新'},
-			                {value:unUpdateRate, name:'未更新'}
-			            ]
+    				 name: '完成率',
+		             type: 'gauge',
+		             detail: {formatter:'{value}%'},
+		             data: [{value: UpdateRate, name: '完成率'}]
 			        }]
      	    	});
         		}
@@ -529,7 +464,7 @@ function getUpdateRate()
         		{}
         },  
         error: function() {  
-        	alert("ajax 函数  GetStatisticsDatabyDate 错误");                        
+        	alertMessage(2, "异常", "ajax 函数  GetUpdateRate 错误");         	                       
           }  
     });
 }

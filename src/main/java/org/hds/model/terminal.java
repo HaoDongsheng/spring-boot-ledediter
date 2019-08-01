@@ -69,6 +69,12 @@ public class terminal {
 
     private String projectid;
 
+    private Integer starlevel;
+
+    private Integer starlevelset;
+
+    private Double updaterate;
+
     private String adidlist;
 
     private String playlist;
@@ -343,6 +349,30 @@ public class terminal {
 
     public void setProjectid(String projectid) {
         this.projectid = projectid == null ? null : projectid.trim();
+    }
+
+    public Integer getStarlevel() {
+        return starlevel;
+    }
+
+    public void setStarlevel(Integer starlevel) {
+        this.starlevel = starlevel;
+    }
+
+    public Integer getStarlevelset() {
+        return starlevelset;
+    }
+
+    public void setStarlevelset(Integer starlevelset) {
+        this.starlevelset = starlevelset;
+    }
+
+    public Double getUpdaterate() {
+        return updaterate;
+    }
+
+    public void setUpdaterate(Double updaterate) {
+        this.updaterate = updaterate;
     }
 
     public String getAdidlist() {
