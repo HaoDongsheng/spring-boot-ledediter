@@ -28,11 +28,12 @@ import com.alibaba.fastjson.JSONObject;
 import sun.font.FontDesignMetrics;
 
 public class DrawTextGraphics {
-	// 图文变成图片
+	// 图文变成图片,一个字一个字画
 	public static BufferedImage getImagebyJsonArray(int playtype, JSONArray JarrContext, JSONObject jsonspecial,
 			int itemwidth, int itemheight) {
 		try {
-			int width = 0, left = 0;
+			int width = 0, left = 0, firstSpace = 0;
+
 			List<JSONObject> JSONlist = new ArrayList<JSONObject>();
 			if (JarrContext != null && JarrContext.size() > 0) {
 				if (playtype == 1) {
@@ -76,7 +77,7 @@ public class DrawTextGraphics {
 										if (itemheight > txth) {
 											top = (itemheight - txth) / 2;
 										}
-										top = top + metrics.getAscent() - 2;
+										top = top + metrics.getAscent() - (metrics.getAscent() - fontSize + 3);
 
 										JSONObject itemJsonObject = new JSONObject();
 										itemJsonObject.put("type", 0);
@@ -152,6 +153,8 @@ public class DrawTextGraphics {
 
 						int rowCount = (int) Math.ceil((double) (rowwidth) / 8);
 						width += rowCount * 8;
+
+						firstSpace = width - rowwidth;
 					}
 				} else {
 					for (int r = 0; r < JarrContext.size(); r++) {// 多行数据
@@ -169,6 +172,7 @@ public class DrawTextGraphics {
 									String forecolor = jsonObject.getString("foreColor");
 
 									String fontName = jsonObject.getString("fontName");
+
 									int fontSize = jsonObject.getIntValue("fontSize");
 									String txtval = jsonObject.getString("value");
 									Font font = new Font(fontName, Font.PLAIN, fontSize);
@@ -189,11 +193,11 @@ public class DrawTextGraphics {
 									if (itemheight > txth) {
 										top = (itemheight - txth) / 2;
 									}
-									top = top + metrics.getAscent() - 2;
+
+									top = top + metrics.getAscent() - (metrics.getAscent() - fontSize + 3);
 
 									for (int i = 0; i < txtval.length(); i++) {
 										int charw = (int) (metrics.charWidth(txtval.charAt(i)) * sx);
-
 										JSONObject itemJsonObject = new JSONObject();
 										itemJsonObject.put("type", 0);
 										itemJsonObject.put("y", top);
@@ -220,8 +224,10 @@ public class DrawTextGraphics {
 															(left + charw) / itemwidth * itemwidth - px);
 												}
 											}
-											itemJsonObject.put("x", (left + charw) / itemwidth * itemwidth);
-											left = (left + charw) / itemwidth * itemwidth + charw;
+//											itemJsonObject.put("x", (left + charw) / itemwidth * itemwidth);
+//											left = (left + charw) / itemwidth * itemwidth + charw;
+											itemJsonObject.put("x", left / itemwidth * itemwidth + itemwidth);
+											left = (left / itemwidth + 1) * itemwidth + charw;
 										} else {
 											itemJsonObject.put("x", left);
 											left += charw;
@@ -259,8 +265,10 @@ public class DrawTextGraphics {
 
 									if (left % itemwidth != 0
 											&& left / itemwidth != (left + imgWidth - 1) / itemwidth) {
-										itemJsonObject.put("x", (left + imgWidth) / itemwidth * itemwidth);
-										left = (left + imgWidth) / itemwidth * itemwidth + imgWidth;
+										itemJsonObject.put("x", left / itemwidth * itemwidth + itemwidth);
+										left = (left / itemwidth + 1) * itemwidth + imgWidth;
+//										itemJsonObject.put("x", (left + imgWidth) / itemwidth * itemwidth);
+//										left = (left + imgWidth) / itemwidth * itemwidth + imgWidth;
 									} else {
 										itemJsonObject.put("x", left);
 										left += imgWidth;
@@ -301,12 +309,19 @@ public class DrawTextGraphics {
 				}
 
 				if (JSONlist.size() > 0) {
+
+//					GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//					String[] fontList = ge.getAvailableFontFamilyNames();
+//					for (String f : fontList) {
+//						System.err.println(f);
+//					}
 					BufferedImage bmp = new BufferedImage(width, itemheight, BufferedImage.TYPE_INT_BGR);
 					Graphics2D graphics = bmp.createGraphics();// 画图
 
 					for (int i = 0; i < JSONlist.size(); i++) {
 						JSONObject jsonObject = JSONlist.get(i);
 						int type = jsonObject.getIntValue("type");
+						int x = jsonObject.getIntValue("x") + firstSpace, y = jsonObject.getIntValue("y");
 						if (type == 0) {
 							String backcolor = jsonObject.getString("backColor").trim();
 							if (backcolor.indexOf("rgb") >= 0) {
@@ -353,8 +368,10 @@ public class DrawTextGraphics {
 								forecolor = "#" + builderr + builderg + builderb;
 							}
 							String fontName = jsonObject.getString("fontName").trim();
+
 							int fontSize = jsonObject.getIntValue("fontSize");
 
+//							Font font = new Font("Microsoft YaHei", Font.PLAIN, fontSize);
 							Font font = new Font(fontName, Font.PLAIN, fontSize);
 
 							int colorbbindex = Integer.parseInt(backcolor.substring(1), 16);
@@ -362,14 +379,13 @@ public class DrawTextGraphics {
 
 							if (backcolor != "#ffffff") {
 								graphics.setColor(m_backcolor);// 在换成黑色
-								graphics.fillRect(jsonObject.getIntValue("x"), 0, jsonObject.getIntValue("w"),
-										itemheight);
+								graphics.fillRect(x, 0, jsonObject.getIntValue("w"), itemheight);
 							}
 							String prints = jsonObject.getString("value");
 
 							int colorbindex = Integer.parseInt(forecolor.substring(1), 16);
 							Color m_forecolor = new Color(colorbindex);
-							int x = jsonObject.getIntValue("x"), y = jsonObject.getIntValue("y");
+
 							GradientPaint paint = null;
 							if (jsonspecial != null) {
 								JSONObject jsonsketch = jsonspecial.getJSONObject("sketch");
@@ -434,18 +450,19 @@ public class DrawTextGraphics {
 								graphics.setColor(m_forecolor);
 							} // 在换成黑色
 							AffineTransform affineTransform = new AffineTransform();
-							affineTransform.scale(jsonObject.getIntValue("sx"), jsonObject.getIntValue("sy"));
+							affineTransform.scale(jsonObject.getDoubleValue("sx"), jsonObject.getDoubleValue("sy"));
 							graphics.setTransform(affineTransform);
-							graphics.drawString(prints, jsonObject.getIntValue("x"), jsonObject.getIntValue("y"));
+							float x1 = (float) (x / jsonObject.getDoubleValue("sx"));
+							float y1 = (float) (y / jsonObject.getDoubleValue("sy"));
+							graphics.drawString(prints, x1, y1);
 						} else {
 							BufferedImage img = (BufferedImage) jsonObject.get("value");
-							graphics.drawImage(img, jsonObject.getIntValue("x"), jsonObject.getIntValue("y"),
-									img.getWidth(), img.getHeight(), null);
+							graphics.drawImage(img, x, y, img.getWidth(), img.getHeight(), null);
 						}
 
 					}
 
-					// ImageIO.write(bmp, "bmp", new File("E:/test.bmp"));
+					ImageIO.write(bmp, "bmp", new File("D:/test.bmp"));
 					// return null;
 					return bmp;
 				} else {
@@ -456,6 +473,468 @@ public class DrawTextGraphics {
 				return null;
 			}
 		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	// 图文变成图片,一屏一画
+	public static BufferedImage getImagebyJsonArray1(int playtype, JSONArray JarrContext, JSONObject jsonspecial,
+			int itemwidth, int itemheight) {
+		try {
+			int left = 0;
+			JSONArray lineArray = new JSONArray();
+			if (JarrContext != null && JarrContext.size() > 0) {
+				if (playtype == 1) {
+					for (int r = 0; r < JarrContext.size(); r++) {// 多行数据
+						JSONArray Jarrr = JarrContext.getJSONArray(r);
+						JSONArray itemJarrr = new JSONArray();
+						for (int t = 0; t < Jarrr.size(); t++) {// 图文混排数据
+							JSONObject jsonObject = Jarrr.getJSONObject(t);
+							int itemType = jsonObject.getInteger("itemType");
+							switch (itemType) {
+							case 0: {
+								String backcolor = jsonObject.getString("backColor");
+								String forecolor = jsonObject.getString("foreColor");
+
+								String fontName = jsonObject.getString("fontName");
+								int fontSize = jsonObject.getIntValue("fontSize");
+								String txtval = jsonObject.getString("value");
+
+								double sx = 1, sy = 1;
+								if (jsonspecial != null) {
+									JSONObject jsonscale = jsonspecial.getJSONObject("scale");
+									if (jsonscale != null) {
+										sx = jsonscale.getDoubleValue("scaleX") / 100;
+										sy = jsonscale.getDoubleValue("scaleY") / 100;
+									}
+								}
+
+								Font font = new Font(fontName, Font.PLAIN, fontSize);
+								FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
+								int txtwidth = metrics.stringWidth(txtval);
+								txtwidth = (int) Math.ceil(txtwidth * sx);
+
+								int top = 0;
+								int txth = fontSize;// metrics.getHeight();
+								txth = (int) (txth * sy);
+								if (itemheight > txth) {
+									top = (itemheight - txth) / 2;
+								}
+								top = top + metrics.getAscent() - (metrics.getAscent() - fontSize + 3);
+
+								JSONObject itemJsonObject = new JSONObject();
+								itemJsonObject.put("type", 0);
+								itemJsonObject.put("x", left);
+								itemJsonObject.put("y", top);
+								itemJsonObject.put("w", txtwidth);
+								itemJsonObject.put("value", txtval);
+								itemJsonObject.put("sx", sx);
+								itemJsonObject.put("sy", sy);
+								itemJsonObject.put("fontName", fontName);
+								itemJsonObject.put("fontSize", fontSize);
+								itemJsonObject.put("backColor", backcolor);
+								itemJsonObject.put("foreColor", forecolor);
+								itemJsonObject.put("image", Drawitem(0, top, txtwidth, itemheight, backcolor, forecolor,
+										fontName, fontSize, txtval, jsonspecial));
+
+								itemJarrr.add(itemJsonObject);
+								left += txtwidth;
+							}
+								;
+								break;
+							case 2:
+							case 3: {
+								String urlString = jsonObject.getString("value");
+								if (urlString.contains("base64")) {
+									String base64ImgString = urlString.substring(urlString.indexOf("base64,") + 7);
+
+									Base64.Decoder decoder = Base64.getDecoder();
+									byte[] imgBytes = decoder.decode(base64ImgString);
+
+									ByteArrayInputStream in = new ByteArrayInputStream(imgBytes); // 将b作为输入流；
+
+									BufferedImage bufImage = ImageIO.read(in); // 将in作为输入流，读取图片存入image中，而这里in可以为ByteArrayInputStream();
+
+									BufferedImage bufnewImage = DrawTextGraphics.getnewbufImage(bufImage, itemheight);
+
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 1);
+									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", 0);
+									itemJsonObject.put("w", bufnewImage.getWidth());
+									itemJsonObject.put("value", bufnewImage);
+									itemJarrr.add(itemJsonObject);
+
+									left += bufnewImage.getWidth();
+								} else {
+									URL url = new URL(urlString);
+									BufferedImage bufImage = ImageIO.read(url);
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 1);
+									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", 0);
+									itemJsonObject.put("w", bufImage.getWidth());
+									itemJsonObject.put("value", bufImage);
+									itemJarrr.add(itemJsonObject);
+									left += bufImage.getWidth();
+								}
+							}
+								;
+								break;
+							default:
+								break;
+							}
+						}
+						lineArray.add(itemJarrr);
+					}
+				} else {
+					for (int r = 0; r < JarrContext.size(); r++) {// 多行数据
+						JSONArray Jarrr = JarrContext.getJSONArray(r);
+						JSONArray itemJarrr = new JSONArray();
+						left = (int) Math.floor((double) left / itemwidth) * itemwidth;
+						for (int t = 0; t < Jarrr.size(); t++) {// 图文混排数据
+							JSONObject jsonObject = Jarrr.getJSONObject(t);
+							int itemType = jsonObject.getInteger("itemType");
+							switch (itemType) {
+							case 0: {
+								String backcolor = jsonObject.getString("backColor");
+								String forecolor = jsonObject.getString("foreColor");
+
+								String fontName = jsonObject.getString("fontName");
+								int fontSize = jsonObject.getIntValue("fontSize");
+								String txtval = jsonObject.getString("value");
+
+								double sx = 1, sy = 1;
+								if (jsonspecial != null) {
+									JSONObject jsonscale = jsonspecial.getJSONObject("scale");
+									if (jsonscale != null) {
+										sx = jsonscale.getDoubleValue("scaleX") / 100;
+										sy = jsonscale.getDoubleValue("scaleY") / 100;
+									}
+								}
+
+								Font font = new Font(fontName, Font.PLAIN, fontSize);
+								FontDesignMetrics metrics = FontDesignMetrics.getMetrics(font);
+								int txtwidth = metrics.stringWidth(txtval);
+								txtwidth = (int) (txtwidth * sx);
+
+								int top = 0;
+								int txth = fontSize;// metrics.getHeight();
+								txth = (int) (txth * sy);
+								if (itemheight > txth) {
+									top = (itemheight - txth) / 2;
+								}
+								top = top + metrics.getAscent() - (metrics.getAscent() - fontSize + 3);
+
+								if (left % itemwidth + txtwidth > itemwidth) {
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 0);
+									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", top);
+									itemJsonObject.put("w", txtwidth);
+									itemJsonObject.put("value", "");
+									itemJsonObject.put("sx", sx);
+									itemJsonObject.put("sy", sy);
+									itemJsonObject.put("fontName", fontName);
+									itemJsonObject.put("fontSize", fontSize);
+									itemJsonObject.put("backColor", backcolor);
+									itemJsonObject.put("foreColor", forecolor);
+//									itemJsonObject.put("image", Drawitem(0, top, txtwidth, itemheight, backcolor,
+//											forecolor, fontName, fontSize, txtval, jsonspecial));
+
+									int firstindex = 0;
+									for (int c = 0; c < txtval.length(); c++) {
+										int charsW = (int) Math.ceil(
+												metrics.charsWidth(txtval.toCharArray(), firstindex, c - firstindex + 1)
+														* sx);
+										if (left % itemwidth + charsW > itemwidth) {
+
+											String ttString = itemJsonObject.getString("value");
+											int ttwidth = (int) Math.ceil(metrics.stringWidth(ttString) * sx);
+											itemJsonObject.put("w", ttwidth);
+											itemJsonObject.put("image", Drawitem(0, top, ttwidth, itemheight, backcolor,
+													forecolor, fontName, fontSize, ttString, jsonspecial));
+
+											itemJarrr.add(itemJsonObject);
+											left = (int) (Math.floor((double) left / itemwidth) + 1) * itemwidth;
+											firstindex = c;
+											c -= 1;
+
+											itemJsonObject = new JSONObject();
+											itemJsonObject.put("type", 0);
+											itemJsonObject.put("x", left);
+											itemJsonObject.put("y", top);
+											itemJsonObject.put("w", txtwidth);
+											itemJsonObject.put("value", "");
+											itemJsonObject.put("sx", sx);
+											itemJsonObject.put("sy", sy);
+											itemJsonObject.put("fontName", fontName);
+											itemJsonObject.put("fontSize", fontSize);
+											itemJsonObject.put("backColor", backcolor);
+											itemJsonObject.put("foreColor", forecolor);
+											continue;
+										} else {
+											String txtString = itemJsonObject.getString("value") + txtval.charAt(c);
+											itemJsonObject.put("value", txtString);
+										}
+
+										if (c == txtval.length() - 1) {
+											String ttString = itemJsonObject.getString("value");
+											int ttwidth = (int) Math.ceil(metrics.stringWidth(ttString) * sx);
+											itemJsonObject.put("w", ttwidth);
+											itemJsonObject.put("image", Drawitem(0, top, ttwidth, itemheight, backcolor,
+													forecolor, fontName, fontSize, ttString, jsonspecial));
+											itemJarrr.add(itemJsonObject);
+											left += ttwidth;
+										}
+									}
+								} else {
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 0);
+									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", top);
+									itemJsonObject.put("w", txtwidth);
+									itemJsonObject.put("value", txtval);
+									itemJsonObject.put("sx", sx);
+									itemJsonObject.put("sy", sy);
+									itemJsonObject.put("fontName", fontName);
+									itemJsonObject.put("fontSize", fontSize);
+									itemJsonObject.put("backColor", backcolor);
+									itemJsonObject.put("foreColor", forecolor);
+									itemJsonObject.put("image", Drawitem(0, top, txtwidth, itemheight, backcolor,
+											forecolor, fontName, fontSize, txtval, jsonspecial));
+
+									itemJarrr.add(itemJsonObject);
+									left += txtwidth;
+								}
+							}
+								;
+								break;
+							case 2:
+							case 3: {
+								String urlString = jsonObject.getString("value");
+								if (urlString.contains("base64")) {
+									String base64ImgString = urlString.substring(urlString.indexOf("base64,") + 7);
+
+									Base64.Decoder decoder = Base64.getDecoder();
+									byte[] imgBytes = decoder.decode(base64ImgString);
+
+									ByteArrayInputStream in = new ByteArrayInputStream(imgBytes); // 将b作为输入流；
+
+									BufferedImage bufImage = ImageIO.read(in); // 将in作为输入流，读取图片存入image中，而这里in可以为ByteArrayInputStream();
+
+									BufferedImage bufnewImage = DrawTextGraphics.getnewbufImage(bufImage, itemheight);
+
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 1);
+//									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", 0);
+									itemJsonObject.put("w", bufnewImage.getWidth());
+									itemJsonObject.put("value", bufnewImage);
+
+									if (left % itemwidth != 0
+											&& left / itemwidth != (left + bufnewImage.getWidth() - 1) / itemwidth) {
+										itemJsonObject.put("x", left / itemwidth * itemwidth + itemwidth);
+										left = (left / itemwidth + 1) * itemwidth + bufnewImage.getWidth();//
+									} else {
+										itemJsonObject.put("x", left);
+										left += bufnewImage.getWidth();
+									}
+
+									itemJarrr.add(itemJsonObject);
+								} else {
+									URL url = new URL(urlString);
+									BufferedImage bufImage = ImageIO.read(url);
+									JSONObject itemJsonObject = new JSONObject();
+									itemJsonObject.put("type", 1);
+//									itemJsonObject.put("x", left);
+									itemJsonObject.put("y", 0);
+									itemJsonObject.put("w", bufImage.getWidth());
+									itemJsonObject.put("value", bufImage);
+									if (left % itemwidth != 0
+											&& left / itemwidth != (left + bufImage.getWidth() - 1) / itemwidth) {
+										itemJsonObject.put("x", left / itemwidth * itemwidth + itemwidth);
+										left = (left / itemwidth + 1) * itemwidth + bufImage.getWidth();//
+									} else {
+										itemJsonObject.put("x", left);
+										left += bufImage.getWidth();
+									}
+									itemJarrr.add(itemJsonObject);
+								}
+							}
+								;
+								break;
+							default:
+								break;
+							}
+						}
+						lineArray.add(itemJarrr);
+					}
+				}
+			}
+
+			int imgWidth = 0, firstSpace = 0;
+			if (playtype == 1) {
+				imgWidth = (int) Math.ceil((double) left / 8) * 8;
+				firstSpace = imgWidth - left;
+			} else {
+				imgWidth = (int) Math.ceil((double) left / itemwidth) * itemwidth;
+			}
+			BufferedImage bmp = new BufferedImage(imgWidth, itemheight, BufferedImage.TYPE_INT_BGR);
+			Graphics2D graphics = bmp.createGraphics();// 画图
+
+			if (lineArray.size() > 0) {
+				for (int i = 0; i < lineArray.size(); i++) {
+					JSONArray jsonArray = lineArray.getJSONArray(i);
+					for (int j = 0; j < jsonArray.size(); j++) {
+						JSONObject itemJsonObject = jsonArray.getJSONObject(j);
+						if (itemJsonObject.getIntValue("type") == 0) {
+							BufferedImage img = (BufferedImage) itemJsonObject.get("image");
+							graphics.drawImage(img, itemJsonObject.getIntValue("x") + firstSpace, 0, img.getWidth(),
+									img.getHeight(), null);
+						} else {
+							BufferedImage img = (BufferedImage) itemJsonObject.get("value");
+							graphics.drawImage(img, itemJsonObject.getIntValue("x") + firstSpace,
+									itemJsonObject.getIntValue("y"), img.getWidth(), img.getHeight(), null);
+						}
+					}
+				}
+			}
+//			ImageIO.write(bmp, "bmp", new File("D:/test1.bmp"));
+			return bmp;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private static String rgb2String(String colorString) {
+		String returnString = "";
+		try {
+			String[] rgb = colorString.split(",");
+			int r = Integer.parseInt(rgb[0].split("(")[1]);
+			int g = Integer.parseInt(rgb[1]);
+			int b = Integer.parseInt(rgb[2].split(")")[0]);
+			StringBuilder builderr = new StringBuilder(Integer.toHexString(r & 0xff));
+			while (builderr.length() < 2) {
+				builderr.append("0");
+			}
+
+			StringBuilder builderg = new StringBuilder(Integer.toHexString(g & 0xff));
+			while (builderg.length() < 2) {
+				builderg.append("0");
+			}
+			StringBuilder builderb = new StringBuilder(Integer.toHexString(b & 0xff));
+			while (builderb.length() < 2) {
+				builderb.append("0");
+			}
+			returnString = "#" + builderr + builderg + builderb;
+			return returnString;
+		} catch (Exception e) {
+			return returnString;
+		}
+	}
+
+	private static BufferedImage Drawitem(int x, int y, int width, int height, String backcolor, String forecolor,
+			String fontName, int fontSize, String prints, JSONObject jsonspecial) {
+		try {
+			BufferedImage bmp = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
+			Graphics2D graphics = bmp.createGraphics();// 画图
+
+			if (backcolor.indexOf("rgb") >= 0) {
+				backcolor = rgb2String(backcolor);
+			}
+			if (forecolor.indexOf("rgb") >= 0) {
+				forecolor = rgb2String(forecolor);
+			}
+
+			Font font = new Font(fontName, Font.PLAIN, fontSize);
+			graphics.setFont(font);// 设置画笔字体
+			int colorbbindex = Integer.parseInt(backcolor.substring(1), 16);
+			Color m_backcolor = new Color(colorbbindex);
+
+			if (backcolor != "#ffffff") {
+				graphics.setColor(m_backcolor);// 在换成黑色
+				graphics.fillRect(0, 0, width, height);
+			}
+
+			int colorbindex = Integer.parseInt(forecolor.substring(1), 16);
+			Color m_forecolor = new Color(colorbindex);
+
+			double sx = 1, sy = 1;
+			GradientPaint paint = null;
+			if (jsonspecial != null) {
+				JSONObject jsonsketch = jsonspecial.getJSONObject("sketch");
+				JSONObject jsonshadow = jsonspecial.getJSONObject("shadow");
+				JSONObject jsongradient = jsonspecial.getJSONObject("gradient");
+				JSONObject jsonscale = jsonspecial.getJSONObject("scale");
+				if (jsonscale != null) {
+					sx = jsonscale.getDoubleValue("scaleX") / 100;
+					sy = jsonscale.getDoubleValue("scaleY") / 100;
+					AffineTransform affineTransform = new AffineTransform();
+					affineTransform.scale(sx, sy);
+					graphics.setTransform(affineTransform);
+				}
+				int strokeWidth = 0;
+				if (jsonsketch != null) {
+					Color m_sketchcolor = new Color(
+							Integer.parseInt(jsonsketch.getString("strokeStyle").substring(1), 16));
+					graphics.setColor(m_sketchcolor);// 描边颜色
+					strokeWidth = jsonsketch.getIntValue("strokeWidth");
+					for (int s = 0; s < strokeWidth; s++) {
+						// 描边上下左右移动点画
+						graphics.drawString(prints, x + s + 1, y);
+						graphics.drawString(prints, x - s - 1, y);
+						graphics.drawString(prints, x, y + s + 1);
+						graphics.drawString(prints, x, y - s - 1);
+					}
+				}
+
+				if (jsonshadow != null) {
+					Color m_shadowcolor = new Color(
+							Integer.parseInt(jsonshadow.getString("shadowColor").substring(1), 16));
+					graphics.setColor(m_shadowcolor);// 阴影颜色
+					int shadowBlur = jsonshadow.getIntValue("shadowBlur");
+					for (int s = 0; s < shadowBlur; s++) {
+						// 阴影左下移动点画
+						graphics.drawString(prints, strokeWidth + x + s + 1, strokeWidth + y + s + 1);
+					}
+				}
+				if (jsongradient != null) {
+					String gradientdirection = jsongradient.getString("gradientdirection");
+					Color gradientcolor1 = new Color(
+							Integer.parseInt(jsongradient.getString("gradientcolor1").substring(1), 16));
+					Color gradientcolor2 = new Color(
+							Integer.parseInt(jsongradient.getString("gradientcolor2").substring(1), 16));
+					switch (gradientdirection) {
+					case "horizontal": {
+						paint = new GradientPaint(0, 0, gradientcolor1, width, 0, gradientcolor2, true);
+					}
+						;
+						break;
+					case "vertical": {
+						paint = new GradientPaint(0, 0, gradientcolor1, 0, height, gradientcolor2, true);
+					}
+						;
+						break;
+					case "oblique": {
+						paint = new GradientPaint(0, 0, gradientcolor1, width, height, gradientcolor2, true);
+					}
+						;
+						break;
+					}
+					graphics.setPaint(paint);// 设置渐变
+				}
+			}
+
+			if (paint == null) {
+				graphics.setColor(m_forecolor);
+			} // 在换成黑色
+
+			graphics.drawString(prints, x, y);
+			graphics.dispose();
+			return bmp;
+		} catch (Exception e) {
+			// TODO: handle exception
 			return null;
 		}
 	}
@@ -511,7 +990,7 @@ public class DrawTextGraphics {
 			if (itemheight > txth) {
 				top = (itemheight - txth) / 2;
 			}
-			int x = 0, y = top + metrics.getAscent() - 2;
+			int x = 0, y = top + metrics.getAscent() - -(metrics.getAscent() - fontSize + 3);
 			GradientPaint paint = null;
 			if (jsonspecial != null) {
 				JSONObject jsonsketch = jsonspecial.getJSONObject("sketch");
@@ -579,7 +1058,7 @@ public class DrawTextGraphics {
 			graphics.drawString(prints, x, y);
 			graphics.dispose();
 
-			// ImageIO.write(bmp, "PNG", new File("E:/11.png"));
+//			ImageIO.write(bmp, "PNG", new File("E:/11.png"));
 
 			return bmp;
 		} catch (Exception e) {

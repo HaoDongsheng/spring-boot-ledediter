@@ -53,9 +53,11 @@ function init_modal()
 		var lifeDie = $("#creat_infolifeDie").val().trim();
 		
 		if(infoname==null || infoname=="")
-			{return;}
+			{alertMessage(1, "警告", "广告名称不能为空!");return;}
+		if(lifeAct>lifeDie)
+			{alertMessage(1, "警告", "开始日期不能大于结束日期!");return;}
 		
-		var strbackgroundStyle = GetbackgroundStyle();
+		var strbackgroundStyle = GetbackgroundStyle();		
 		
 		var datatype = $("#modal_creatinfo").attr("data-type");
 		if(datatype=="create_info")//新建

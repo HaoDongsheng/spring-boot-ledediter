@@ -6,17 +6,24 @@
 	
 	<!-- Bootstrap 核心 CSS 文件 -->	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">	
-	<link th:href="@{~/css/login_style.css}" rel="stylesheet" type="text/css">	
+	<link th:href="@{~/css/login_style.css}" rel="stylesheet" type="text/css">		
+	<link th:href="@{~/css/slide-unlock.css}" type="text/css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">	
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
-	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>
+	<!-- jquery-ui 核心 JavaScript 文件 -->	
+	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
+	<script type="text/javascript" th:src="@{~/jquery-ui/jquery-ui.min.js}" ></script>	
 	<!--jquery.validate-->
 	<script src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 	<script src="https://cdn.bootcss.com/jquery-validate/1.17.0/localization/messages_zh.min.js"></script>	
 	<script type="text/javascript" th:src="@{~/javascript/login.js}" ></script>	
 	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/share.js}"></script>		
+	<script type="text/javascript" th:src="@{~/javascript/jquery.slideunlock.js}"></script> 		
+	
 	<style type="text/css">				
 		#login_form{display: block;}
 		#register_form{display: none;}
@@ -38,7 +45,13 @@
 					<div class="form-group">
 						<label for="password" class="sr-only">密码</label>
 						<input type="password" class="form-control required" id="login_password" placeholder="密码" name="password" maxlength="20"></input>
-					</div>
+					</div>					
+					
+					<div id="slider" style="display:none;">
+				        <div id="slider_bg"></div>
+				        <span id="label">>></span> <span id="labelTip">拖动滑块验证</span>
+				    </div>
+				    
 					<div class="form-group">
 						<label for="remember"><input type="checkbox" id="remember"></input>记住</label>
 					</div>

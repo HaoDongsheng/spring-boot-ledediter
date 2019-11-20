@@ -8,9 +8,16 @@ var selectItem,selectGrip;
 var defaultFontsize=32;
 var ue;
 var scrollValue=0;
+var ispermission=true;
 
 $(function(){		
+	
+	console.log($(window).height()); //浏览器时下窗口可视区域高度
+	console.log($(document).height()); //浏览器时下窗口文档的高度 
+	console.log($(document.body).height());//浏览器时下窗口文档body的高度
+	
 	//ue = UE.getEditor('ueditor_context');		   		
+	permission();
 	
 	getGroup();
 	
@@ -36,6 +43,43 @@ $(function(){
 	*/
 	 	 			
 });
+//权限功能封闭
+function permission() {
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));		
+	
+	if(adminInfo.issuperuser!=1)
+		{
+		var adminpermission = adminInfo.adminpermission;
+		var isable = parseInt(adminpermission[0]);
+		if(isable==1)
+			{
+			ispermission = true;
+//			$('#info_create').removeAttr("disabled");
+//			$('#info_save').removeAttr("disabled");
+//			$('#info_delete').removeAttr("disabled");
+//			$('#info_publish').removeAttr("disabled");
+//			$('#info_copy').removeAttr("disabled");
+//			
+//			$('#creat_layer').removeAttr("disabled");	
+			
+			$('#info_parameter input').removeAttr("disabled");
+			$('#info_parameter select').removeAttr("disabled");
+			}
+		else {
+			ispermission = false;
+//			$('#info_create').attr("disabled","disabled");	
+//			$('#info_save').attr("disabled","disabled");
+//			$('#info_delete').attr("disabled","disabled");
+//			$('#info_publish').attr("disabled","disabled");
+//			$('#info_copy').attr("disabled","disabled");
+//			
+//			$('#creat_layer').attr("disabled","disabled");	
+			
+			$('#info_parameter input').attr("disabled","disabled");
+			$('#info_parameter select').attr("disabled","disabled");
+		}		
+		}
+}
 //自定义 图片
 function ueditor_customImage()
 {
@@ -51,6 +95,20 @@ function ueditor_customSpecial()
 	$('#modal_special_select').modal('show');
 }
 
+function isSensitive(content) {
+	var sensitiveString="";
+	var sensitivelist = JSON.parse(sessionStorage.getItem('sensitivelist'));	
+	for(var i=0;i<sensitivelist.length;i++)
+		{
+		if(content.indexOf(sensitivelist[i].svstring)!=-1)
+			{
+			sensitiveString = sensitivelist[i].svstring;
+			break;
+			}
+		}
+	return sensitiveString;
+}
+
 function initpage()
 {			
 	$('#info_operation_group').css("left",$('.container').offset().left - $('#info_operation_group').width());
@@ -58,9 +116,112 @@ function initpage()
 	
 	$(".modal").draggable();
 	
+	getsensitive();
+	
+	$("#btn_sensitive_add").click(function(){	
+		var sensitiveString = $("#input_sensitive").val().trim();
+		if(sensitiveString==null || sensitiveString=="")
+			{
+			alertMessage(1, "异常", "添加敏感词不能为空!");
+			return;
+			}
+		
+		$.ajax({  
+	        url:"/addSensitive",         
+	        data:{
+	        	sensitiveString:sensitiveString,
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname       	
+				},  
+	        type:"post",  
+	        dataType:"json", 
+	        success:function(data)  
+	        {       	  
+	        	if(data.result=="success")
+	        		{            			
+	        		var sensitivelist = JSON.parse(sessionStorage.getItem('sensitivelist'));	        		
+	        		
+        			var svid = data.svid;
+        			var projectid = data.projectid;
+        			var svstring = data.svstring;
+        			$('#svlist').append('<option value='+svid+' data-projectid ="'+projectid+'">'+svstring+'</option>');	
+        			
+        			var arr  = {
+	        		         svid : svid,
+	        		         projectid : projectid,
+	        		         svstring : svstring,
+	        		         svdelindex : 0
+	        		};
+	        		sensitivelist.push(arr);
+	        		sessionStorage.setItem('sensitivelist', JSON.stringify(sensitivelist));
+	        		
+        			alertMessage(0, "成功", "添加敏感词汇成功!");
+	        		}
+	        	else
+	        		{
+	        			alertMessage(1, "异常", data.resultMessage);				        			
+	        		}
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  addSensitive 错误");			        	            
+	          }  
+	    });
+	});
+
+	$("#btn_sensitive_delete").click(function(){	
+		var sensitivelist = $("#svlist").val().join(",");
+		if(sensitivelist==null || sensitivelist=="")
+			{
+			alertMessage(1, "异常", "请选择要删除的敏感词!");
+			return;
+			}
+		
+		$.ajax({  
+	        url:"/deleteSensitive",         
+	        data:{
+	        	sensitiveIdlist:sensitivelist,
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname       	
+				},  
+	        type:"post",  
+	        dataType:"json", 
+	        success:function(data)  
+	        {       	  
+	        	if(data.result=="success")
+	        		{            			
+	        		var sensitivelist = JSON.parse(sessionStorage.getItem('sensitivelist'));
+	        		var svlist=$("#svlist").val();
+	        		for(var i=0;i<svlist.length;i++)
+	        			{
+	        			var svid = parseInt(svlist[i]);
+	        			$("#svlist option[value="+svid+"]").remove();  //删除Select中Value='3'的Option
+	        			
+	        			for(var j=0;j<sensitivelist.length;j++)
+	        				{
+	        				if(sensitivelist[j].svid == svid)
+	        					{
+	        					sensitivelist.splice(j,1);
+	        					break;
+	        					}
+	        				}
+	        			}	        		
+        	
+	        		sessionStorage.setItem('sensitivelist', JSON.stringify(sensitivelist));
+	        		
+        			alertMessage(0, "成功", "shanchu敏感词汇成功!");
+	        		}
+	        	else
+	        		{
+	        			alertMessage(1, "异常", data.resultMessage);				        			
+	        		}
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  deleteSensitive 错误");			        	            
+	          }  
+	    });
+	});		
+	
 	$("#workarea").click(function(){	
 		selectitem=0;
-	});
+	});			
 	
 	$("#creat_layer").click(function(){
 		var pid=0;
@@ -77,6 +238,15 @@ function initpage()
 		}
 	});
 
+	$("#btn_sensitive_ok").click(function(){
+		var Content = $("#modal_sensitive").attr("data-content");
+		updateitem(selectpageid,selectitemid,["itemtype","special","context"],[0,selectspecial,Content]);
+		updateCanvasItem(selectpageid,selectitemid,true,false);
+		 
+		$("#myModalEdit").modal('hide');
+		$('#modal_sensitive').modal('hide');
+	});
+
 	$("#editItem").click(function(){
 		var selcet_div = parseInt($("#select_div").val());
 		switch(selcet_div)
@@ -85,11 +255,21 @@ function initpage()
 			if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
 			{			
 			 var Content = tinymce.activeEditor.getContent();
-			 //var Content = ue.getContent();
-			 updateitem(selectpageid,selectitemid,["itemtype","special","context"],[0,selectspecial,Content]);
-			 updateCanvasItem(selectpageid,selectitemid,true,false);
+			 var text = tinymce.activeEditor.getContent( { 'format' : 'text' } );
+			 var sensitiveString = isSensitive(text);
+			 if(sensitiveString!="")
+				 {
+				 $('#modal_sensitive .modal-body').text("内容包含敏感词汇["+sensitiveString+"],是否继续保存?");
+				 $('#modal_sensitive').modal('show');
+				 $("#modal_sensitive").attr("data-content",Content);
+				 }
+			 else {
+				 updateitem(selectpageid,selectitemid,["itemtype","special","context"],[0,selectspecial,Content]);
+				 updateCanvasItem(selectpageid,selectitemid,true,false);
+				 
+				 $("#myModalEdit").modal('hide');	
+			}
 			 
-			 $("#myModalEdit").modal('hide');
 			}
 		};break;
 		case 1/*Gif动画*/:{
@@ -903,7 +1083,9 @@ function saveitem(infoid)
 			        	if(data.result=="success")
 			        		{    
 			        			infomap[infoid].isSave=0;
-			        			alertMessage(0, "成功", "保存成功");			        			
+			        			
+    							alertMessage(0, "成功", "保存成功!");
+			        						        			
 			        		}
 			        	else
 			        		{
@@ -1049,7 +1231,7 @@ function updateitem(pageid,itemid,proNames,values)
 									var proName=proNames[p];
 									switch(proName)
 									{
-										case 'context':{
+										case 'context':{											    
 											 item.context=values[p];
 											 
 											 var arrNode = updateitembfcolorReturnjson(item);
@@ -1428,6 +1610,7 @@ function infoAuditbyid(infoid)
 			    							selectinfoid=0;			    							
 			    							initSvgcanvas();
 			    							$("#layer_list").empty();
+			    							
 			    							alertMessage(0, "成功", "送审核成功!");
 		        		        		}
 		        		        	else
@@ -1788,7 +1971,7 @@ function getitemsize(itemw,contextJson,type)
 			    var str = itemnode.value;
 			    for(var j = 0; j < str.length; j++){
 			    	var charw=0;
-				    if (str.charCodeAt(j) > 128 ) {
+				    if (str.charCodeAt(j) > 128/* && str.charCodeAt(j)!=160*/) {
 				    	charw=itemnode.fontSize;
 				    	txtwidth += charw;
 				    } 
@@ -1827,7 +2010,7 @@ function getitemsize(itemw,contextJson,type)
 			    var str = itemnode.value;
 			    for(var j = 0; j < str.length; j++){
 			    	var charw=0;
-				    if (str.charCodeAt(j) > 128 ) {
+				    if (str.charCodeAt(j) > 128/*&& str.charCodeAt(j)!=160*/) {
 				    	charw=itemnode.fontSize;				    	
 				    } 
 				    else {
@@ -1838,7 +2021,8 @@ function getitemsize(itemw,contextJson,type)
 				    charw = parseInt(charw * scaleX);
 				    if(left%itemw!=0 && Math.floor(left/itemw) != Math.floor((left + charw - 1)/itemw))
 		        	{			        		
-		        		left = Math.floor((left + charw)/itemw) * itemw + charw;
+//		        		left = Math.floor((left + charw)/itemw) * itemw + charw;
+		        		left = Math.floor(left / itemw + 1) * itemw + charw;
 		        	}
 		        	else {				        		
 		        		left += charw;	
@@ -1852,7 +2036,8 @@ function getitemsize(itemw,contextJson,type)
 				var w = nodewidth;
 				 if(left%itemw!=0 && Math.floor(left/itemw) != Math.floor((left + w - 1)/itemw))
 		        	{				        	
-		        		left = Math.floor((left + w)/itemw)*itemw + w;
+//		        		left = Math.floor((left + w)/itemw)*itemw + w;
+		        		left = Math.floor(left / itemw + 1) * itemw + w;
 		        	}
 		        	else {						        				        		
 		        		left += w;	
@@ -1872,6 +2057,40 @@ function getitemsize(itemw,contextJson,type)
 			itemw:totalw
 	};
 	return result;
+}
+//获取敏感词汇
+function getsensitive()
+{					
+	$.ajax({  
+        url:"/getSensitive",         
+        data:{        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname       	
+			},  
+        type:"post",  
+        dataType:"json", 
+        success:function(data)  
+        {       	  
+        	if(data.result=="success" && data.sensitivelist!=null)
+        		{            			
+        		var sensitivelist = JSON.parse(data.sensitivelist);
+        		sessionStorage.setItem('sensitivelist', data.sensitivelist);
+        		for(var i=0;i<sensitivelist.length;i++)
+        			{
+        			var svid = sensitivelist[i].svid;
+        			var projectid = sensitivelist[i].projectid;
+        			var svstring = sensitivelist[i].svstring;
+        			$('#svlist').append('<option value='+svid+' data-projectid ="'+projectid+'">'+svstring+'</option>');
+        			}
+        		}
+        	else
+        		{
+        			alertMessage(1, "异常", data.resultMessage);				        			
+        		}
+        },  
+        error: function() { 
+        	alertMessage(2, "异常", "ajax 函数  getSensitive 错误");			        	            
+          }  
+    });	
 }
 //
 function SendCallback(SN,infocodelist,i)

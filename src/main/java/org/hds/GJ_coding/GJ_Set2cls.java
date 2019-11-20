@@ -1,44 +1,55 @@
 package org.hds.GJ_coding;
 
-public class GJ_Set2cls
-{
-    private int id;
-    /// <summary>
-    /// set2id--1byte
-    /// </summary>   
+public class GJ_Set2cls {
+	private int id;
+	/// <summary>
+	/// set2id--1byte
+	/// </summary>
 
-    private int version;
-    /// <summary>
-    /// set2版本号--1byte
-    /// </summary>    
+	private int version;
+	/// <summary>
+	/// set2版本号--1byte
+	/// </summary>
 
-    private String DefaulText;
-    /// <summary>
-    /// 默认标语--8byte。
-    /// </summary> 
-    
-    private String AlarmText;
-    /// <summary>
-    /// 报警标语--8byte。
-    /// </summary>
+	private String DefaulText;
+	/// <summary>
+	/// 默认标语--8byte。
+	/// </summary>
 
-    private int setZhaoMingMode;
-    /// <summary>
-    /// 设置照明灯方式--1byte 0：按设定时间开关。1：常关。2：常开。
-    /// </summary>
+	private String AlarmText;
+	/// <summary>
+	/// 报警标语--8byte。
+	/// </summary>
 
-    private String ZhaoMingTimeStart;
-    /// <summary>
-    /// 照明灯开启时间--2byte，时分
-    /// </summary>
+	private int setZhaoMingMode;
+	/// <summary>
+	/// 设置照明灯方式--1byte 0：按设定时间开关。1：常关。2：常开。
+	/// </summary>
 
-    private String ZhaoMingTimeEnd;
-    /// <summary>
-    /// 照明灯结束时间--2byte，时分
-    /// </summary>
+	private String ZhaoMingTimeStart;
+	/// <summary>
+	/// 照明灯开启时间--2byte，时分
+	/// </summary>
 
+	private String ZhaoMingTimeEnd;
+	/// <summary>
+	/// 照明灯结束时间--2byte，时分
+	/// </summary>
 
-    public int get_id() {
+	private int Playmode;
+	/// <summary>
+	/// 设置照明灯方式--1byte 0：正常。1：默认标语。2：车牌。
+	/// </summary>
+
+	public int get_Playmode() {
+		return Playmode;
+	}
+
+	public void set_Playmode(int playmode) {
+		Playmode = playmode;
+	}
+
+	public int get_id() {
 		return id;
 	}
 
@@ -92,5 +103,5 @@ public class GJ_Set2cls
 
 	public void set_ZhaoMingTimeEnd(String ZhaoMingTimeEnd) {
 		this.ZhaoMingTimeEnd = ZhaoMingTimeEnd;
-	}	
+	}
 }

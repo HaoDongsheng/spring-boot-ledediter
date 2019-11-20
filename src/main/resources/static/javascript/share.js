@@ -1,9 +1,48 @@
 $(function(){
-		
-	adminpermission();
+				
+	$( ".modal" ).draggable({ handle: ".modal-header" });
+	
+//	adminpermission();
 	
 	mainClick();
+	
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));	
+	
+	$('#dropdownUser_name').text(adminInfo.adminname);
 });
+
+//获取当前时间，格式YYYY-MM-DD
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
+}
+
+function getNowFormatDatetime() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+":"+date.getMilliseconds();
+    return currentdate;
+}
 
 function alertMessage(messageType, title, message) {	
 	var icon='fa fa-check';
@@ -58,24 +97,28 @@ function mainClick()
 	})
 	
 	$('.bk-clr-four').click(function() {
-		window.location.href="groupManger";
+		window.location.href="historyManger";
 	})
 	
 	$('.bk-clr-five').click(function() {
-		window.location.href="userManger";
+		window.location.href="groupManger";
 	})
 	
 	$('.bk-clr-six').click(function() {
-		window.location.href="taxiManger";
+		window.location.href="userManger";
 	})
 	
 	$('.bk-clr-seven').click(function() {
+		window.location.href="taxiManger";
+	})
+	
+	$('.bk-clr-eight').click(function() {
 		window.location.href="projectManger";
 	})
 }
 
 function adminpermission()
-{
+{	
 	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));		
 	
 	if(adminInfo.issuperuser!=1)
@@ -88,40 +131,47 @@ function adminpermission()
 				switch(i)
 				{
 					case 0:{
-						if(adminpermission[i]=='0')
-							{
-								$('#advManger').css("display","none");
-								$('.bk-clr-one').parent().css("display","none");
-							}
-						else
-							{
-								$('#advManger').css("display","inline");
-								$('.bk-clr-one').parent().css("display","inline");
-							}
+//						if(adminpermission[i]=='0')
+//							{
+//								$('#advManger').css("display","none");
+//								$('.bk-clr-one').parent().css("display","none");
+//							}
+//						else
+//							{
+//								$('#advManger').css("display","inline");
+//								$('.bk-clr-one').parent().css("display","inline");
+//							}
+						
+						$('#advManger').css("display","inline");
+						$('.bk-clr-one').parent().css("display","inline");
 					};break;
 					case 1:{
-						if(adminpermission[i]=='0')
-						{
-							$('#auditManger').css("display","none");
-							$('.bk-clr-two').parent().css("display","none");
-						}
-					else
-						{
-							$('#auditManger').css("display","inline");
-							$('.bk-clr-two').parent().css("display","inline");
-						}
+//						if(adminpermission[i]=='0')
+//						{
+//							$('#auditManger').css("display","none");
+//							$('.bk-clr-two').parent().css("display","none");
+//						}
+//						else
+//						{
+//							$('#auditManger').css("display","inline");
+//							$('.bk-clr-two').parent().css("display","inline");
+//						}
+						$('#auditManger').css("display","inline");
+						$('.bk-clr-two').parent().css("display","inline");
 					};break;
 					case 2:{
-						if(adminpermission[i]=='0')
-						{
-							$('#infoList').css("display","none");
-							$('.bk-clr-three').parent().css("display","none");
-						}
-					else
-						{
-							$('#infoList').css("display","inline");
-							$('.bk-clr-three').parent().css("display","inline");
-						}
+//						if(adminpermission[i]=='0')
+//						{
+//							$('#infoList').css("display","none");
+//							$('.bk-clr-three').parent().css("display","none");
+//						}
+//						else
+//						{
+//							$('#infoList').css("display","inline");
+//							$('.bk-clr-three').parent().css("display","inline");
+//						}
+						$('#infoList').css("display","inline");
+						$('.bk-clr-three').parent().css("display","inline");
 					};break;
 					case 3:{
 						if(adminpermission[i]=='0')
@@ -147,7 +197,7 @@ function adminpermission()
 							$('.bk-clr-five').parent().css("display","inline");
 						}
 					};break;
-					case 4:{
+					case 5:{
 						if(adminpermission[i]=='0')
 						{
 							$('#taxiManger').css("display","none");
@@ -167,6 +217,65 @@ function adminpermission()
 			$('#projectManger').css("display","inline");
 			$('.bk-clr-seven').parent().css("display","inline");
 		}
+}
+//16进制6位转日期字符串
+function hexlife2String(life) {
+	life=life.toString();
+	if(life==0 || life=="0")
+		{
+		return "无生命周期";
+		}
+	else {
+		var y1 = parseInt(life.substring(0,2),16);
+		var m1 = parseInt(life.substring(2,4),16);
+		var d1 = parseInt(life.substring(4,6),16);
+		var y2 = parseInt(life.substring(6,8),16);
+		var m2 = parseInt(life.substring(8,10),16);
+		var d2 = parseInt(life.substring(10,12),16);
+		
+		return "20"+y1+"年"+m1+"月"+d1+"日 --- 20"+y2+"年"+m2+"月"+d2+"日";	
+	}
+	
+}
+//反转义
+function GJ_FanZhuanYi(oldData) {
+	var newData="";
+	newData+="7E";
+	for (var i = 2; i < oldData.length - 2; i+=2) {
+		if (oldData.substring(i,i+2) == "7D" || oldData.substring(i,i+2) == "7d") {
+			i+=2;
+			if (oldData.substring(i,i+2) == "01") {
+				newData+="7D";
+			} else if (oldData.substring(i,i+2) == "02") {
+				newData+="7E";
+			} else {
+				newData+="7D";
+				i-=2;
+			}
+		} else {
+			newData+=oldData.substring(i,i+2);			
+		}
+	}
+	newData+="7E";
+	return newData;
+}
+//获取真正秘钥
+function getCodeKey(str)
+{
+	let result = ''
+      // 转字符串
+      str += ''
+      for (let i = 0; i < str.length; i++) {
+        let bit = parseInt(str[i], 16).toString(2)
+        // 转字符串
+        bit.toString()
+        // 补零
+        while (bit.length < 4) {
+          bit = '0' + bit
+        }
+        result += bit
+      }
+      return result	 
 }
 
 var ws;

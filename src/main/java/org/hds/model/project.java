@@ -1,34 +1,50 @@
 package org.hds.model;
 
 public class project {
-    private String projectid;
+	private String projectid;
 
-    private String projectname;
+	private String projectname;
 
-    private Integer AutoGroupTo;    
+	private Integer AutoGroupTo;
 
-    private Integer IsOurModule;
-    
-    private String ConnectParameters;
-    
-    private Integer Total;
-    
-    private Integer DTU;
-    
-    private Integer LED;
-    
-    private Integer Updated;
-    
-    private String RecordingTime;
-    
-    private double UpdateRate;
-    
-    private String AdvertisementUpdateTime;
-    
-    private String TerminalUpdateTime;
-    
-    private String ParameterUpdateTime;
-    
+	private Integer IsOurModule;
+
+	private String ConnectParameters;
+
+	private Integer Total;
+
+	private Integer DTU;
+
+	private Integer LED;
+
+	private Integer Updated;
+
+	private String RecordingTime;
+
+	private double UpdateRate;
+
+	private String AdvertisementUpdateTime;
+
+	private String TerminalUpdateTime;
+
+	private String ParameterUpdateTime;
+
+	private String CheckCode;
+
+	private Integer DefaultStartlevel;
+
+	private Integer startlevelControl;
+
+	private Integer disconnect;
+
+	public Integer getDisconnect() {
+		return disconnect;
+	}
+
+	public void setDisconnect(Integer disconnect) {
+		this.disconnect = disconnect;
+	}
+
 	public Integer getAutoGroupTo() {
 		return AutoGroupTo;
 	}
@@ -38,20 +54,20 @@ public class project {
 	}
 
 	public String getProjectid() {
-        return projectid;
-    }
+		return projectid;
+	}
 
-    public void setProjectid(String projectid) {
-        this.projectid = projectid == null ? null : projectid.trim();
-    }
+	public void setProjectid(String projectid) {
+		this.projectid = projectid == null ? null : projectid.trim();
+	}
 
-    public String getProjectname() {
-        return projectname;
-    }
+	public String getProjectname() {
+		return projectname;
+	}
 
-    public void setProjectname(String projectname) {
-        this.projectname = projectname == null ? null : projectname.trim();
-    }
+	public void setProjectname(String projectname) {
+		this.projectname = projectname == null ? null : projectname.trim();
+	}
 
 	public Integer getIsOurModule() {
 		return IsOurModule;
@@ -69,7 +85,6 @@ public class project {
 		ConnectParameters = connectParameters;
 	}
 
-	
 	public Integer getTotal() {
 		return Total;
 	}
@@ -117,7 +132,7 @@ public class project {
 	public void setUpdateRate(double updateRate) {
 		UpdateRate = updateRate;
 	}
-		
+
 	public String getAdvertisementUpdateTime() {
 		return AdvertisementUpdateTime;
 	}
@@ -141,6 +156,29 @@ public class project {
 	public void setParameterUpdateTime(String parameterUpdateTime) {
 		ParameterUpdateTime = parameterUpdateTime;
 	}
-	
-	
+
+	public String getCheckCode() {
+		return CheckCode;
+	}
+
+	public void setCheckCode(String checkCode) {
+		CheckCode = checkCode;
+	}
+
+	public Integer getDefaultStartlevel() {
+		return DefaultStartlevel;
+	}
+
+	public void setDefaultStartlevel(Integer defaultStartlevel) {
+		DefaultStartlevel = defaultStartlevel;
+	}
+
+	public Integer getStartlevelControl() {
+		return startlevelControl;
+	}
+
+	public void setStartlevelControl(Integer startlevelControl) {
+		this.startlevelControl = startlevelControl;
+	}
+
 }

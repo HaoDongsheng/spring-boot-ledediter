@@ -1,6 +1,4 @@
-$(function(){
-	$( ".modal" ).draggable();
-	
+$(function(){	
 	initBTabel()
 	
 	getprojectList();
@@ -16,6 +14,20 @@ $(function(){
 	$('#select_ProvinceList').change(function(){
 		getCityList($('#select_ProvinceList').val());
 	});	
+	
+	$('#setZhaoMingMode').change(function(){
+		var setZhaoMingMode = $('#setZhaoMingMode').val();
+		if(setZhaoMingMode==0)
+			{
+			$('#m_ZhaoMingTimeStart').parents(".col-md-6").css("display","block");	
+			$('#m_ZhaoMingTimeEnd').parents(".col-md-6").css("display","block");	
+			
+			}
+		else {
+			$('#m_ZhaoMingTimeStart').parents(".col-md-6").css("display","none");
+			$('#m_ZhaoMingTimeEnd').parents(".col-md-6").css("display","none");	
+		}
+	});		
 	
 	//模态确定按钮
 	$('#btn_group_delete').click(function(){
@@ -65,10 +77,16 @@ $(function(){
 		$('#group_eidt_width').val(128);
 		$('#group_eidt_height').val(32);	
 		
+		$("#group_edit_enable").parents('.col-md-6').css('display','inline');
+		
 		if($('#group_edit_project option').length > 1)
-		{$('#group_edit_project').parents('.col-md-6').css('display','inline');}
+		{
+			$('#group_edit_project').parents('.col-md-6').css('display','inline');			
+		}
 		else
-		{$('#group_edit_project').parents('.col-md-6').css('display','none');}
+		{
+			$('#group_edit_project').parents('.col-md-6').css('display','none');			
+		}
 		
 		$('#modal_group_edit').attr("data-type",0);
 		$('#modal_group_edit').modal('show');				
@@ -123,7 +141,8 @@ $(function(){
 				AlarmText:$("#AlarmText").val(),
 				setZhaoMingMode:$("#setZhaoMingMode").val(),
 				m_ZhaoMingTimeStart:$("#m_ZhaoMingTimeStart").val(),
-				m_ZhaoMingTimeEnd:$("#m_ZhaoMingTimeEnd").val()
+				m_ZhaoMingTimeEnd:$("#m_ZhaoMingTimeEnd").val(),
+				setDisconnectMode:$("#setDisconnectMode").val()
 			};
 		set_parameter(parameter);
 	});
@@ -237,6 +256,7 @@ window.operateEvents = {
 			$('#group_edit_height').val(row.group_screenheight);	
 						
 			$('#group_edit_project').parents('.col-md-6').css('display','none');
+			$("#group_edit_enable").parents('.col-md-6').css('display','none');
         	$('#modal_group_edit').attr("data-type",row.group_sn);
         	$('#modal_group_edit').attr("data-index",index);
     		$('#modal_group_edit').modal('show');
@@ -293,11 +313,11 @@ window.operateEvents = {
 function getprojectList()
 {
 	$.ajax({  
-        url:"/getProjectList",          
+        url:"/getProjectListbyuser",          
         type:"post",  
         dataType:"json", 
         data:{
-        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        	adminInfo:localStorage.getItem("adminInfo")
         	},
         success:function(data)  
         {       	  
@@ -534,7 +554,7 @@ function model_eidtgroup()
 	{alertMessage(1, "警告", "高度不能为空!");return;}
 				
 	if(parseInt($("#modal_group_edit").attr("data-type"))==0)//创建
-		{
+		{		
 		$.ajax({  
 	        url:"/CreatGroup",          
 	        type:"post", 
@@ -544,6 +564,8 @@ function model_eidtgroup()
 	        	packLength:parseInt($('#group_edit_packLength').val()),
 	        	grpwidth:grpwidth,
 	        	grpheight:grpheight,
+	        	grpheight:grpheight,
+	        	grpbelong:parseInt($('#group_edit_enable').val()),
 	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 				},  
 	        dataType:"json", 
@@ -590,7 +612,7 @@ function model_eidtgroup()
 	    });
 		}
 	else//编辑
-		{
+		{		
 		$.ajax({  
 	        url:"/EditGroup",          
 	        type:"post", 
@@ -709,6 +731,10 @@ function get_parameter(parameter)
         				$("#setZhaoMingMode").val(data.setZhaoMingMode);
         				$("#m_ZhaoMingTimeStart").val(data.m_ZhaoMingTimeStart);
         				$("#m_ZhaoMingTimeEnd").val(data.m_ZhaoMingTimeEnd);
+        				if(data.setDisconnectMode==null || data.setDisconnectMode=="")
+        					{$("#setDisconnectMode").val(0);}
+        				else        					
+        				{$("#setDisconnectMode").val(data.setDisconnectMode);}
         				//$("#modal_user_parameter").modal('hide');
         			};break;
         			case "brightness":{

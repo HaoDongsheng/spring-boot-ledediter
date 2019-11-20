@@ -1,8 +1,12 @@
 $(function(){
+	//var codekey = getCodeKey("AA");
+	
 	initBTabel();
 	
 	getProjectlist();
 });
+
+var projectList=[];
 
 function initBTabel()
 {
@@ -14,7 +18,7 @@ function initBTabel()
         pagination: false,                   //是否显示分页（*）
         sortable: true,                     //是否启用排序
         sortOrder: "asc",                   //排序方式        
-        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
         pageNumber:1,                       //初始化加载第一页，默认第一页
         pageSize: 10,                       //每页的记录行数（*）
         pageList: [10],        //可供选择的每页的行数（*）
@@ -39,27 +43,192 @@ function initBTabel()
             }
         }, {
             field: 'projectId',
-            title: '项目id'            
-            
+            title: '项目id',
+            sortable:true            
         }, {
             field: 'projectName',
-            title: '项目名称'
+            title: '项目名称',
+            sortable:true
+            
+        },{
+            field: 'projectPwd',
+            title: '校验码',
+            visible: false  
+            
+        },{
+            field: 'autoGrp',
+            title: '默认分组',
+            sortable:true,
+            formatter: function (value, row, index) {            	
+            	var groupid = value;
+            	var dgrpname="";         	
+            	   
+            	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+            	           	               	
+            	if(groupid!=null)
+        		{	            	
+            		for(var i=0;i<grpsinfo.length;i++)
+        			{
+        				var grpid=grpsinfo[i].grpid;
+        				var grpname = grpsinfo[i].grpname;	
+        				
+        				if(groupid==grpid)
+        				{	        					
+        					dgrpname = grpname;break;
+        				}					    			
+        			}	                   				    			
+        		}            	
+            	            	
+                return dgrpname;
+            }
+            
+        },{
+            field: 'startLevelControl',
+            title: '可控星级',
+            sortable:true,
+            formatter: function (value, row, index) {            	
+            	if(value==0)
+            	{return "否";}
+            	else {
+            		return "是";	
+				}
+                
+            }
+            
+        },{
+            field: 'defaultStartLevel',
+            title: '默认星级',
+            sortable:true,
+            formatter: function (value, row, index) {
+            	var startlevel="☆☆☆☆☆";
+            	switch (value) {
+				case 1:
+					startlevel="★☆☆☆☆";
+					break;
+				case 2:
+					startlevel="★★☆☆☆";
+					break;
+				case 3:
+					startlevel="★★★☆☆";
+					break;
+				case 4:
+					startlevel="★★★★☆";
+					break;
+				case 5:
+					startlevel="★★★★★";
+					break;
+
+				default:
+					startlevel="☆☆☆☆☆";
+					break;
+				}
+            	return startlevel;            	                
+            }
             
         }, {
             field: 'ConnectParameters',
             title: '连接参数',
+            sortable:true,
             visible: false         
         },{
             field: 'grouplist',
-            title: '包含分组'
-         
+            title: '包含分组',
+            sortable:true,
+            formatter: function (value, row, index) {            	
+            	var groups = value.toString();
+            	
+            	var option;            	
+            	   
+            	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
+            	
+            	var gpArr=null;
+            	if(groups != null && groups != "")
+            		{
+            		gpArr = groups.split(",");
+            		}
+            	var headOption = "";            	    
+            	
+            	if(gpArr!=null)
+        		{
+	            	for(var j=0;j<gpArr.length;j++)
+	    			{
+	            		for(var i=0;i<grpsinfo.length;i++)
+	        			{
+	        				var grpid=grpsinfo[i].grpid;
+	        				var grpname = grpsinfo[i].grpname;
+	        				var screenwidth = grpsinfo[i].screenwidth;
+	        				var screenheight = grpsinfo[i].screenheight;	
+	        				
+	        				if(gpArr[j]==grpid)
+	        				{
+	        					headOption = headOption + "<option value='"+grpid+"'>"+grpname+"</option>";
+	        				}					    			
+	        			}	                   			
+	    			}
+        		}
+            	else
+        		{
+            		for(var i=0;i<grpsinfo.length;i++)
+        			{
+        				var grpid=grpsinfo[i].grpid;
+        				var grpname = grpsinfo[i].grpname;
+        				var screenwidth = grpsinfo[i].screenwidth;
+        				var screenheight = grpsinfo[i].screenheight;	
+        				
+        				if(row.projectid==grpsinfo[i].projectid)
+        				{
+        					headOption = headOption + "<option value='"+grpid+"'>"+grpname+"</option>";
+        				}					    			
+        			}			
+        		}
+            	
+            	option = '<select class="form-control">'+ headOption + '</select>';
+            	            	
+                return option;
+            }         
         }, {
             field: 'ourmodule',
+            sortable:true,
             title: '我司模块'
          
         }, {
+            field: 'disconnect',
+            sortable:true,
+            title: '失联播放模式',
+            formatter: function (value, row, index) {  
+            	var txt="关闭"
+            	if(value!=null && value!="" && value==1)
+            		{txt = "开启";}
+            	return txt;
+            }         
+        }, {
             field: 'userlist',
-            title: '包含用户'         
+            title: '包含用户',
+            sortable:true,
+            formatter: function (value, row, index) {            	
+            	var names = value;
+            	
+            	var option;            	
+            	               	            	
+            	var nameArr=null;
+            	if(names != null && names != "")
+            		{
+            		nameArr = names.split(",");
+            		}
+            	var headOption = "";            	    
+            	
+            	if(nameArr!=null)
+        		{
+	            	for(var j=0;j<nameArr.length;j++)
+	    			{	            			        				
+	            		headOption = headOption + "<option value='"+nameArr[j]+"'>"+nameArr[j]+"</option>";	        				                   			
+	    			}
+        		}            	
+            	
+            	option = '<select class="form-control">'+ headOption + '</select>';
+            	            	
+                return option;
+            }
         }, {
         	field: 'operate',
         	title: '操作',
@@ -70,9 +239,333 @@ function initBTabel()
         ]
     });
     
+    $("#select_start").change(function(){ 
+    	var select_start = parseInt($("#select_start").val());
+    	if(select_start==0)
+    		{
+    		$('#project_startLevel').attr("disabled", "disabled");
+    		}
+    	else {
+    		$('#project_startLevel').removeAttr("disabled");
+		}						
+    }); 
+    
+    $("#select_project").change(function(){ 
+    	getGroupbyProjectid($("#select_project").val(),'select_group');						
+    }); 
+    
+    $("#ore_project").change(function(){ 
+    	getGroupbyProjectid($("#ore_project").val(),'ore_group');						
+    }); 
+    
+    
+    $("#btn_table_Move").click(function(){
+    	$('#select_project').empty();
+    	$('#ore_project').empty();
+    	if(projectList!=null && projectList.length>0)
+    		{
+    		for(var i=0;i<projectList.length;i++)
+    			{
+    			var sel="";
+    			if(i==0)
+    				{
+    				sel="selected";
+    				getGroupbyProjectid(projectList[i].projectid,'select_group');
+    				getGroupbyProjectid(projectList[i].projectid,'ore_group');
+    				}
+    			var item="<option "+sel+" value='"+projectList[i].projectid+"'>"+projectList[i].projectname+"</option>";
+    			$('#select_project').append(item);
+    			$('#ore_project').append(item);
+    			}
+    		}		
+    	
+    	$("#modal_moveGroup").modal('show');
+    });
+    
+    $("#btn_table_decode").click(function(){ 
+    	$('#decode_result').empty();
+    	$("#modal_decode").modal('show');
+    });
+    
+    $("#btn_table_change").click(function(){ 
+//    	$.ajax({  
+//            url:"/programlistChange",           
+//            type:"post",  
+//            dataType:"json", 
+//            success:function(data)  
+//            {       	  
+//            	if(data.result=="success")
+//            		{  
+//            		alertMessage(0, "提示", "转换成功");
+//            		}
+//            	else
+//            		{
+//            			alertMessage(1, "警告", data.resultMessage);              			
+//            		}        	            	
+//            },  
+//            error: function() {  
+//            	alertMessage(2, "异常", "ajax 函数  programlistChange 错误");             	
+//              }  
+//        });
+    	
+//    	$.ajax({  
+//            url:"/passwordEnCode",           
+//            type:"post",  
+//            dataType:"json", 
+//            success:function(data)  
+//            {       	  
+//            	if(data.result=="success")
+//            		{  
+//            		alertMessage(0, "提示", "转换成功");
+//            		}
+//            	else
+//            		{
+//            			alertMessage(1, "警告", data.resultMessage);              			
+//            		}        	            	
+//            },  
+//            error: function() {  
+//            	alertMessage(2, "异常", "ajax 函数  passwordEnCode 错误");             	
+//              }  
+//        });
+    	
+//    	$.ajax({  
+//            url:"/txt2db",           
+//            type:"post",  
+//            dataType:"json", 
+//            success:function(data)  
+//            {       	  
+//            	if(data.result=="success")
+//            		{  
+//            		alertMessage(0, "提示", "转换成功");
+//            		}
+//            	else
+//            		{
+//            			alertMessage(1, "警告", data.resultMessage);              			
+//            		}        	            	
+//            },  
+//            error: function() {  
+//            	alertMessage(2, "异常", "ajax 函数  passwordEnCode 错误");             	
+//              }  
+//        });
+    });
+    
+    //解码
+    $("#btn_decode").click(function(){  
+    	var Content = tinymce.activeEditor.getContent({ 'format' : 'text' });
+    	//alert(Content);
+    	var data="";
+    	var codeJson= JSON.parse(Content);
+    	if(codeJson!=null && codeJson.length>0)
+    		{
+    		for(var i=0;i<codeJson.length;i++)
+    			{
+    			var codeitem = codeJson[i].replace(/\s*/g,"");
+    			var newitem = GJ_FanZhuanYi(codeitem);
+    			var isJM = parseInt(newitem.substring(14*2,14*2+2),16);
+    			var dataitem="";
+    			if(isJM==1)//解密
+    				{
+					var JMkey = newitem.substring(15*2,15*2+2);    			
+					var codekey = getCodeKey("AA");
+					var code=0;
+					if(codekey[7]^codekey[6] == 0)
+						{
+						code = (codekey[5]*4 + codekey[4]*2 + codekey[3])*10 + (codekey[2]*4 + codekey[1]*2 + codekey[0]);
+						}
+					else {
+						code = (codekey[5]*2 + codekey[4])*10 + (codekey[3]*4 + codekey[2]*4 + codekey[1]*2 + codekey[0]);
+					}
+					dataitem = newitem.substring(32 * 2,newitem.length - 23*2);
+					var newDate="";
+					for(var j=0;j<dataitem.length;j+=2)
+						{
+						var valitem = parseInt(dataitem.substring(j,2),16);
+						newDate += (valitem^code).toString(16);
+						}
+					dataitem = newDate;
+    				}
+    			else {
+    				dataitem = newitem.substring(32 * 2,newitem.length - 23*2);	
+				}
+    			
+    			data += dataitem;
+    			}
+    		var decodeType = parseInt($('#select_decodeType').val());
+    		if(decodeType==0)//广告解码
+    			{
+    			var n=0;
+    			var pid=parseInt(data.substring(n,n+=4),16);
+    			var tlength=parseInt(data.substring(n,n+=8),16);
+    			var type=parseInt(data.substring(n,n+=2),16);
+    			var dtsize=data.substring(n+=20,n+=8);
+    			var bordertype=parseInt(data.substring(n,n+=2),16);
+    			var borderspeed=parseInt(data.substring(n,n+=2),16);
+    			var op=parseInt(data.substring(n,n+=2),16);
+    			var dtbytesize=parseInt(data.substring(n+=20,n+=8),16);
+    			var dtcount=parseInt(data.substring(n,n+=2),16);
+    			var pm=parseInt(data.substring(n,n+=2),16);
+    			var pl=parseInt(data.substring(n,n+=4),16);
+    			var itemcount=parseInt(data.substring(n,n+=4),16);
+    			
+    			var itemlist=data.substring(n,data.length - 4);
+    			var m=0;
+    			for(var j=0;j<itemcount;j++)
+    				{
+    				var itembytelemgth=parseInt(itemlist.substring(m,m+=8),16);
+    				var itemtype=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemcolor=itemlist.substring(m,m+=16);
+    				var itemfomtmo=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemls=itemlist.substring(m,m+=16);
+    				var itemlink=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemdisplaymode=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemspeed=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemstopmode=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemstoptime=parseInt(itemlist.substring(m,m+=8),16);
+    				var itemloop=parseInt(itemlist.substring(m,m+=2),16);
+    				var itemdb=parseInt(itemlist.substring(m,m+=2),16);
+    				var ptcoumt=parseInt(itemlist.substring(m+=18,m+=4),16);
+    				for(var z=0;z<ptcoumt;z++)
+    					{
+    					var pttype=parseInt(itemlist.substring(m,m+=2),16);
+    					var ptlength=parseInt(itemlist.substring(m,m+=4),16);
+    					var ptw = parseInt(itemlist.substring(m,m+=4),16);
+    					var pth = parseInt(itemlist.substring(m,m+=4),16);
+    					
+    					switch(pttype)
+    					{
+    					case 0:/*图文*/{};break;
+    					case 1:/*时间*/{};break;
+    					case 2:/*日期*/{};break;
+    					case 3:/*全彩图*/{};break;
+    					case 4:/*gif*/{};break;
+    					case 5:/*2位图*/{
+    						var colorbyteTableLength = 2*3*2;
+    						var colorbyteTable = itemlist.substring(m,m+=colorbyteTableLength);//颜色索引表
+    						
+    						var Index_compress_length= ptw * pth / 8 * 2;    						
+    						var Index_compress = itemlist.substring(m,m+=Index_compress_length);//图片索引表
+    					};break;
+    					case 6:/*4位图*/{
+    						var colorbyteTableLength = 4*3*2;
+    						var colorbyteTable = itemlist.substring(m,m+=colorbyteTableLength);
+    						
+    						var Index_compress_length= ptw * pth / 4 * 2;    						
+    						var Index_compress = itemlist.substring(m,m+=Index_compress_length);
+    					};break;
+    					case 7:/*16位图*/{
+    						var colorbyteTableLength = 16*3*2;
+    						var colorbyteTable = itemlist.substring(m,m+=colorbyteTableLength);
+    						
+    						var Index_compress_length= ptw * pth / 2 * 2;    						
+    						var Index_compress = itemlist.substring(m,m+=Index_compress_length);
+    					};break;
+    					case 8:/*256位图*/{
+    						var colorbyteTableLength = 256*3*2;
+    						var colorbyteTable = itemlist.substring(m,m+=colorbyteTableLength);
+    						
+    						var Index_compress_length= ptw * pth * 2;    						
+    						var Index_compress = itemlist.substring(m,m+=Index_compress_length);
+    					};break;
+    					}    					    					
+    					}    				
+    				}
+    			}
+    		else {//列表解码
+    			var message="";
+				var pid=parseInt(data.substring(0,4),16);
+				message+="列表id:"+pid+"</br>";
+				var tlength=parseInt(data.substring(4,8),16);				
+				var yxj=parseInt(data.substring(8,10),16);
+				message+="优先级:"+yxj+"</br>";
+				var life=parseInt(data.substring(30,42),16);				
+				message+="生命周期:"+hexlife2String(life)+"</br>";
+				var tcount=parseInt(data.substring(42,44),16);
+				message+="播放时段:【"+tcount+"】";
+				var tlist = data.substring(44,44 + 8*tcount);
+				message+= tlist+"</br>";
+				var pmode = data.substring(44 + 8*tcount,44 + 8*tcount+2);
+				message+="播放模式:"+life+"</br>";
+				var dlist = data.substring(44 + 8*tcount+2,data.length -4);
+				var crc = data.substring(data.length -4);
+				message+="crc:"+crc+"</br>";
+				
+				var cycle = dlist.substring(20,28);
+				message+="周期:"+life+"</br>";
+				var infoCount = parseInt(dlist.substring(28,32),16);
+				message+="广告数量:"+infoCount+"</br>";
+				var n=32;
+				for(var j=0;j<infoCount;j++)
+					{
+					var infoid = parseInt(dlist.substring(n,n+4),16);
+					message+="广告id:"+infoid;
+					var infolife = dlist.substring(n+12,n+24);
+					message+="生命周期:"+hexlife2String(infolife);
+					var plength = parseInt(dlist.substring(n+24,n+32),16);
+					message+="时长:"+plength;
+					var valCount = parseInt(dlist.substring(n+32,n+36),16);
+					message+="偏移量数量:【"+valCount+"】";
+					var plist =dlist.substring(n+36,n+36+8*valCount);
+					for(var z=0;z<valCount;z++)
+						{
+						var pval=parseInt(plist.substring(z*8,z*8 +8),16)
+						message+= pval+",";
+						}
+					message+="</br>";
+					n=n+36+8*valCount;
+					}
+				$('#decode_result').empty();
+				$('#decode_result').append(message);				
+			}
+    		}
+    	//$("#modal_decode").modal('hide');
+    });
+    
+    
+    $("#btn_moveGroup").click(function(){ 
+    	var sp = $('#select_project').val();
+    	var op = $('#ore_project').val();
+    	var sg = $('#select_group').val();
+    	var og = $('#ore_group').val();
+    	
+    	$.ajax({  
+            url:"/moveGroup", 
+            data:{
+            	sprojectid:sp,
+            	oprojectid:op,
+            	sgroupid:sg,
+            	ogroupid:og,
+            	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+    			},  
+            type:"post",  
+            dataType:"json", 
+            success:function(data)  
+            {       	  
+            	if(data.result=="success")
+            		{  
+            		}
+            	else
+            		{
+            			alertMessage(1, "警告", data.resultMessage);              			
+            		}        	
+            	$("#modal_moveGroup").modal('hide');
+            },  
+            error: function() {  
+            	alertMessage(2, "异常", "ajax 函数  moveGroup 错误"); 
+            	$("#modal_moveGroup").modal('hide');
+              }  
+        });
+    	
+    });
+    
     $("#btn_table_add").click(function(){ 
     	$('#user_card').css('display','block');
 		$('#group_card').css('display','block');
+		
+		$('#project_group').empty();
+		$('#project_group').attr("disabled", "disabled");
+		
+		$("#select_start").val(0);
+		$('#project_startLevel').attr("disabled", "disabled");
 		
 		$('#project_id').removeAttr("disabled");
 		$('#project_id').val('');
@@ -83,7 +576,7 @@ function initBTabel()
     	$('#protocal_port').val('');
     	$('#protocal_name').val('');
     	$('#protocal_pwd').val('');
-    	$('#protocal_type').val('博海科技XML1.0');
+    	$('#protocal_type').val('BHKJ_XML1.0');
 		
 		$('#modal_CreateProject').attr("data-type",-1);
     	$('#modal_CreateProject').attr("data-index",-1);
@@ -108,7 +601,11 @@ function initBTabel()
                 data:{
                 	projectid:$('#project_id').val(),
                 	projectname:$('#project_name').val(),
+                	CheckCode:$('#project_pwd').val(),
+                	startlevelControl:parseInt($("#select_start").val()),
+                	DefaultStartlevel:parseInt($("#project_startLevel").val()),
                 	isOurModule:$('#select_our').val(),
+                	disconnect:parseInt($('#select_disconnect').val()),
                 	ConnectParameters:JSON.stringify(Protocal),
                 	username:$('#user_name').val(),
                 	userpwd:$('#user_pwd').val(),
@@ -130,12 +627,22 @@ function initBTabel()
                 		var item={
             					projectId:$('#project_id').val(),
             					projectName:$('#project_name').val(),
+            					projectPwd:$('#project_pwd').val(),
+	        					autoGrp:data.Groupid,
+	        					startLevelControl:parseInt($("#select_start").val()),
+	        					defaultStartLevel:parseInt($("#project_startLevel").val()),
             					ConnectParameters:JSON.stringify(Protocal),
             					ourmodule:isOurModule,
-            					grouplist:$('#group_name').val(),
+            					grouplist:data.Groupid,
             					userlist:$('#user_name').val()
             			};
                 		
+                		var pitem={
+	        					projectid:item.projectId,
+	        					projectname:item.projectName	
+	        			};
+	        			projectList.push(pitem);
+	        			
                 		grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
                 		if(grpsinfo==null)
                 			{grpsinfo=[];}
@@ -171,7 +678,12 @@ function initBTabel()
                 data:{
                 	projectid:$('#project_id').val(),
                 	projectname:$('#project_name').val(),
+                	AutoGroupTo:$('#project_group').val(),
+                	CheckCode:$('#project_pwd').val(),
+                	startlevelControl:parseInt($("#select_start").val()),
+                	DefaultStartlevel:parseInt($("#project_startLevel").val()),
                 	isOurModule:$('#select_our').val(),
+                	disconnect:parseInt($('#select_disconnect').val()),
                 	ConnectParameters:JSON.stringify(Protocal),
                 	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
         			},  
@@ -187,9 +699,25 @@ function initBTabel()
                 		var item={
             					projectId:$('#project_id').val(),
             					projectName:$('#project_name').val(),
+            					projectPwd:$('#project_pwd').val(),
+	        					autoGrp:$('#project_group').val(),
+	        					startLevelControl:parseInt($("#select_start").val()),
+	        					defaultStartLevel:parseInt($("#project_startLevel").val()),
             					ConnectParameters:JSON.stringify(Protocal),
-            					ourmodule:isOurModule            					
-            			};          
+            					ourmodule:isOurModule,
+            					disconnect:parseInt($('#select_disconnect').val())
+            			};    
+                		
+                		for(var i=0;i<projectList.length;i++)
+						{
+			    			var id=projectList[i].projectid;
+			    			if(id==item.projectId)
+			    				{
+			    				projectList[i].projectname=item.projectName
+			    				break;
+			    				}
+						}
+                		
                 		var index = $('#modal_CreateProject').attr("data-index");
                 		$('#projectinfo_table').bootstrapTable('updateRow', {index: index, row: item});
                 		$("#modal_CreateProject").modal('hide');
@@ -224,6 +752,10 @@ window.operateEvents = {
 			$('#user_card').css('display','none');
 			$('#group_card').css('display','none');
 			
+			$('#project_group').removeAttr("disabled");
+			
+			getGroupbyProjectid(row.projectId,'project_group');
+			
 			$('#project_id').attr("disabled", "disabled");
 			$('#project_id').val(row.projectId);
         	$('#project_name').val(row.projectName);
@@ -231,6 +763,21 @@ window.operateEvents = {
         		{$('#select_our').val(0);}
         	else{$('#select_our').val(1);}
         	
+        	$('#select_disconnect').val(row.disconnect);
+        	
+        	$('#project_pwd').val(row.projectPwd);
+        	$('#select_start').val(row.startLevelControl);
+        	
+        	var select_start = parseInt($("#select_start").val());
+        	if(select_start==0)
+        		{
+        		$('#project_startLevel').attr("disabled", "disabled");
+        		}
+        	else {
+        		$('#project_startLevel').removeAttr("disabled");
+    		}		
+        	
+        	$('#project_startLevel').val(row.defaultStartLevel);        	
         	
         	var Protocal = JSON.parse(row.ConnectParameters);
         	
@@ -259,6 +806,16 @@ window.operateEvents = {
                 {       	  
                 	if(data.result=="success")
                 		{  
+                		for(var i=0;i<projectList.length;i++)
+						{
+			    			var id=projectList[i].projectid;
+			    			if(id==projectId)
+			    				{
+			    				projectList.splice(i, 1);
+			    				break;
+			    				}
+						}
+                		
                 		$("#projectinfo_table").bootstrapTable("remove", {field: "projectId",values: [projectId]});
                 		}
                 	else
@@ -271,6 +828,37 @@ window.operateEvents = {
                   }  
             });
         }
+}
+//获取分组按项目编号
+function getGroupbyProjectid(projectid,SelectName) {
+	$.ajax({  
+        url:"/getGroupbyProjectid", 
+        data:{
+        	projectid:projectid,
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+			},  
+        type:"post",  
+        dataType:"json", 
+        success:function(data)  
+        {       
+        	$('#'+SelectName).empty();
+        	if(data!=null && data.length>0)
+        		{
+        		for(var i=0;i<data.length;i++)
+        			{
+        			var sel="";
+        			if(data[i].isSelect==1)
+        				{sel = "selected";}
+        			var item="<option "+sel+" value='"+data[i].grpid+"'>"+data[i].grpname+"</option>";
+        			$('#'+SelectName).append(item);
+        			}
+        		
+        		}        	       	       	
+        },  
+        error: function() {  
+        	alertMessage(2, "异常", "ajax 函数  getGroupbyProjectid 错误");            
+          }  
+    });
 }
 
 //按组取广告列表
@@ -287,14 +875,21 @@ function getProjectlist()
         	if(data!=null && data.length>0)
         		{   
         			var ArrayTable = [];
-        			
+        			        			
 	        		for(var i=0;i<data.length;i++)
 					{
 	        			var projectid=data[i].projectid;
-	        			var projectname=data[i].projectname;	        			
+	        			var projectname=data[i].projectname;
+	        			var item={
+	        					projectid:projectid,
+	        					projectname:projectname	
+	        			};
+	        			projectList.push(item);
+
 	        			var grouplist=data[i].grouplist;
 	        			var userlist=data[i].userlist;
 	        			var IsOurModule = data[i].IsOurModule;
+	        			var disconnect = data[i].disconnect;
 	        			var ConnectParameters = data[i].ConnectParameters;
 	        			
 	        			var strOurModule="是";
@@ -305,8 +900,13 @@ function getProjectlist()
 	        			var item={
 	        					projectId:projectid,
 	        					projectName:projectname,
+	        					projectPwd:data[i].projectPwd,
+	        					autoGrp:data[i].autoGrp,
+	        					startLevelControl:data[i].startLevelControl,
+	        					defaultStartLevel:data[i].defaultStartLevel,
 	        					ConnectParameters:ConnectParameters,
 	        					ourmodule:strOurModule,
+	        					disconnect:disconnect,
 	        					grouplist:grouplist,
 	        					userlist:userlist
 	        			};

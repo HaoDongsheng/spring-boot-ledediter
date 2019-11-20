@@ -12,7 +12,8 @@
     
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
-	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<!-- Bootstrap 核心 JavaScript 文件 -->	
+	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>		
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
 					
@@ -47,6 +48,19 @@
                     <strong>公司: </strong>鞍山博海泰克电子设备有限公司
                     &nbsp;&nbsp;
                     <strong>电话: </strong>0412-5234000
+                    &nbsp;&nbsp;                    
+                    <a  id="dropdownUser" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                       <span class="fa fa-user-circle-o" style="font-size: 25px;"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-settings" style="text-align:center"  role="menu" aria-labelledby="dropdownUser">
+                        <div class="media">                             
+                            <div class="media-body">
+                                <h4 id ="dropdownUser_name" class="media-heading"></h4>                                 
+                            </div>
+                        </div>
+                        <hr />
+                        <a href="index" class="btn btn-danger btn-sm">退出</a>
+                    </div>
                 </div>
 
             </div>
@@ -65,11 +79,12 @@
                             <li id='advManger'><a href="advManger">广告编辑</a></li>
                             <li id='auditManger'><a class="menu-top-active" href="auditManger">广告审核</a></li>
                             <li id='infoList'><a href="infoList">广告发布</a></li>
-                            <li id='recycleManger'><a href="recycleManger">回收站</a></li>
-                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
-                            <li id='userManger'><a href="userManger">用户管理</a></li>
-                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
+                            <li shiro:hasPermission="advManger" id='recycleManger'><a href="recycleManger">回收站</a></li>
+                            <li id='historyManger'><a href="historyManger">广告统计</a></li>
+                            <li shiro:hasPermission="groupManger" id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li shiro:hasPermission="userManger" id='userManger'><a href="userManger">用户管理</a></li>
+                            <li shiro:hasPermission="taxiManger" id='taxiManger'><a href="taxiManger">车辆管理</a></li>                            
+                            <li shiro:hasRole="admin" id='projectManger'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->
 
                         </ul>

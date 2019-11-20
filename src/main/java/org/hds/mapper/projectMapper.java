@@ -14,96 +14,82 @@ import org.apache.ibatis.type.JdbcType;
 import org.hds.model.project;
 
 public interface projectMapper {
-    @Delete({
-        "delete from t_project",
-        "where projectId = #{projectid,jdbcType=VARCHAR}"
-    })
-    int deleteByPrimaryKey(String projectid);
+	@Delete({ "delete from t_project", "where projectId = #{projectid,jdbcType=VARCHAR}" })
+	int deleteByPrimaryKey(String projectid);
 
-    @Insert({
-        "insert into t_project (projectId, projectName, AutoGroupTo, IsOurModule, ConnectParameters)",
-        "values (#{projectid,jdbcType=VARCHAR}, #{projectname,jdbcType=VARCHAR}, #{AutoGroupTo,jdbcType=INTEGER}, #{IsOurModule,jdbcType=INTEGER}, #{ConnectParameters,jdbcType=VARCHAR})"
-    })
-    int insert(project record);
+	@Insert({
+			"insert into t_project (projectId, projectName, CheckCode, DefaultStartlevel, startlevelControl, AutoGroupTo, IsOurModule, disconnect, ConnectParameters)",
+			"values (#{projectid,jdbcType=VARCHAR}, #{projectname,jdbcType=VARCHAR}, #{CheckCode,jdbcType=VARCHAR}, #{DefaultStartlevel,jdbcType=INTEGER}, #{startlevelControl,jdbcType=INTEGER}, #{AutoGroupTo,jdbcType=INTEGER}, #{disconnect,jdbcType=INTEGER}, #{IsOurModule,jdbcType=INTEGER}, #{ConnectParameters,jdbcType=VARCHAR})" })
+	int insert(project record);
 
-    @InsertProvider(type=projectSqlProvider.class, method="insertSelective")
-    int insertSelective(project record);
+	@InsertProvider(type = projectSqlProvider.class, method = "insertSelective")
+	int insertSelective(project record);
 
-    @Select({
-        "select",
-        "projectId, projectName, AutoGroupTo, IsOurModule, ConnectParameters",
-        "from t_project",
-        "where projectId = #{projectid,jdbcType=VARCHAR}"
-    })
-    @Results({
-        @Result(column="projectId", property="projectid", jdbcType=JdbcType.VARCHAR, id=true),
-        @Result(column="projectName", property="projectname", jdbcType=JdbcType.VARCHAR),
-        @Result(column="AutoGroupTo", property="AutoGroupTo", jdbcType=JdbcType.INTEGER),
-        @Result(column="IsOurModule", property="IsOurModule", jdbcType=JdbcType.INTEGER),
-        @Result(column="ConnectParameters", property="ConnectParameters", jdbcType=JdbcType.VARCHAR)
-    })
-    project selectByPrimaryKey(String projectid);
-    
-    @Select({
-        "select",
-        "UpdateRate",
-        "from t_project",
-        "where projectId = #{0}"
-    })    
-    @Result(column="UpdateRate", property="UpdateRate", jdbcType=JdbcType.DOUBLE)
-    double selectUpdateRateByPrimaryKey(String projectid);
-    
-    @Select({
-        "select",
-        "projectId, projectName, AutoGroupTo, IsOurModule, ConnectParameters",
-        "from t_project order by projectId asc"        
-    })
-    @Results({
-        @Result(column="projectId", property="projectid", jdbcType=JdbcType.VARCHAR, id=true),
-        @Result(column="projectName", property="projectname", jdbcType=JdbcType.VARCHAR),
-        @Result(column="AutoGroupTo", property="AutoGroupTo", jdbcType=JdbcType.INTEGER),
-        @Result(column="IsOurModule", property="IsOurModule", jdbcType=JdbcType.INTEGER),
-        @Result(column="ConnectParameters", property="ConnectParameters", jdbcType=JdbcType.VARCHAR)
-    })
-    List<project> selectAll();
+	@Select({ "select",
+			"projectId, projectName, CheckCode, DefaultStartlevel, startlevelControl, AutoGroupTo, IsOurModule, disconnect, ConnectParameters",
+			"from t_project", "where projectId = #{projectid,jdbcType=VARCHAR}" })
+	@Results({ @Result(column = "projectId", property = "projectid", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "projectName", property = "projectname", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "CheckCode", property = "CheckCode", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "DefaultStartlevel", property = "DefaultStartlevel", jdbcType = JdbcType.INTEGER),
+			@Result(column = "startlevelControl", property = "startlevelControl", jdbcType = JdbcType.INTEGER),
+			@Result(column = "AutoGroupTo", property = "AutoGroupTo", jdbcType = JdbcType.INTEGER),
+			@Result(column = "IsOurModule", property = "IsOurModule", jdbcType = JdbcType.INTEGER),
+			@Result(column = "disconnect", property = "disconnect", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ConnectParameters", property = "ConnectParameters", jdbcType = JdbcType.VARCHAR) })
+	project selectByPrimaryKey(String projectid);
 
-    @UpdateProvider(type=projectSqlProvider.class, method="updateByPrimaryKeySelective")
-    int updateByPrimaryKeySelective(project record);
+	@Select({ "select",
+			"projectId, projectName, CheckCode, DefaultStartlevel, startlevelControl, AutoGroupTo, IsOurModule, disconnect, ConnectParameters",
+			"from t_project", "where projectName = #{0}" })
+	@Results({ @Result(column = "projectId", property = "projectid", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "projectName", property = "projectname", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "CheckCode", property = "CheckCode", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "DefaultStartlevel", property = "DefaultStartlevel", jdbcType = JdbcType.INTEGER),
+			@Result(column = "startlevelControl", property = "startlevelControl", jdbcType = JdbcType.INTEGER),
+			@Result(column = "AutoGroupTo", property = "AutoGroupTo", jdbcType = JdbcType.INTEGER),
+			@Result(column = "IsOurModule", property = "IsOurModule", jdbcType = JdbcType.INTEGER),
+			@Result(column = "disconnect", property = "disconnect", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ConnectParameters", property = "ConnectParameters", jdbcType = JdbcType.VARCHAR) })
+	project selectByprojectName(String projectName);
 
-    @Update({
-        "update t_project",
-        "set projectName = #{projectname,jdbcType=VARCHAR},",
-        "AutoGroupTo = #{AutoGroupTo,jdbcType=INTEGER},",
-        "IsOurModule = #{IsOurModule,jdbcType=INTEGER},",
-        "ConnectParameters = #{ConnectParameters,jdbcType=INTEGER}",
-        "where projectId = #{projectid,jdbcType=VARCHAR}"
-    })
-    int updateByPrimaryKey(project record);
-    
-    @Update({
-        "update t_project",
-        "set AdvertisementUpdateTime = #{1}",
-        "where projectId = #{0}"
-    })
-    int updateAdvUpdateTimeByPrimaryKey(String projectid, String AdvertisementUpdateTime);
-    
-    @Update({
-        "update t_project",
-        "set TerminalUpdateTime = #{1}",
-        "where projectId = #{0}"
-    })
-    int updateTerminalUpdateTimeByPrimaryKey(String projectid, String TerminalUpdateTime);
-    
-    @Update({
-        "update t_project",
-        "set TerminalUpdateTime = #{0}"        
-    })
-    int updateTerminalUpdateTimeByAll(String TerminalUpdateTime);
-    
-    @Update({
-        "update t_project",
-        "set ParameterUpdateTime = #{1}",
-        "where projectId = #{0}"
-    })
-    int updateParameterUpdateTimeByPrimaryKey(String projectid, String ParameterUpdateTime);
+	@Select({ "select", "UpdateRate", "from t_project", "where projectId = #{0}" })
+	@Result(column = "UpdateRate", property = "UpdateRate", jdbcType = JdbcType.DOUBLE)
+	double selectUpdateRateByPrimaryKey(String projectid);
+
+	@Select({ "select",
+			"projectId, projectName, CheckCode, DefaultStartlevel, startlevelControl, AutoGroupTo, IsOurModule, disconnect, ConnectParameters",
+			"from t_project order by projectId asc" })
+	@Results({ @Result(column = "projectId", property = "projectid", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "projectName", property = "projectname", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "CheckCode", property = "CheckCode", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "DefaultStartlevel", property = "DefaultStartlevel", jdbcType = JdbcType.INTEGER),
+			@Result(column = "startlevelControl", property = "startlevelControl", jdbcType = JdbcType.INTEGER),
+			@Result(column = "AutoGroupTo", property = "AutoGroupTo", jdbcType = JdbcType.INTEGER),
+			@Result(column = "IsOurModule", property = "IsOurModule", jdbcType = JdbcType.INTEGER),
+			@Result(column = "disconnect", property = "disconnect", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ConnectParameters", property = "ConnectParameters", jdbcType = JdbcType.VARCHAR) })
+	List<project> selectAll();
+
+	@UpdateProvider(type = projectSqlProvider.class, method = "updateByPrimaryKeySelective")
+	int updateByPrimaryKeySelective(project record);
+
+	@Update({ "update t_project", "set projectName = #{projectname,jdbcType=VARCHAR},",
+			"CheckCode = #{CheckCode,jdbcType=VARCHAR}, DefaultStartlevel = #{DefaultStartlevel,jdbcType=INTEGER}, startlevelControl = #{startlevelControl,jdbcType=INTEGER}, AutoGroupTo = #{AutoGroupTo,jdbcType=INTEGER},",
+			"IsOurModule = #{IsOurModule,jdbcType=INTEGER}, disconnect = #{disconnect,jdbcType=INTEGER},",
+			"ConnectParameters = #{ConnectParameters,jdbcType=INTEGER}",
+			"where projectId = #{projectid,jdbcType=VARCHAR}" })
+	int updateByPrimaryKey(project record);
+
+	@Update({ "update t_project", "set AdvertisementUpdateTime = #{1}", "where projectId = #{0}" })
+	int updateAdvUpdateTimeByPrimaryKey(String projectid, String AdvertisementUpdateTime);
+
+	@Update({ "update t_project", "set TerminalUpdateTime = #{1}", "where projectId = #{0}" })
+	int updateTerminalUpdateTimeByPrimaryKey(String projectid, String TerminalUpdateTime);
+
+	@Update({ "update t_project", "set TerminalUpdateTime = #{0}" })
+	int updateTerminalUpdateTimeByAll(String TerminalUpdateTime);
+
+	@Update({ "update t_project", "set ParameterUpdateTime = #{1}", "where projectId = #{0}" })
+	int updateParameterUpdateTimeByPrimaryKey(String projectid, String ParameterUpdateTime);
 }

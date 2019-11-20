@@ -1,19 +1,34 @@
-$(function(){	
-	$( ".modal" ).draggable();
+$(function(){			
+	//$( '#taxi_command_cycle div').draggable({ cursor: "move",containment: "parent",axis: "y",connectToSortable: "#taxi_command_cycle",helper: "clone",revert: "invalid" });
+	
+	$( "#taxi_command_cycle" ).sortable({
+	      revert: true,
+	      cursor: "move",
+	      containment: "parent",
+	      axis: "y"
+	    });
 	
 	getGroup();
 	
 	initBTabel();
+		
+	$('#taxi_command_cycle input').change(function() {
+		alert($(this).parent().text().trim());
+	});	
 	
 	var intervalpie = setInterval("refreshTable()",60000);
 	
 	$('#btn_table_search').click(function() {
 		initBTabel();				
-	})
+	});
 	
 	$('#btn_taxi_edit').click(function() {
 		taxi_info_edit();
-	});	
+	});
+	
+	$('#btn_taxi_delete').click(function() {
+		taxi_info_delete();
+	});
 	
 	$('#btn_group_edit').click(function() {
 		taxi_group_edit();
@@ -22,6 +37,11 @@ $(function(){
 	$('#btn_table_mutilUpdate').click(function() {	
 		$('#modal_group_edit').modal('show');
 	});
+	
+	$('#btn_table_parmset').click(function() {	
+		$('#modal_parmset').modal('show');
+	});
+	
 	
 	$('#btn_table_edit').click(function() {	
 		if(selectDtuKey=="")
@@ -36,7 +56,19 @@ $(function(){
 	    			if(DtuKey == selectDtuKey)
 	    				{
 	    				$('#taxi_edit_DTUKey').val(DtuKey);
-	    				$('#taxi_edit_name').val(tableData[i].name);
+	    				if(isVehicleNumber(tableData[i].name))
+	    				{	    			
+	    					var province = tableData[i].name.substring(0,1);
+	    					var NO = tableData[i].name.substring(1,2);
+	    					var name = tableData[i].name.substring(2).trim();
+	    					$('#taxi_edit_province').val(province);
+	    					$('#taxi_edit_NO').val(NO);
+	    					$('#taxi_edit_name').val(name);
+	    				}
+	    				else {
+	    					$('#taxi_edit_name').val("");
+						}
+	    					    				
 	    				$('#taxi_edit_startLevel').val(tableData[i].StarLevel);
 	    				
 	    				var groupName = tableData[i].groupid;
@@ -59,7 +91,19 @@ $(function(){
 	    	
 			$('#modal_taxi_edit').modal('show');	
 		}					
-	});	
+	});
+	
+	$('#btn_table_delete').click(function() {	
+		if(selectDtuKey=="")
+			{
+			alertMessage(1, "警告", "请选择要编辑的终端!");			
+			}
+		else {
+			//selectDtuKey
+			
+			$('#modal_taxi_delete').modal('show');	
+		}					
+	});
 	
 	$('#taxi_table').on('click-row.bs.table', function (e,row,$element) {        
         if($($element).hasClass("changeColor"))
@@ -85,6 +129,13 @@ $(function(){
 });
 
 var selectDtuKey="";
+
+function isVehicleNumber(vehicleNumber) {
+    var result = false;    
+    var express = /(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1} [A-Z0-9]{5}$)|(^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1} [A-Z0-9]{6}$)/;
+    result = express.test(vehicleNumber);    
+    return result;
+}
 
 //刷新选中列表
 function refreshTableRowSelect() {
@@ -153,6 +204,11 @@ function initBTabel()
         showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
         cardView: false,                    //是否显示详细视图
         detailView: false,                   //是否显示父子表onEditableSave
+        //导出功能设置（关键代码）
+        exportDataType:'basic',//'basic':当前页的数据, 'all':全部的数据, 'selected':选中的数据
+        showExport: true,  //是否显示导出按钮
+        buttonsAlign:"right",  //按钮位置
+        exportTypes:['excel', 'txt'],  //导出文件类型，[ 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf']
         columns: [{
             title: '序号',
             field: 'id',            
@@ -170,8 +226,18 @@ function initBTabel()
         }, {
             field: 'DtuKey',
             title: 'DTU编号',
-            sortable:true
-          
+            sortable:true          
+        }, {
+            field: 'disconnect',
+            title: '内置车牌',
+            visible: false,
+            sortable:true,
+            formatter: function (value, row, index) {  
+            	var txt="否"
+            	if(value!=null && value!="" && value==1)
+            		{txt = "是";}
+            	return txt;
+            }        
         }, {
             field: 'projectid',
             title: '项目名称',
@@ -371,6 +437,27 @@ function initBTabel()
             },
             visible: false,
             sortable:true         
+        }, {
+            field: 'LED_LastResponseTime',
+            title: 'LED最后应答',
+            width:100,
+            class:'colStyle',
+            formatter:function (value, row, index) { 
+            	if(row.LED_LastResponseTime!=null)
+            		{
+	            	var values = row.LED_LastResponseTime;//获取当前字段的值
+	                //替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
+	                //&nbsp;代替
+	                values = values.replace(/\s+/g,'&nbsp;')
+	                values = values.replace(/\},/,'},\n');//换行
+	                return "<span title="+values+">"+row.LED_LastResponseTime+"</span>"
+            		}
+            	else {
+            		return "<span title=''></span>"
+				}
+            },
+            visible: false,
+            sortable:true         
         }
         ]
     }); 
@@ -380,7 +467,7 @@ function initBTabel()
     // 得到查询的参数
     function queryParams(params) {		
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的            
-            pageSize: params.limit,                         //页面大小
+            pageSize: params.limit,                        //页面大小
             pageNum: (params.offset / params.limit) + 1,   //页码
             searchString: $('#searchString_id').val().trim(),
             sort: params.sort,      //排序列名  
@@ -388,7 +475,8 @@ function initBTabel()
             issuperuser:JSON.parse(localStorage.getItem("adminInfo")).issuperuser,
             projectid:JSON.parse(localStorage.getItem("adminInfo")).projectid,
             adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname,
-            groupids:JSON.parse(localStorage.getItem("adminInfo")).groupids
+            groupids:JSON.parse(localStorage.getItem("adminInfo")).groupids,
+            adminlevel:JSON.parse(localStorage.getItem("adminInfo")).adminlevel
         };
         return temp;
     };
@@ -446,16 +534,22 @@ function getGroup()
 function taxi_info_edit()
 {
 	var DTUKey = $('#taxi_edit_DTUKey').val();
-	var taxiName = $('#taxi_edit_name').val();
+	var province = $('#taxi_edit_province').val();
+	var NO = $('#taxi_edit_NO').val();
+	var taxiName = $('#taxi_edit_name').val().trim().toUpperCase();	
+	
 	var StarLevelset = $('#taxi_edit_startLevel').val();
 	if(taxiName==null || taxiName=="")
 		{alertMessage(1, "警告", "终端名称不能为空!");return;}
+	
+	var carNum =province+NO+" "+taxiName;
+		
 	var groupid = parseInt($('#taxi_edit_group').val());
 	$.ajax({  
         url:"/taxiInfoEdit", 
         data:{
         	dtukey:DTUKey,
-        	taxiname:taxiName,
+        	taxiname:carNum,
         	groupid:groupid,
         	StarLevelset:StarLevelset,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
@@ -467,11 +561,12 @@ function taxi_info_edit()
         	if(data.result=="success")
         		{    
         		var item={		        					
-        				name:taxiName,
+        				name:carNum,
         				DtuKey:DTUKey,		        					
         				projectid:data.projectName,
         				groupid:data.groupName,
-        				StarLevelSet:StarLevelset
+        				StarLevelSet:StarLevelset,
+        				disconnect:data.disconnect
     			};
         		var rowIndex=-1;
         		
@@ -501,6 +596,37 @@ function taxi_info_edit()
         error: function() {  
         	alertMessage(2, "异常", "ajax 函数  taxiInfoEdit 错误");         		                        
             $('#modal_taxi_edit').modal('hide');
+          }  
+    });
+}
+
+//删除终端信息
+function taxi_info_delete()
+{	
+	$.ajax({  
+        url:"/taxiInfoDelete", 
+        data:{
+        	dtukey: selectDtuKey,        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+			},  
+        type:"post",  
+        dataType:"json", 
+        success:function(data)  
+        {       	  
+        	if(data.result=="success")
+        		{    
+        		$("#taxi_table").bootstrapTable("remove", {field: "DtuKey",values: [selectDtuKey]}); 		 
+        		}
+        	else
+        		{
+        			alertMessage(1, "警告", data.resultMessage);        			
+        		}
+        	refreshTableRowSelect();
+        	$('#modal_taxi_delete').modal('hide');
+        },  
+        error: function() {  
+        	alertMessage(2, "异常", "ajax 函数  taxiInfoDelete 错误");         		                        
+            $('#modal_taxi_delete').modal('hide');
           }  
     });
 }

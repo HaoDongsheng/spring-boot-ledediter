@@ -11,6 +11,7 @@
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>				
 					
@@ -30,6 +31,13 @@
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/projectManger.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	
+	<link th:href="@{~/tinymce/js/tinymce/skins/content/default/content.min.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/tinymce.min.js}"></script>	
+	
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/themes/silver/theme.min.js}"></script>
+	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/langs/zh_CN.js}"></script>	
+	<script type="text/javascript" th:src="@{~/javascript/tinymceConfig.js}" ></script>
 </head>
 <body>
     <header>
@@ -39,6 +47,19 @@
                     <strong>公司: </strong>鞍山博海泰克电子设备有限公司
                     &nbsp;&nbsp;
                     <strong>电话: </strong>0412-5234000
+                    &nbsp;&nbsp;                    
+                    <a  id="dropdownUser" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                       <span class="fa fa-user-circle-o" style="font-size: 25px;"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-settings" style="text-align:center"  role="menu" aria-labelledby="dropdownUser">
+                        <div class="media">                             
+                            <div class="media-body">
+                                <h4 id ="dropdownUser_name" class="media-heading"></h4>                                 
+                            </div>
+                        </div>
+                        <hr />
+                        <a href="index" class="btn btn-danger btn-sm">退出</a>
+                    </div>
                 </div>
 
             </div>
@@ -57,11 +78,12 @@
                             <li id='advManger'><a href="advManger">广告编辑</a></li>
                             <li id='auditManger'><a href="auditManger">广告审核</a></li>
                             <li id='infoList'><a href="infoList">广告发布</a></li>
-                            <li id='recycleManger'><a href="recycleManger">回收站</a></li>
-                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
-                            <li id='userManger'><a href="userManger">用户管理</a></li>
-                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger'><a class="menu-top-active" href="projectManger">项目管理</a></li>
+                            <li shiro:hasPermission="advManger" id='recycleManger'><a href="recycleManger">回收站</a></li>
+                            <li id='historyManger'><a href="historyManger">广告统计</a></li>
+                            <li shiro:hasPermission="groupManger" id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li shiro:hasPermission="userManger" id='userManger'><a href="userManger">用户管理</a></li>
+                            <li shiro:hasPermission="taxiManger" id='taxiManger'><a href="taxiManger">车辆管理</a></li>                            
+                            <li shiro:hasRole="admin" id='projectManger'><a class="menu-top-active" href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->
                         </ul>
                     </div>
@@ -82,10 +104,30 @@
             <div class="row">            	
                 <div class="col-md-12">
                 <div class="table">           			 
-				     <div id="toolbar">				     				     
-						<button id="btn_table_add" type="button" class="btn  btn-success">
-			                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
-			            </button>				    				     				            
+				     <div id="toolbar">	
+				     	<div class="btn-group">			     				     
+						<button id="btn_table_add" type="button" class="btn btn-success">
+			                <span class="fa fa-plus" aria-hidden="true"></span>新增
+			            </button>			
+			            </div>
+			            
+			            <div class="btn-group">			     				     
+						<button id="btn_table_Move" type="button" class="btn btn-info">
+			                <span class="fa fa-automobile" aria-hidden="true"></span>移动终端分组
+			            </button>			
+			            </div>
+			            
+			            <div class="btn-group">			     				     
+						<button id="btn_table_decode" type="button" class="btn btn-danger">
+			                <span class="fa fa-contao" aria-hidden="true"></span>解码
+			            </button>			
+			            </div>
+			            
+<!-- 			            <div class="btn-group">			     				      -->
+<!-- 						<button id="btn_table_change" type="button" class="btn btn-danger"> -->
+<!-- 			                <span class="fa fa-contao" aria-hidden="true"></span>转换 -->
+<!-- 			            </button>			 -->
+<!-- 			            </div>	    				     				             -->
 			        </div>
 			        
 				  	<table id="projectinfo_table" class='table-sm table-striped thead-dark'>						    						    
@@ -115,6 +157,16 @@
 	        <div class="card">
 			  <div class="card-header">项目参数</div>
 			  <div class="card-body">
+			  	
+			  	<div class="row">
+		        <div class="col-md-4">
+		        	项目名称
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="text" id="project_name" class="form-control" maxlength="255">
+		        </div>
+		        </div>
+		        
 	  	        <div class="row">
 		        <div class="col-md-4">
 		        	项目编号
@@ -126,12 +178,43 @@
 		        
 		        <div class="row">
 		        <div class="col-md-4">
-		        	项目名称
+		        	校验码
 		        </div>
 		        <div class="col-md-8">
-		        	<input type="text" id="project_name" class="form-control" maxlength="255">
+		        	<input type="text" id="project_pwd" class="form-control" maxlength="255">	
 		        </div>
 		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	默认分组
+		        </div>
+		        <div class="col-md-8">
+		        	<select id="project_group" class="form-control"></select>		        		
+		        </div>
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	平台控星级
+		        </div>
+		        <div class="col-md-8">
+		        	<select id="select_start" class="form-control">
+				      <option value='0'>否</option>
+				      <option selected value='1'>是</option>
+				    </select>
+		        </div>
+		        </div>	
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	默认星级
+		        </div>
+		        <div class="col-md-8">
+		        	<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;} if(value>5){value=5;}" class="form-control" id="project_startLevel" step="1" min=0 max=5 placeholder="星级设置" value= "5"/>		        		
+		        </div>
+		        </div>
+		        
 		        
 		        <div class="row">
 		        <div class="col-md-4">
@@ -143,7 +226,20 @@
 				      <option selected value='1'>是</option>
 				    </select>
 		        </div>
-		        </div>			
+		        </div>
+		        
+		        <div class="row">
+		        <div class="col-md-4">
+		        	失联模式
+		        </div>
+		        <div class="col-md-8">
+		        	<select id="select_disconnect" class="form-control">
+				      <option selected value='0'>关闭</option>
+				      <option value='1'>开启</option>
+				    </select>
+		        </div>
+		        </div>
+		        			
 	    	  </div> 								  
 			</div>
 			
@@ -322,8 +418,7 @@
 			
 	        </div>
 	        
-	        </div>	        	        	        	        
-	        			         			    
+	        </div>	        	        	        	        	         			    
 	        </div>
 	   
 	        <!-- 模态框底部 -->
@@ -336,6 +431,136 @@
 	     </div>
 	     </div>
 	     
+	    <div class="modal fade" data-backdrop="static" id="modal_moveGroup"> 
+	    <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">移动终端分组</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">
+	        <div class="row">
+            	<div class="col-md-6">
+            	<div class="card">
+				  <div class="card-header">选中分组</div>
+				  <div class="card-body">
+		  	        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	项目名称			   
+			        	</div>     			        
+			        </div>
+			        
+			        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	<select id="select_project" class="form-control"></select>			   
+			        	</div>     			        
+			        </div>
+			        
+			        <div class="row">			
+			        	<div class="col-md-12">        
+			        	分组名称
+			        	</div>			        			        
+			        </div>
+			        
+			        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	<select id="select_group" class="form-control"></select>			   
+			        	</div>     			        
+			        </div>
+			        			
+		    	  </div> 								  
+				</div>
+            	</div>
+            	
+        		<div class="col-md-6">
+        		<div class="card">
+				  <div class="card-header">目标分组</div>
+				  <div class="card-body">
+		  	        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	项目名称			   
+			        	</div>     			        
+			        </div>
+			        
+			        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	<select id="ore_project" class="form-control"></select>			   
+			        	</div>     			        
+			        </div>
+			        
+			        <div class="row">			
+			        	<div class="col-md-12">        
+			        	分组名称
+			        	</div>			        			        
+			        </div>
+			        
+			        <div class="row">	
+		  	        	<div class="col-md-12">		        
+			        	<select id="ore_group" class="form-control"></select>			   
+			        	</div>     			        
+			        </div>			
+		    	  </div> 								  
+				</div>
+        		</div>
+	        </div>
+	        </div>
+	        
+	         <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_moveGroup" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+        </div>
+	    </div>
+	    </div>
+	    
+	     <div class="modal fade" data-backdrop="static" id="modal_decode"> 
+	    <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">解码</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">
+	        <div class="row">
+            	<div class="col-md-4">
+            	<select id="select_decodeType" class="form-control">
+            	<option selected value=0>广告解码</option>
+            	<option value=1>列表解码</option>
+            	</select>
+            	</div>            	        		
+	        </div>
+	        
+	        <div class="row">
+            	<div class="col-md-12">
+            	<textarea id="tinymce_code"></textarea>           	
+            	</div>            	        		
+	        </div>
+	        
+	        <div class="row">
+            	<div id="decode_result" class="col-md-12">            	           	
+            	</div>            	        		
+	        </div>
+	        
+	        </div>
+	        
+	         <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_decode" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+        </div>
+	    </div>
+	    </div>
+	    
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
     <footer>

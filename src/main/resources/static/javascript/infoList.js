@@ -1,6 +1,31 @@
 var selectplaylistid=0,rowIndex=-1,ptrowIndex=-1;
+var ispermission=true;
+var spinner;
 
 $(function(){
+	
+	var opts = {            
+        lines: 13, // 花瓣数目
+        length: 20, // 花瓣长度
+        width: 10, // 花瓣宽度
+        radius: 30, // 花瓣距中心半径
+        corners: 1, // 花瓣圆滑度 (0-1)
+        rotate: 0, // 花瓣旋转角度
+        direction: 1, // 花瓣旋转方向 1: 顺时针, -1: 逆时针
+        color: '#000', // 花瓣颜色
+        speed: 1, // 花瓣旋转速度
+        trail: 60, // 花瓣旋转时的拖影(百分比)
+        shadow: false, // 花瓣是否显示阴影
+        hwaccel: false, //spinner 是否启用硬件加速及高速旋转            
+        className: 'spinner', // spinner css 样式名称
+        zIndex: 2e9, // spinner的z轴 (默认是2000000000)
+        top: '25%', // spinner 相对父容器Top定位 单位 px
+        left: '50%'// spinner 相对父容器Left定位 单位 px
+    };
+
+    spinner = new Spinner(opts);
+        
+	permission();
 	
 	$('#playlist_StartTime').timepicker({
 		defaultTime:'9:00',
@@ -37,17 +62,12 @@ $(function(){
         $('#infolist_table').bootstrapTable('refresh');
 	});
 	
-	$("#start_index").change(function(){					
+	$("#modal_mutiAddpt input").bind('input propertychange', function() {
+
 		mutiadditemtip();
-	  });
+
+		});
 	
-	$("#end_index").change(function(){					
-		mutiadditemtip();
-	  });
-	
-	$("#interval_index").change(function(){			
-		mutiadditemtip();
-	  });
 	$("#grouplist").change(function(){			
 		getInfoList(parseInt($("#grouplist").val()));	    
 	  });
@@ -99,6 +119,61 @@ $(function(){
 		SendSerialData(playlistid);
 		}
 	});
+	
+
+    
+	$("#search_lifeAct").datetimepicker({
+		format: 'yyyy-mm-dd',
+		bootcssVer: 3,
+		minView: "month", //选择日期后，不会再跳转去选择时分秒 
+		autoclose: true,
+        todayBtn: true,
+        language: 'zh-CN',
+        pickerPosition: "bottom-left"
+	});
+	
+	
+	$("#search_lifeDie").datetimepicker({
+		format: 'yyyy-mm-dd',
+		minView: "month", //选择日期后，不会再跳转去选择时分秒 
+		autoclose: true,
+        todayBtn: true,
+        language: 'zh-CN',
+        pickerPosition: "bottom-left"
+	});	
+	
+	$('#btn_search_date').click(function(){
+    	var startDate = $('#search_lifeAct').val();
+    	var endDate = $('#search_lifeDie').val();
+    	if(endDate<startDate || startDate=="" || endDate=="")
+    		{
+    		alertMessage(1, "警告", "日期不能为空或者开始日期不能大于结束日期");
+    		return;
+    		}
+    	if(endDate!='')
+    		{endDate = endDate + ' 23:59:59'}
+    	var playlistid = parseInt($("#modal_search_date").attr("data-playlistid"));
+    	
+    	$('#infoMore').popover('hide');
+    	$('#infoMore').remove();	
+    	selectinfoid = 0;	
+    	$('#infolist_draft span').removeClass('mws-ic-16 ic-accept');
+    	refreshTablebyDate(startDate,endDate)
+    	
+    	$('#modal_search_date').modal('hide');
+    });
+	
+	//日期检查排期
+	$("#list_datesearch").click(function(){
+		if(selectplaylistid != 0)
+		{
+		var playlistid = selectplaylistid;
+		$('#search_lifeAct').val(getNowFormatDate());
+	    $('#search_lifeDie').val(getNowFormatDate());
+		$("#modal_search_date").attr("data-playlistid",playlistid);
+		$('#modal_search_date').modal('show');		
+		}
+	});
 		
 	$("#playlist").change(function(){
 		playlistSelectChange(parseInt($("#playlist").val()));
@@ -120,12 +195,36 @@ $(function(){
 		if(intervalindex==0)
 			{
 			for(var i=startindex;i<selectlistcycle;i++)
-				{
-					isS = addlistitem(dataval.infosn,i,dataval.timelenght);
-					if(isS){
-						alert("添加排期1条:"+i+"秒");
-						break;}
-				}
+			{
+				isS = addlistitem(dataval.infosn,i,dataval.timelenght);
+				if(isS)
+				{alert("添加排期1条:"+i+"秒");break;}
+			}
+			
+//			isS = addlistitem(dataval.infosn,startindex,dataval.timelenght);
+//			if(!isS)
+//				{
+//				var isst=false;var index=0;
+//				for(var i=startindex + 1;i<selectlistcycle;i++)
+//					{
+//					isst = judgeitem(i,dataval.timelenght);
+//					if(isst)
+//					{index = i;break;}
+//					}
+//				if(isst)
+//					{
+//					$("#modal_deleteitem .modal-body").text("第"+startindex+"秒,不能容纳此广告,将自动下移到"+index+"秒");
+//			    	$("#modal_deleteitem").attr("data-type","muti_add");
+//			    	$("#modal_deleteitem").attr("data-infosn",dataval.infosn);
+//			    	$("#modal_deleteitem").attr("data-startindex",index);
+//			    	$("#modal_deleteitem").attr("data-timelenght",dataval.timelenght);
+//					$('#modal_deleteitem').modal('show');
+//					isS=true;
+//					}				
+//				}
+//			else {
+//				alert("添加排期1条:"+startindex+"秒");
+//			}
 			}
 		else {
 			var arrayitem = mutiladdlistitem(startindex,endindex,intervalindex,dataval.infosn,dataval.timelenght);
@@ -137,15 +236,38 @@ $(function(){
 		}
 		
 		if(!isS)
-			{alertMessage(1, "警告", "没有容纳本条广告的空间");}
-		else {
-			$('#modal_mutiAddpt').modal('hide');
-		}
+			{alertMessage(1, "警告", "没有容纳本条广告的空间");}		
 		
 	});
 		
 	initBTabel();
 });
+
+//权限功能封闭
+function permission() {
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));		
+	
+	if(adminInfo.issuperuser!=1)
+		{
+		var adminpermission = adminInfo.adminpermission;
+		var isable = parseInt(adminpermission[2]);
+		if(isable==1)
+			{
+			ispermission = true;
+//			$('#list_create').removeAttr("disabled");
+//			$('#list_delete').removeAttr("disabled");
+//			$('#list_publish').removeAttr("disabled");
+//			$('#btn_add_playlist').removeAttr("disabled");			
+			}
+		else {
+			ispermission = false;
+//			$('#list_create').attr("disabled","disabled");	
+//			$('#list_delete').attr("disabled","disabled");
+//			$('#list_publish').attr("disabled","disabled");
+//			$('#btn_add_playlist').attr("disabled","disabled");
+		}		
+		}
+}
 
 function mutiadditemtip() {
 	var endindex = parseInt($('#end_index').val());												
@@ -155,8 +277,10 @@ function mutiadditemtip() {
 	var dataval = JSON.parse($('#modal_mutiAddpt').attr('data-value'));
 	if(intervalindex!=0 && intervalindex<dataval.timelenght)
 	{
-	alertMessage(1, "警告", "间隔时间不为0时不能小于广告时长"+dataval.timelenght+"秒");
-	$('#interval_index').val(dataval.timelenght);
+		$('#mutiadd_itemtip').text('间隔时间小于广告时长不能排期');
+//	alertMessage(1, "警告", "间隔时间不为0时不能小于广告时长"+dataval.timelenght+"秒");
+//	$('#interval_index').val(dataval.timelenght);
+//	mutiadditemtip()
 	return;
 	}
 	var isS = false;
@@ -166,7 +290,8 @@ function mutiadditemtip() {
 			{					
 				var isS = judgeitem(i,dataval.timelenght);
 				if(isS){						
-					alertMessage(1, "警告", '预计添加1条排期,排期时间:'+i+"秒"); 
+					//alertMessage(1, "警告", '预计添加1条排期,排期时间:'+i+"秒"); 
+					$('#mutiadd_itemtip').text('预计添加1条排期,排期时间:'+i+'秒');
 					break;
 				}
 			}
@@ -177,11 +302,12 @@ function mutiadditemtip() {
 		if(arrayitem.length>0)
 			{
 				isS=true;
-				alertMessage(1, "警告", '预计添加'+arrayitem.length+'条排期,排期时间:'+arrayitem.join(',')+"秒"); 					
+				$('#mutiadd_itemtip').text('预计添加'+arrayitem.length+'条排期,排期时间:'+arrayitem.join(',')+'秒');
+				//alertMessage(1, "警告", '预计添加'+arrayitem.length+'条排期,排期时间:'+arrayitem.join(',')+"秒"); 					
 			}
 	}
 	if(!isS)
-	{alertMessage(1, "警告", '没有空间容纳本条广告!');}
+	{$('#mutiadd_itemtip').text('没有空间容纳本条广告!');}
 }
 //获取当前时间，格式YYYY-MM-DD
 function getNowFormatDate() {
@@ -227,7 +353,7 @@ function initBTabel()
         detailView: false,                   //是否显示父子表onEditableSave
         rowStyle:function(row,index)
         {        							
-        	if(row.infosn==selectinfoid)
+        	if(row.infoid==selectinfoid)
         		{
 	        	return { classes: 'infochangeColor'};
         		}
@@ -246,7 +372,7 @@ function initBTabel()
                 return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
             }
         }, {
-            field: 'infosn',
+            field: 'infoid',
             title: '广告id',
             visible: false
             
@@ -338,32 +464,14 @@ function advoperateFormatter(value, row, index) {
 
 window.advoperateEvents = {
 	'click .delete': function (e, value, row, index) {	
-		$("#infolist_table").bootstrapTable("remove", {field: "indexNo",values: [row.indexNo]}); 
-		
-		itemlist.splice(row.indexNo, 1);
-		
-		var lifeAct = getNowFormatDate();
-		var lifeDie = getNowFormatDate();
-		if(selectinfoid!=0)
-			{
-				var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
-				for(var i=0;i<infopubs.length;i++)
-				{
-					var infosn=infopubs[i].id;																	
-					if(infosn==selectinfoid)
-						{
-						lifeAct=infopubs[i].lifeAct;
-						lifeDie=infopubs[i].lifeDie;
-						break;
-						}
-				}
-			}
-		
-		refreshTablebyDate(lifeAct,lifeDie);
-		
-    	itemChange();
-    	
-    	refreshTableRowSelect();
+		if(!ispermission){
+			alertMessage(1, "警告", "没有相关操作权限,请联系管理员!"); 
+			return;
+		}
+		$("#modal_deleteitem .modal-body").text("是否下架此广告?");
+    	$("#modal_deleteitem").attr("data-type","remove_snInfo");
+    	$("#modal_deleteitem").attr("data-indexNo",row.indexNo);                	                	    	
+		$('#modal_deleteitem').modal('show');
     }
 };
 
@@ -382,7 +490,7 @@ function infopublish() {
 		if(infosn==infoid)
 			{		        				
 			var item={    
-					infosn:infosn,
+					infoid:infosn,
 					infoname:infoname,
 					lifeAct:lifeAct,
 					lifeDie:lifeDie,
@@ -433,12 +541,12 @@ function infopublish() {
 					{$('#interval_index').val(parseInt(selectlistcycle));} 
 					});
 				var dataval={
-					infosn:item.infosn,
+					infosn:item.infoid,
 					timelenght:item.timelenght
 				}
 				$('#modal_mutiAddpt').attr('data-value',JSON.stringify(dataval));
 				$('#modal_mutiAddpt').modal('show');
-				
+				mutiadditemtip();
 				};
 				break;
 
@@ -451,11 +559,16 @@ function infopublish() {
 					$('#infolist_table').bootstrapTable('append', item);					 
 				}
 				else {
-					var bootdata = $("#infolist_table").bootstrapTable("getData");					
-					itemlist.splice(bootdata[rowIndex].indexNo,0,item);
-					//item.indexNo=bootdata[rowIndex].indexNo;
-					//var params = {index:rowIndex, row:item};
-		    		//$('#infolist_table').bootstrapTable('insertRow', params);
+					var bootdata = $("#infolist_table").bootstrapTable("getData");
+					if(rowIndex < bootdata.length)
+						{
+						itemlist.splice(bootdata[rowIndex].indexNo,0,item);
+						}
+					else {
+						itemlist.push(item);
+						item.indexNo=itemlist.length - 1;
+						$('#infolist_table').bootstrapTable('append', item);
+					}
 		    		
 		    		refreshTablebyDate(lifeAct,lifeDie);
 		    		refreshTableRowSelect();
@@ -489,6 +602,38 @@ function initInfolist()
 		
 		var datatype = $("#modal_deleteitem").attr("data-type");
 		switch (datatype) {
+		case "remove_snInfo":{
+			var indexNo = parseInt($("#modal_deleteitem").attr("data-indexNo"));
+			
+			$("#infolist_table").bootstrapTable("remove", {field: "indexNo",values: [indexNo]}).bootstrapTable('refresh'); 
+			
+			itemlist.splice(indexNo, 1);
+			
+//			var lifeAct = getNowFormatDate();
+//			var lifeDie = getNowFormatDate();
+//			if(selectinfoid!=0)
+//				{
+//					var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+//					for(var i=0;i<infopubs.length;i++)
+//					{
+//						var infosn=infopubs[i].id;																	
+//						if(infosn==selectinfoid)
+//							{
+//							lifeAct=infopubs[i].lifeAct;
+//							lifeDie=infopubs[i].lifeDie;
+//							break;
+//							}
+//					}
+//				}
+//			
+//			refreshTablebyDate(lifeAct,lifeDie);
+			
+	    	itemChange();
+	    	
+	    	refreshTableRowSelect();
+	    	
+	    	//rowIndex=-1;
+		};break;
 		case "delete_list":{
 			var playlistid = selectplaylistid;
 			playlistDeletebyid(playlistid);
@@ -536,17 +681,17 @@ function initInfolist()
 			    					var st=item.offsetlist[f];
 			    					$('#info_canvas').removeLayerGroup(infosn+"offset"+st).drawLayers();		    						    				
 			    					}
-			    				itemlist.splice(l, 1);
-			    				itemChange();
+			    				itemlist.splice(l, 1);			    				
 			    				break;				
 			    			}			
 			    		}
+			    		itemChange();
 			    	}
 				};
 				break;	
 			case 2://顺序
 				{
-				$("#infolist_table").bootstrapTable("remove", {field: "infosn",values: [infosn]});
+				$("#infolist_table").bootstrapTable("remove", {field: "infoid",values: [infosn]}).bootstrapTable('refresh');
 				
 				if(itemlist!=null && itemlist.length>0)
 		    	{
@@ -554,35 +699,37 @@ function initInfolist()
 		    		{
 		    			var item = itemlist[l];
 		    						
-		    			if(item.infosn==infosn)
+		    			if(item.infoid==infosn)
 		    			{		    				
 		    				itemlist.splice(l, 1);
 		    				l=l-1;
 		    			}			
 		    		}
 		    	}
-				var lifeAct = getNowFormatDate();
-				var lifeDie = getNowFormatDate();
-				if(selectinfoid!=0)
-					{
-						var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
-						for(var i=0;i<infopubs.length;i++)
-						{
-							var infosn=infopubs[i].id;																	
-							if(infosn==selectinfoid)
-								{
-								lifeAct=infopubs[i].lifeAct;
-								lifeDie=infopubs[i].lifeDie;
-								break;
-								}
-						}
-					}
-				
-				refreshTablebyDate(lifeAct,lifeDie);
+//				var lifeAct = getNowFormatDate();
+//				var lifeDie = getNowFormatDate();
+//				if(selectinfoid!=0)
+//					{
+//						var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+//						for(var i=0;i<infopubs.length;i++)
+//						{
+//							var infosn=infopubs[i].id;																	
+//							if(infosn==selectinfoid)
+//								{
+//								lifeAct=infopubs[i].lifeAct;
+//								lifeDie=infopubs[i].lifeDie;
+//								break;
+//								}
+//						}
+//					}
+//				
+//				refreshTablebyDate(lifeAct,lifeDie);
 						
 		    	itemChange();
 		    			    	
 		    	refreshTableRowSelect();
+		    	
+		    	rowIndex=-1;
 				};
 				break;
 			}		    			    			    	  		    	    		    	    		   				    		    		    			    		    	
@@ -617,6 +764,14 @@ function initInfolist()
 		    });
 	    	
 		};break;
+		case "muti_add":{
+			var infosn = parseInt($("#modal_deleteitem").attr("data-infosn"));
+			var startindex = parseInt($("#modal_deleteitem").attr("data-startindex"));
+			var timelenght = parseInt($("#modal_deleteitem").attr("data-timelenght"));
+			
+			var isS = addlistitem(infosn,startindex,timelenght);
+	    	
+		};break
 		}		
 		
 		$('#modal_deleteitem').modal('hide');
@@ -625,7 +780,7 @@ function initInfolist()
 	$('#btn_add_quantum').click(function(){
 		var st = $('#playlist_StartTime').val();
 		var et = $('#playlist_EndTime').val();
-		if(st>et && et!='00:00')
+		if(new Date(st)>new Date(et) && et!='00:00'&& et!='0:00')
 			{alertMessage(1, "警告", "开始时间不能大于结束时间");return;}
 				
 		var optionCount = $('#creat_playlist_quantum option').length;
@@ -668,8 +823,7 @@ function initInfolist()
 			}					
 	});	
 	
-	$('#btn_del_quantum').click(function(){
-		
+	$('#btn_del_quantum').click(function(){		
 		var checkText=$("#creat_playlist_quantum").val();   //获取Select选择的Text
 		$("#creat_playlist_quantum option[value='"+checkText+"']").remove(); 
 	});
@@ -816,6 +970,7 @@ function getInfoList(groupid)
 {
 	sessionStorage.setItem('playlists', "");
 	sessionStorage.setItem('selectgrpid', groupid);
+	$('#playlist').empty();
 	$.ajax({  
         url:"/getInfoList",          
         type:"post", 
@@ -825,8 +980,7 @@ function getInfoList(groupid)
 			},  
         dataType:"json", 
         success:function(data)  
-        {     
-			$('#playlist').empty();
+        {     			
         	if(data!=null && data.length>0)    		
         		{        			
         			var fristid=0;
@@ -889,7 +1043,7 @@ function GetInfopubsbygrpid(groupid)
         success:function(data)  
         {       	        	
         	$('#infolist_draft').empty();			
-			$('#badge_infolist').text(0);			
+			$('#badge_draft').text(0);			
         	if(data!=null && data.length>0)    		
         		{        
         			//var ArrayTable = [];
@@ -903,6 +1057,7 @@ function GetInfopubsbygrpid(groupid)
 	        			var lifeDie=data[i].lifeDie;
 	        			var playTimelength=data[i].playTimelength;
 	        			var infopubid=data[i].Pubidid;	
+	        			var publishDate=data[i].publishDate;	        			
 	        			/*	    
 	        			var item={
         					infosn:infosn,
@@ -1017,17 +1172,18 @@ function playlistSelectChange(playlistid)
 						case 2:{
 							$("#pt_sort").css("display","inline");
 							$("#pt_template").css("display","none");
-							refreshTablebyDate(getNowFormatDate(),getNowFormatDate());
+							
 						};break;
 						case 1:{
+							
 							$("#pt_sort").css("display","none");
 							$("#pt_template").css("display","inline");
 							if(jsontq.listcycle!=null && jsontq.listcycle!="" && jsontq.listcycle!=0)
 							{DrawBackground(jsontq.listcycle);}
-							GetitemList('','');
+							//GetitemList('','');							
 						};break;
 					}														
-					
+					refreshTablebyDate(getNowFormatDate(),getNowFormatDate());
 					var divheight = $('#pt_sort').parent('.col-md-10').height();
 	        		if(divheight>600)
 	        			{
@@ -1084,7 +1240,7 @@ function refreshTablebyDate(dts,dte)
 			var id=playlists[i].id;
 			if(id==selectplaylistid)
 				{    				
-				var Scheduletype=parseInt(playlists[i].Scheduletype);
+				Scheduletype=parseInt(playlists[i].Scheduletype);
 				}
 		}
 	}
@@ -1100,7 +1256,7 @@ function refreshTablebyDate(dts,dte)
 					{
 					var lifeAct = itemlist[r].lifeAct;
 					var lifeDie = itemlist[r].lifeDie;
-					var infosn = parseInt(itemlist[r].infosn);
+					var infosn = parseInt(itemlist[r].infoid);
 					if(lifeAct==''){lifeAct='1999-09-09';}
 					if(lifeDie==''){lifeDie='2100-09-09';}
 					
@@ -1162,6 +1318,8 @@ function infoSelectChange(infoid,isCancle)
 
     	refreshTableRowSelect();    		
 				 
+//    	console.warn("其他数据 开始时间" + getNowFormatDatetime());
+    	
     	$('#infolist_draft span').removeClass('mws-ic-16 ic-accept');		
 		
 		$("#div_"+selectinfoid+" span").addClass('mws-ic-16 ic-accept');
@@ -1175,7 +1333,13 @@ function infoSelectChange(infoid,isCancle)
         '<span id="moredelete" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-trash-o"></i>删除</span>'+
         '<span id="morecopy" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-copy"></i>复制</span>'+
         '<span id="moreserialPort" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-magnet"></i>串口</span></div>';
-		
+		if(!ispermission)
+			{
+			html ='<div class="btn-group-vertical btn-group-sm">'+			
+	        '<span id="moredetails" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-exclamation-circle"></i>详情</span>'+	        
+	        '<span id="morecopy" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-copy"></i>复制</span>'+
+	        '<span id="moreserialPort" class="btn btn-link" href="javascript:void(0)"><i class="fa fa-magnet"></i>串口</span></div>';
+			}
 		$('[data-toggle="popover"]').each(function () {
             var element = $(this);
             element.popover({
@@ -1266,35 +1430,37 @@ function infoSelectChange(infoid,isCancle)
                 }, 100);
             });
         });
+//		console.warn("加菜单 结束时间" + getNowFormatDatetime());
 		
-		if(itemlist!=null && itemlist.length>0)
-		{
-		for(var l=0;l<itemlist.length;l++)
-			{
-				var item = itemlist[l];
-				
-				var itemColor = itembackColor;
-				if(item.infoid==selectinfoid)
-				{
-					itemColor = itemSelectbackColor;
-				}
-				
-				var offsetlist = item.offsetlist;
-				if(offsetlist!=null && offsetlist.length>0)
-				{
-					for(var j=0;j<offsetlist.length;j++)
-						{
-						var st = offsetlist[j];
-						
-	        			var layerid=item.infoid + "offset" + st;		        					        					        					        			
-	        			$('#info_canvas').setLayerGroup(layerid, {
-	        				  fillStyle: itemColor		        					        				  
-	        				})
-	        				.drawLayers();	        					        			
-						}
-				}		        						
-			}
-		}
+//		if(itemlist!=null && itemlist.length>0)
+//		{
+//		for(var l=0;l<itemlist.length;l++)
+//			{
+//				var item = itemlist[l];
+//				
+//				var itemColor = itembackColor;
+//				if(item.infoid==selectinfoid)
+//				{
+//					itemColor = itemSelectbackColor;
+//				}
+//				
+//				var offsetlist = item.offsetlist;
+//				if(offsetlist!=null && offsetlist.length>0)
+//				{
+//					for(var j=0;j<offsetlist.length;j++)
+//						{
+//						var st = offsetlist[j];
+//						
+//	        			var layerid=item.infoid + "offset" + st;		        					        					        					        			
+//	        			$('#info_canvas').setLayerGroup(layerid, {
+//	        				  fillStyle: itemColor		        					        				  
+//	        				})
+//	        				.drawLayers();	        					        			
+//						}
+//				}		        						
+//			}
+//		}
+//		console.warn("其他数据 结束时间" + getNowFormatDatetime());
 	}
 	else if(isCancle)
 	{			
@@ -1320,24 +1486,7 @@ function playlistDeletebyid(playlistid)
         	if(data!=null)    		
         		{
 	        		if(data.result=='success')
-					{
-	        			/*
-						if($("#div_"+playlistid).parent()[0].id=='playlist_draft')
-        				{
-        				var count_draft = parseInt($('#badge_draft').text()) - 1;
-            			if(count_draft<0){count_draft=0;}
-    					$('#badge_draft').text(count_draft);
-    					}
-        			else
-        				{
-        				var count_publish = parseInt($('#badge_publish').text()) - 1;
-            			if(count_publish <0){count_publish =0;}
-    					$('#badge_publish').text(count_publish );
-    					}
-						
-						$("#div_"+playlistid).remove();	
-						*/
-	        			
+					{	        			
 	        			$("#playlist option[value="+playlistid+"]").remove(); 
 	        			
 						var playlists= JSON.parse(sessionStorage.getItem('playlists'));
@@ -1359,6 +1508,8 @@ function playlistDeletebyid(playlistid)
 						
 						$('#info_canvas').removeLayers().drawLayers();
 						itemlist=[];
+						if($("#playlist").val()!="" && $("#playlist").val()!="" && $("#playlist").val()!=null)
+						{playlistSelectChange(parseInt($("#playlist").val()));}
 					}
 	        		else
 					{alertMessage(1, "警告", data.resultMessage);}
@@ -1725,6 +1876,11 @@ function ajaxCreateInfoList(listname,listtype,quantums,ScheduleType)
 //ajax 保存列表
 function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,itemlist,isRefresh,isPublish)
 {
+	if(playlistid==null || playlistid=="" || playlistid==0)
+		{
+		alertMessage(1, "警告", "保存发布播放列表失败,选中播放列表为空!");
+		}
+	
 	$.ajax({  
         url:"/UpdateInfoList",          
         type:"post",  
@@ -1741,6 +1897,11 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         dataType:"json", 
+        beforeSend: function(){        	
+//        	$("#modal_spinner").modal('show');
+        	var target = $("#pt_template").parent().get(0);
+        	spinner.spin(target);
+        },
         success:function(data)  
         {       	  
         	if(data!=null)    		
@@ -1758,8 +1919,10 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 					    				{
 					    				if(data.returnid != null)//生成新列表
 					    					{
-					    						addinfolistnav(data.returnid,listname,0);
-					    						playlists.splice(i, 1);					    						
+						    					playlists.splice(i, 1);	
+					    						$("#playlist option[value="+playlistid+"]").remove();
+				    						
+					    						addinfolistnav(data.returnid,listname,0);					    						
 					    						
 					    						var jpl={
 					    								id:data.returnid,
@@ -1779,18 +1942,8 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 												
 												sessionStorage.setItem('playlists', JSON.stringify(playlists));
 												
-					    						playlistSelectChange(data.returnid);
-					    						
-					    						$("#playlist option[value="+playlistid+"]").remove(); 
-					    						
-					    						/*
-					    						$("#div_"+playlistid).remove();
-					    						
-												var count = parseInt($('#badge_publish').text()) - 1;
-												$('#badge_publish').text(count);
-					        					
-												$('#modal_save').modal('hide');
-												*/
+					    						playlistSelectChange(data.returnid);					    											    						 
+					    											    						
 												$('#modal_addplaylist').modal('hide');					    						
 					    					}
 					    				else
@@ -1799,30 +1952,12 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 						    				playlists[i].Scheduletype=ScheduleType;					    				
 						    				if(playlists[i].Playlistname!=listname)
 						    					{
-						    					//$("#pl_"+playlistid).text(listname);
 						    					$("#playlist option[value="+playlistid+"]").text(listname);
 						    					playlists[i].Playlistname=listname;
 						    					}
 						    				
 						    				playlists[i].Programlist=JSON.stringify(itemlist);
-						    				playlists[i].Timequantum=strquantums;
-						    				/*
-						    				if(playlists[i].pubid!==0 && playlists[i].pubid!=="0")
-					    					{
-						    					var count = parseInt($('#badge_draft').text()) + 1;
-												if(count <= 0){count = 0;}
-												$('#badge_draft').text(count);
-												
-												$('#playlist_draft').append($("#div_" + playlistid));
-												var count = parseInt($('#badge_publish').text()) - 1;
-												$('#badge_publish').text(count);
-					        					
-												$('#modal_save').modal('hide');
-												$('#modal_addplaylist').modal('hide');
-												
-												playlists[i].pubid = "0";
-					    					}
-						    				*/
+						    				playlists[i].Timequantum=strquantums;						    				
 						    				
 			    							if(data.pubid!=null)
 						    				{
@@ -1861,8 +1996,7 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 			    									}
 			    								}
 		    								}
-					    					}
-					    				alertMessage(0, "成功", "修改成功");		    							
+					    					}					    						    							
 					    				break;
 					    				}
 								}
@@ -1870,13 +2004,21 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 						
 							sessionStorage.setItem('playlists', JSON.stringify(playlists));
 							$('#modal_addplaylist').modal('hide');
+														
+							alertMessage(0, "成功", "修改成功");
         				}
         			else
         				{alertMessage(1, "警告", data.resultMessage);}
         		}
-        	else{alertMessage(1, "警告", "存储列表返回数据为null");}	        	   
+        	else{alertMessage(1, "警告", "存储列表返回数据为null");}	
+        	//关闭spinner  
+            spinner.spin();
+//            $("#modal_spinner").modal('hide');
         },  
         error: function() { 
+        	//关闭spinner  
+            spinner.spin();
+//            $("#modal_spinner").modal('hide');
         	alertMessage(2, "异常", "ajax 函数  UpdateInfoList 错误");        	            
           }  
     });
@@ -2255,6 +2397,26 @@ function infoSendSerialData(infoid)
 //获取显示项
 function getitem(infoid)
 {	
+	var infopubs = JSON.parse(sessionStorage.getItem('infopubs'));
+	
+	for(var i=0;i<infopubs.length;i++)
+	{
+		var infosn=infopubs[i].id;	
+		
+		if(infosn==infoid)
+			{						
+			var infoname=infopubs[i].Advname;
+			var lifeAct=infopubs[i].lifeAct;
+			var lifeDie=infopubs[i].lifeDie;
+			var playTimelength=infopubs[i].playTimelength;
+			var infopubid=infopubs[i].Pubidid;	
+			var publishDate=infopubs[i].publishDate;
+			$('#details_life').text(lifeAct+"---"+lifeDie);
+			$('#details_publishDate').text(publishDate);
+			break;
+			}
+	}
+	
 	$.ajax({  
         url:"/GetItem",         
         data:{

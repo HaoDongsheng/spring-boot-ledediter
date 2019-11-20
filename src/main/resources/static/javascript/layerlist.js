@@ -53,7 +53,7 @@ function listitemdblclick(obj)
 	var canvasid = $(obj)[0].id;
 	var pageid = canvasid.substring(9,canvasid.indexOf("_item"));	
 	var itemid = canvasid.substring(canvasid.indexOf("_item")+5);
-	
+	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}
 	 $('#myModalEdit').modal('show');
 	    if(itemmap.hasOwnProperty(pageid))
 		{
@@ -61,8 +61,13 @@ function listitemdblclick(obj)
 				{
 					var item=itemmap[pageid][i];
 					if(item.itemid==itemid)
-						{										
-						ue.setContent(item.context);
+						{																
+//						var background_position = $('.edui-default .edui-for-customimage .edui-icon').css('background-position');
+//						$('#myModalEdit').modal('show');
+//						$("#select_div").val("0");
+//						$("#div_tp").css("display","inline");
+//						$("#div_gif").css("display","none");
+						tinymce.activeEditor.setContent(item.context);
 						initspecial(item.itemstyle.special);
 						break;
 						}
@@ -211,6 +216,7 @@ function getRect()
 //添加列表
 function list_additem(obj)
 {	
+	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}
 	if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid))
 	{				
 		var rect = getRect();
@@ -267,6 +273,7 @@ function list_additem(obj)
 //删除列表
 function list_deleteitem(obj)
 {
+	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}
 	if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
 	{			
 		
@@ -328,8 +335,9 @@ function addlayer(pageid,itemlist,isSelect)
 	var ho =screenh*scaleone;
 	var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='border:2px outset;'></canvas>";	
 	$("#page_header_"+pageid).append(page);
-	//var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='margin:5px 5px;'></canvas>";
-	//$("#layer_items").append(page);
+	
+//	var page ="<canvas id='list_page_"+pageid+"' width="+w+"px height="+h+"px style='margin:5px 5px;'></canvas>";
+//	$("#layer_items").append(page);
 	
 	
 	updatalistbackground('list_page_'+pageid,selectinfoid);

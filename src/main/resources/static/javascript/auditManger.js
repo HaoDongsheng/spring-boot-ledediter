@@ -1,8 +1,10 @@
+var ispermission=true;
+
 $(function(){
-	
-	$(".modal" ).draggable();
-		
+				
 	initBTabel();
+	
+	permission();
 	
 	getGroup();
 	
@@ -53,6 +55,24 @@ $(function(){
         spinner = new Spinner(opts);
 	
 });
+
+//权限功能封闭
+function permission() {
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));		
+	
+	if(adminInfo.issuperuser!=1)
+		{
+		var adminpermission = adminInfo.adminpermission;
+		var isable = parseInt(adminpermission[1]);
+		if(isable==1)
+			{
+			ispermission = true;
+			}
+		else {
+			ispermission = false;
+		}		
+		}
+}
 
 var spinner;
 
@@ -191,11 +211,19 @@ window.operateEvents = {
         	$("#modal_details").modal('show'); 
         	getitem(row.infosn);
         },
-        'click .allow': function (e, value, row, index) {        
+        'click .allow': function (e, value, row, index) { 
+        	if(!ispermission){
+        		alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");
+        		return;
+        		}
         	$("#modal_allow").attr("data-type",row.infosn);
         	$("#modal_allow").modal('show');	
         },
-        'click .refuse': function (e, value, row, index) {        
+        'click .refuse': function (e, value, row, index) {  
+        	if(!ispermission){
+        		alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");
+        		return;
+        	}
         	$("#modal_refuse").attr("data-type",row.infosn);
         	$("#modal_refuse").modal('show');       
         },

@@ -13,7 +13,7 @@
 			
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
-	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<!-- Bootstrap 核心 JavaScript 文件 -->			
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
 	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>
@@ -38,9 +38,14 @@
 	<script type="text/javascript" th:src="@{~/javascript/infoList.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/DrawInfolistbyCanvas.js}" ></script>
 		
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.zh-CN.js}" ></script>
+	
 	<link th:href="@{~/css/bootstrap-timepicker.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>		
+	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>	
+	
+	<script type="text/javascript" th:src="@{~/spin/spin.min.js}" ></script>	
 </head>
 <body>
    <header>
@@ -49,7 +54,20 @@
                 <div class="col-md-12">
                     <strong>公司: </strong>鞍山博海泰克电子设备有限公司
                     &nbsp;&nbsp;
-                    <strong>电话: </strong>0412-5234000                
+                    <strong>电话: </strong>0412-5234000  
+                    &nbsp;&nbsp;                    
+                    <a  id="dropdownUser" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                       <span class="fa fa-user-circle-o" style="font-size: 25px;"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-settings" style="text-align:center"  role="menu" aria-labelledby="dropdownUser">
+                        <div class="media">                             
+                            <div class="media-body">
+                                <h4 id ="dropdownUser_name" class="media-heading"></h4>                                 
+                            </div>
+                        </div>
+                        <hr />
+                        <a href="index" class="btn btn-danger btn-sm">退出</a>
+                    </div>              
                 </div>
             </div>
         </div>
@@ -66,11 +84,12 @@
                             <li id='advManger'><a href="advManger">广告编辑</a></li>
                             <li id='auditManger'><a href="auditManger">广告审核</a></li>
                             <li id='infoList'><a class="menu-top-active" href="infoList">广告发布</a></li>
-                            <li id='recycleManger'><a href="recycleManger">回收站</a></li>
-                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
-                            <li id='userManger'><a href="userManger">用户管理</a></li>
-                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
+                            <li shiro:hasPermission="advManger" id='recycleManger'><a href="recycleManger">回收站</a></li>
+                            <li id='historyManger'><a href="historyManger">广告统计</a></li>
+                            <li shiro:hasPermission="groupManger" id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li shiro:hasPermission="userManger" id='userManger'><a href="userManger">用户管理</a></li>
+                            <li shiro:hasPermission="taxiManger" id='taxiManger'><a href="taxiManger">车辆管理</a></li>                            
+                            <li shiro:hasRole="admin" id='projectManger'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li>  -->                         
                         </ul>
                     </div>                    
@@ -126,11 +145,12 @@
 	           
 	           <div class="col-md-8">
 		           <div class="btn-group btn-group-sm">	           		      	
-				    <button id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
-				    <button id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
-				    <button id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
+				    <button shiro:hasPermission="publishManger" id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
+				    <button shiro:hasPermission="publishManger" id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
+				    <button shiro:hasPermission="publishManger" id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
 				    <button id='list_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
 				    <button id='list_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
+				    <button id='list_datesearch' type="button" class="btn btn-primary"><i class="fa fa-clock-o"></i>日期检索</button>
 				   </div> 	
 			   </div>
 			   
@@ -153,13 +173,12 @@
 			
 			<div id="pt_template" style="display:none;">		       	          
 				<div id="info_workarea"  style="border:1px solid;position:relative;box-shadow: 10px 10px 5px #888888;">							
-				<canvas id="info_canvas" width=800px height=400px></canvas>	
-				<span id = 'tooltip' class="tooltipT" style="pointer-events:none;">提示文本</span>										
+				<canvas id="info_canvas" width=800px height=400px></canvas>															
 			  </div>	       
 	       </div> 
 			</div> 	  		       		     
 	   	   </div>		   	   	   	   	
-	     
+	     <div id = 'tooltip' class="tooltipT">提示文本</div>
     	</div>
     			
 		<!-- 模态框  添加广告-->
@@ -249,13 +268,24 @@
 		 
 		  		<!-- 模态框底部 -->
 		        <div class="modal-footer">
-		          <button id="btn_add_playlist" type="button" class="btn btn-primary">确定</button> 
+		          <button shiro:hasPermission="publishManger" id="btn_add_playlist" type="button" class="btn btn-primary">确定</button> 
 		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 		        </div>
 		    </div>
 		  </div>
 		</div>
-						
+			
+		<!-- 模态框  添加时间集合-->
+		<div class="modal fade" data-backdrop="static" id="modal_spinner" style="background-color:#ffffff;opacity: 0.0">
+		  <div class="modal-dialog">
+		    <div class="modal-content">		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body" style="width:400px;height:400px;">			  					  
+		      </div>
+		    </div>
+		  </div>
+		</div>
+					
 		<!-- 模态框  添加时间集合-->
 		<div class="modal fade" data-backdrop="static" id="modal_addquantum">
 		  <div class="modal-dialog">
@@ -307,7 +337,7 @@
 			      <div class="input-group-prepend">
 			        <span class="input-group-text">开始时间(秒)</span>
 			      </div>
-					<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="start_index"  min="0" value= "0"/>								    
+					<input type="text" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="start_index"  min="0" value= "0"/>								    
 			    </div>
 			    
 			    <div class="input-group mb-3 input-group-sm">
@@ -322,7 +352,8 @@
 			        <span class="input-group-text">时间间隔(秒)</span>
 			      </div>
 					<input type="number" oninput="value=value.replace(/[^\d]/g,''); if(value<0){value=0;}" class="form-control" id="interval_index"  min="0" value= "0"/>								    
-			    </div>				    		  					  
+			    </div>	
+			    <div id="mutiadd_itemtip" style="color:#ff0000;width:100%; word-break:break-all;"></div>			    		  					  
 		      </div>				  			      
 		 
 		  		<!-- 模态框底部 -->
@@ -424,7 +455,15 @@
 	        </div>
 	   
 	        <!-- 模态框主体 -->
-	        <div class="modal-body">	        
+	        <div class="modal-body">
+	        	<div>
+	        	生命周期
+	        	<a id='details_life'></a>
+	        	</div>
+	        	<div>
+	        	发布时间
+	        	<a id='details_publishDate'></a>
+	        	</div>	        
 	        	<div class="table">
         		<div id="details_toolbar">				     				     										    				     				           
 		        </div>
@@ -442,7 +481,48 @@
 	      </div>
 	     </div>
 	     </div>
-	     
+	    
+	    <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_search_date">
+	    <div class="modal-dialog modal-sm">
+	      <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">日期选择</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	   
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">
+	        <div class="row">
+	        <div class="col-md-4">
+	        	开始日期
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" class="form-control required" id="search_lifeAct" placeholder="开始日期" name="playlistlife" maxlength="20"></input>
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	结束日期
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" class="form-control required" id="search_lifeDie" placeholder="结束日期" name="playlistlife" maxlength="20"></input> 
+	        </div>
+	        </div>			         			    
+	        </div>
+	   
+	        <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_search_date" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+	   
+	      </div>
+	     </div>
+	     </div>
     </div>
     
     <!-- CONTENT-WRAPPER SECTION END-->

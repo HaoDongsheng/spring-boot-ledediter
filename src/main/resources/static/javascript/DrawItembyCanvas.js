@@ -78,7 +78,7 @@ function ParseNode(node) {
 	 				arrNode.push(data);
 	 			};break;
 	 			default:{
-	 				var fontName='SimSun';fontSize=16;forecolor='#ff0000';backcolor='#000000';
+	 				var fontName='SimSun';fontSize=16;forecolor='#ffff00';backcolor='#000000';
 	 				if(node.tagName!='p')
 	 					{	 					
 		 				var style = escape2Html(node.children[i].parentNode.attrs['style']);
@@ -109,7 +109,7 @@ function ParseNode(node) {
 	 	                                        case 'color':{
 	 	                                        	if(attrArr[1]!=null && attrArr[1]!="")
 	 	                                        	{forecolor=colorRGB2Hex(attrArr[1]);}
-	 	                                        	else{forecolor='#ff0000';}
+	 	                                        	else{forecolor='#ffff00';}
 	 	                                        };break;
 	 	                                        case 'background-color':{
 	 	                                        	if(attrArr[1]!=null && attrArr[1]!="")
@@ -170,9 +170,20 @@ function tinymceParseNode(node,arrNode) {
 			if(fontSize==0)
 			{fontSize=16;}
 			if(foreColor=='')
-			{foreColor='#ff0000';}
+			{foreColor='#ffff00';}
 			if(backColor=='')
 			{backColor='#000000';}
+			
+			var txtstring = node.value;
+			var tmp = ""; 
+		    for(var j=0;j<txtstring.length;j++){ 
+		        if(txtstring.charCodeAt(j)==160){ 
+		            tmp= tmp+ " "; 
+		        }
+		        else {
+		        	tmp= tmp+ txtstring[j]; 
+				}										         
+		    } 
 			
 			var data={	
 				fontName:fontName,
@@ -180,7 +191,7 @@ function tinymceParseNode(node,arrNode) {
 				foreColor:foreColor,
 				backColor:backColor,
 				itemType:0,
-				value:node.value	 						
+				value:tmp	 						
 			};
 			arrNode.push(data);
 		};break;
@@ -269,7 +280,10 @@ function tinymceGetStyle(node,styleJson) {
 						 				var fontName='SimSun';
 						 				var arrfn=attrArr[1].split(",");
 						 				if(arrfn.length>0)
-						 					{fontName=arrfn[0].trim();}
+						 					{
+						 					fontName=arrfn[0].trim();
+						 					fontName = fontName.replace(/'/g,'');
+						 					}
 						 				if(styleJson.fontName=='')
 						 				{styleJson.fontName=fontName;}		
 						 			};break;
@@ -281,7 +295,7 @@ function tinymceGetStyle(node,styleJson) {
                                  	{styleJson.fontSize=fontSize;}
                                  };break;
                                  case 'color':{
-                                	var forecolor='#ff0000';
+                                	var forecolor='#ffff00';
                                  	if(attrArr[1]!=null && attrArr[1]!="")
                                  	{forecolor=attrArr[1].trim();}   
                                  	if(forecolor.indexOf('rgb')>-1)
@@ -378,6 +392,8 @@ function item2Src(item)
  				switch(itemnode.itemType)
  				{
 	 				case 0:{
+	 					//var ii = itemnode.value.indexOf(" ");
+	 					//var jj = itemnode.value.indexOf("");
 	 					var scaleX = 1,scaleY = 1;
 	 					if(txtscale!=null)
 	 						{
@@ -846,7 +862,7 @@ function DrawDisplayItem(pageid,itemid,isCreat,isSelect,itemleft,itemtop,width,h
 	var parentid="workarea_canvas";
 	var itemname="item"+itemid;
 	var draggableEnable=true;
-	
+	if(!ispermission) {draggableEnable=false;}
 	var cw=width * itemscale,ch=height * itemscale;	
 	var cx=itemleft * itemscale,cy=itemtop * itemscale;
 	if(isCreat)
@@ -896,7 +912,7 @@ function DrawDisplayItem(pageid,itemid,isCreat,isSelect,itemleft,itemtop,width,h
 				  window.event.cancelBubble = true; 
 				  },
 			  dblclick: function(layer) {
-				  	
+				  	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}
 				    if(itemmap.hasOwnProperty(pageid))
 					{
 						for(var i=0;i<itemmap[pageid].length;i++)
@@ -1032,6 +1048,8 @@ function DrawListItemone(pageid,itemid,isCreat,itemleft,itemtop,width,height,img
 function DrawControl(layerid,x,y,width,height)
 {	
 	drawPointSize(x,y,width,height);
+	var draggableEnable=true;
+	if(!ispermission) {draggableEnable=false;}
 	
 	 $(layerid).removeLayer('controlRect').drawLayers();
 	 $(layerid).removeLayer('controlpoint1').drawLayers();
@@ -1064,7 +1082,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint1',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,			 
 			 cursors: {
 				    mouseover: 'nw-resize',				    
@@ -1094,7 +1112,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint2',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'n-resize',				    
@@ -1123,7 +1141,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint3',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'ne-resize',				    
@@ -1152,7 +1170,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint4',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'e-resize',				    
@@ -1181,7 +1199,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint5',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'se-resize',				    
@@ -1210,7 +1228,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint6',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 's-resize',				    
@@ -1239,7 +1257,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint7',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'sw-resize',				    
@@ -1268,7 +1286,7 @@ function DrawControl(layerid,x,y,width,height)
 		 $(layerid).drawArc({
 			 layer: true,
 			 name: 'controlpoint8',	
-			 draggable: true,
+			 draggable: draggableEnable,
 			 bringToFront: true,
 			 cursors: {
 				    mouseover: 'w-resize',				    

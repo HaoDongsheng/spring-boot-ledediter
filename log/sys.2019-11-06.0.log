@@ -1,0 +1,581 @@
+2019-11-06 08:14:57,251 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 08:14:57,270 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 08:14:57,424 INFO (DeferredLog.java:227)- Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-11-06 08:14:57,425 INFO (DeferredLog.java:227)- For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-11-06 08:15:01,653 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:02,794 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:02,798 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:02,810 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:02,951 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,059 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,071 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,174 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,187 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy66] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,189 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,192 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,354 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:03,370 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 08:15:04,262 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 08:15:04,287 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 08:15:04,303 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 08:15:04,304 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 08:15:04,319 INFO (DirectJDKLog.java:173)- The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_211\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre1.8.0_211/bin/server;C:/Program Files/Java/jre1.8.0_211/bin;C:/Program Files/Java/jre1.8.0_211/lib/amd64;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\MySQL\bin;C:\Program Files\Java\jre1.8.0_202\bin;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files (x86)\Windows Kits\8.0\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\PrivateAssemblies\;C:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;d:\Program Files\Git\cmd;C:\Users\86139\AppData\Local\Microsoft\WindowsApps;;D:\eclipse;;.]
+2019-11-06 08:15:04,501 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 08:15:04,501 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 7075 ms
+2019-11-06 08:15:05,612 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 08:15:05,897 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 08:15:05,980 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 08:15:07,694 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 08:15:07,749 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 08:15:07,833 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 08:15:07,838 INFO (StartupInfoLogger.java:59)- Started Application in 11.712 seconds (JVM running for 13.031)
+2019-11-06 08:15:10,198 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 08:15:10,199 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 08:15:10,214 INFO (FrameworkServlet.java:546)- Completed initialization in 15 ms
+2019-11-06 08:15:10,361 INFO (LoginController.java:49)- /Index Open
+2019-11-06 08:15:11,269 INFO (LoginController.java:49)- /Index Open
+2019-11-06 08:53:37,378 INFO (DruidDataSource.java:930)- {dataSource-1} inited
+2019-11-06 08:53:37,752 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 08:53:37,902 INFO (MainController.java:27)- /main Open
+2019-11-06 08:53:38,220 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 08:53:39,831 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 08:53:42,959 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 08:53:43,114 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 08:53:45,864 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 08:53:45,871 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 08:53:59,930 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 08:54:05,164 INFO (operateLog.java:25)- ===用户:admin 拒绝广告id:3709 返回结果:{"result":"success"}===
+2019-11-06 08:54:06,496 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 08:54:06,615 INFO (operateLog.java:25)- ===用户:admin 广告id:3709获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":3709,"itembackcolor":"","itembackopacity":100,"itemcontext":"<p><span style=\"font-family: SimSun;\">文明驾,驶.8安全行车</span></p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾,驶.8安全行车\"}]]","itemfontno":0,"itemforecolor":"","itemforeopacity":100,"itemheight":24,"itemid":1,"itemleft":0,"itemstyle":"{\"special\":{\"scale\":{\"scaleX\":100,\"scaleY\":100}},\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"Mandatorytime\":0,\"MandatorytimeLength\":5,\"stoptime\":0,\"playtime\":8.88,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":144,"pageid":1}]}===
+2019-11-06 10:26:28,391 INFO (LoginController.java:49)- /Index Open
+2019-11-06 10:26:29,972 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:26:29,985 INFO (DruidDataSource.java:1825)- {dataSource-1} closed
+2019-11-06 10:26:30,946 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 10:26:30,946 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 10:26:34,174 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,223 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,226 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,236 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,245 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,268 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,270 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,301 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,316 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy102] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,317 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,319 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,347 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,350 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:26:34,578 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 10:26:34,580 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:26:34,581 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 10:26:34,581 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 10:26:34,619 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 10:26:34,620 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 3656 ms
+2019-11-06 10:26:35,274 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:26:35,357 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 10:26:35,395 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 10:26:36,791 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 10:26:36,846 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:26:36,853 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 10:26:36,854 INFO (StartupInfoLogger.java:59)- Started Application in 6.158 seconds (JVM running for 7902.046)
+2019-11-06 10:26:36,864 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 10:26:38,193 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 10:26:38,195 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 10:26:38,200 INFO (FrameworkServlet.java:546)- Completed initialization in 5 ms
+2019-11-06 10:26:38,270 INFO (DruidDataSource.java:930)- {dataSource-2} inited
+2019-11-06 10:26:38,308 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 10:26:38,347 INFO (MainController.java:27)- /main Open
+2019-11-06 10:26:38,667 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 10:26:40,703 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 10:26:40,806 INFO (operateLog.java:25)- ===用户:admin 广告id:3709获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":3709,"itembackcolor":"","itembackopacity":100,"itemcontext":"<p><span style=\"font-family: SimSun;\">文明驾,驶.8安全行车</span></p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾,驶.8安全行车\"}]]","itemfontno":0,"itemforecolor":"","itemforeopacity":100,"itemheight":24,"itemid":1,"itemleft":0,"itemstyle":"{\"special\":{\"scale\":{\"scaleX\":100,\"scaleY\":100}},\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"Mandatorytime\":0,\"MandatorytimeLength\":5,\"stoptime\":0,\"playtime\":8.88,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":144,"pageid":1}]}===
+2019-11-06 10:26:42,025 INFO (operateLog.java:25)- ===用户:admin 送审核广告id:3709 返回结果:{"result":"success","errorString":""}===
+2019-11-06 10:26:43,455 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 10:26:43,578 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 10:26:46,126 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:26:46,129 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:26:49,265 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:26:54,741 INFO (operateLog.java:25)- ===用户:admin 拒绝广告id:3709 返回结果:{"result":"success"}===
+2019-11-06 10:26:55,772 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 10:26:55,843 INFO (operateLog.java:25)- ===用户:admin 广告id:3709获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":3709,"itembackcolor":"","itembackopacity":100,"itemcontext":"<p><span style=\"font-family: SimSun;\">文明驾,驶.8安全行车</span></p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾,驶.8安全行车\"}]]","itemfontno":0,"itemforecolor":"","itemforeopacity":100,"itemheight":24,"itemid":1,"itemleft":0,"itemstyle":"{\"special\":{\"scale\":{\"scaleX\":100,\"scaleY\":100}},\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"Mandatorytime\":0,\"MandatorytimeLength\":5,\"stoptime\":0,\"playtime\":8.88,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":144,"pageid":1}]}===
+2019-11-06 10:27:02,848 INFO (operateLog.java:25)- ===用户:admin 广告id:3709保存显示项返回结果:{"result":"success","infoID":3709}===
+2019-11-06 10:27:02,867 INFO (operateLog.java:25)- ===用户:admin 送审核广告id:3709 返回结果:{"result":"success","errorString":""}===
+2019-11-06 10:27:04,374 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 10:27:04,508 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 10:27:09,729 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:27:09,733 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:29:46,873 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:30:45,583 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:30:45,593 INFO (DruidDataSource.java:1825)- {dataSource-2} closed
+2019-11-06 10:30:46,566 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 10:30:46,567 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 10:30:49,618 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,654 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,657 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,663 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,670 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,694 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,706 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,736 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,754 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy117] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,754 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,755 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,781 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:49,783 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:30:50,008 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 10:30:50,010 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:30:50,010 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 10:30:50,011 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 10:30:50,044 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 10:30:50,045 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 3464 ms
+2019-11-06 10:30:50,125 WARN (DirectJDKLog.java:173)- Cannot deserialize session attribute [org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY] for session [33819C9BB1E2661C6806528029AB41B0]
+2019-11-06 10:30:50,722 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:30:50,796 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 10:30:50,831 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 10:30:52,152 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 10:30:52,186 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:30:52,195 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 10:30:52,208 INFO (StartupInfoLogger.java:59)- Started Application in 5.833 seconds (JVM running for 8157.401)
+2019-11-06 10:30:52,225 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 10:30:55,891 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 10:30:55,893 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 10:30:55,920 INFO (FrameworkServlet.java:546)- Completed initialization in 25 ms
+2019-11-06 10:30:55,922 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 10:30:56,210 INFO (DruidDataSource.java:930)- {dataSource-3} inited
+2019-11-06 10:30:56,224 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 10:30:58,955 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:30:58,961 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:31:30,526 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:31:58,072 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:31:58,077 INFO (DruidDataSource.java:1825)- {dataSource-3} closed
+2019-11-06 10:31:58,916 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 10:31:58,917 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 10:32:01,302 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,326 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,328 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,332 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,336 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,352 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,354 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,372 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,381 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy132] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,381 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,382 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,396 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,397 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:32:01,538 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 10:32:01,539 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:32:01,539 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 10:32:01,539 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 10:32:01,563 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 10:32:01,564 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2635 ms
+2019-11-06 10:32:02,093 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:32:02,179 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 10:32:02,203 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 10:32:03,480 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 10:32:03,498 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:32:03,504 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 10:32:03,505 INFO (StartupInfoLogger.java:59)- Started Application in 4.763 seconds (JVM running for 8228.698)
+2019-11-06 10:32:03,509 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 10:32:04,756 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 10:32:04,758 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 10:32:04,767 INFO (FrameworkServlet.java:546)- Completed initialization in 8 ms
+2019-11-06 10:32:04,774 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 10:32:05,090 INFO (DruidDataSource.java:930)- {dataSource-4} inited
+2019-11-06 10:32:05,098 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 10:32:10,356 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:32:10,360 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:33:12,175 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:33:42,798 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:33:42,801 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:36:05,240 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:36:51,801 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:36:51,806 INFO (DruidDataSource.java:1825)- {dataSource-4} closed
+2019-11-06 10:36:52,637 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 10:36:52,637 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 10:36:54,933 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,958 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,960 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,964 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,968 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,980 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,982 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:54,999 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,008 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy147] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,009 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,009 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,021 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,022 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:36:55,184 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 10:36:55,194 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:36:55,194 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 10:36:55,195 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 10:36:55,238 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 10:36:55,239 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2586 ms
+2019-11-06 10:36:55,765 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:36:55,820 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 10:36:55,841 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 10:36:57,165 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 10:36:57,211 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:36:57,217 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 10:36:57,218 INFO (StartupInfoLogger.java:59)- Started Application in 4.759 seconds (JVM running for 8522.41)
+2019-11-06 10:36:57,221 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 10:36:57,245 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 10:36:57,245 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 10:36:57,250 INFO (FrameworkServlet.java:546)- Completed initialization in 5 ms
+2019-11-06 10:36:57,254 INFO (LoginController.java:49)- /Index Open
+2019-11-06 10:36:58,720 INFO (DruidDataSource.java:930)- {dataSource-5} inited
+2019-11-06 10:36:58,747 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 10:36:58,771 INFO (MainController.java:27)- /main Open
+2019-11-06 10:36:59,021 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 10:37:00,500 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 10:37:00,664 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 10:37:03,942 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 10:37:03,947 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 10:39:37,714 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 10:39:58,100 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:39:58,105 INFO (DruidDataSource.java:1825)- {dataSource-5} closed
+2019-11-06 10:39:58,932 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 10:39:58,932 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 10:40:01,224 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,247 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,249 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,253 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,256 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,268 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,270 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,287 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,295 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy162] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,296 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,296 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,310 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,311 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 10:40:01,463 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 10:40:01,463 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:40:01,464 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 10:40:01,464 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 10:40:01,492 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 10:40:01,492 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2548 ms
+2019-11-06 10:40:01,535 WARN (DirectJDKLog.java:173)- Cannot deserialize session attribute [org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY] for session [33819C9BB1E2661C6806528029AB41B0]
+2019-11-06 10:40:01,900 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 10:40:01,965 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 10:40:01,987 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 10:40:03,279 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 10:40:03,298 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 10:40:03,312 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 10:40:03,313 INFO (StartupInfoLogger.java:59)- Started Application in 4.555 seconds (JVM running for 8708.506)
+2019-11-06 10:40:03,315 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 12:50:53,026 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 12:50:53,844 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 12:50:53,844 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 12:50:56,262 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,286 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,289 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,294 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,299 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,312 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,314 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,334 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,343 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy177] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,343 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,345 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,359 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,360 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:50:56,502 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 12:50:56,503 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 12:50:56,504 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 12:50:56,504 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 12:50:56,526 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 12:50:56,527 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2669 ms
+2019-11-06 12:50:56,951 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 12:50:57,010 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 12:50:57,031 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 12:50:58,363 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 12:50:58,381 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 12:50:58,387 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 12:50:58,387 INFO (StartupInfoLogger.java:59)- Started Application in 4.746 seconds (JVM running for 16563.58)
+2019-11-06 12:50:58,390 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 12:51:30,014 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 12:51:30,812 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 12:51:30,813 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 12:51:33,135 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,156 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,157 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,161 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,164 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,176 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,178 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,194 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,203 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy192] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,203 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,204 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,217 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,218 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 12:51:33,337 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 12:51:33,338 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 12:51:33,339 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 12:51:33,339 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 12:51:33,363 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 12:51:33,363 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2537 ms
+2019-11-06 12:51:33,880 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 12:51:33,931 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 12:51:33,961 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 12:51:35,228 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 12:51:35,248 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 12:51:35,257 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 12:51:35,258 INFO (StartupInfoLogger.java:59)- Started Application in 4.623 seconds (JVM running for 16600.451)
+2019-11-06 12:51:35,264 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 12:59:12,330 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 12:59:12,332 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 12:59:12,368 INFO (FrameworkServlet.java:546)- Completed initialization in 35 ms
+2019-11-06 12:59:12,371 INFO (LoginController.java:49)- /Index Open
+2019-11-06 12:59:14,854 INFO (DruidDataSource.java:930)- {dataSource-6} inited
+2019-11-06 12:59:14,878 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 12:59:14,910 INFO (MainController.java:27)- /main Open
+2019-11-06 12:59:15,155 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 12:59:16,375 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 12:59:17,899 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 12:59:18,015 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 12:59:20,150 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 12:59:20,155 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 13:03:00,007 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:07:14,421 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:07:14,426 INFO (DruidDataSource.java:1825)- {dataSource-6} closed
+2019-11-06 13:07:15,266 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 13:07:15,266 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 13:07:17,777 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,800 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,802 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,805 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,809 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,822 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,823 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,839 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,847 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy207] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,848 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,848 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,860 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,861 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:17,977 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 13:07:17,978 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:07:17,979 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 13:07:17,979 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 13:07:18,008 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 13:07:18,008 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2729 ms
+2019-11-06 13:07:18,049 WARN (DirectJDKLog.java:173)- Cannot deserialize session attribute [org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY] for session [DB04A5880B36FAF804D0449B5D15ADB8]
+2019-11-06 13:07:18,444 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:07:18,500 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 13:07:18,520 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 13:07:19,755 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 13:07:19,787 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:07:19,790 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 13:07:19,791 INFO (StartupInfoLogger.java:59)- Started Application in 4.701 seconds (JVM running for 17544.983)
+2019-11-06 13:07:19,792 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 13:07:45,286 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:07:46,113 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 13:07:46,113 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 13:07:48,362 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,382 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,384 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,388 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,391 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,403 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,404 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,420 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,429 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy222] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,429 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,430 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,443 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,444 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:07:48,554 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 13:07:48,555 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:07:48,555 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 13:07:48,555 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 13:07:48,578 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 13:07:48,578 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2452 ms
+2019-11-06 13:07:48,963 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:07:49,019 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 13:07:49,039 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 13:07:50,292 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 13:07:50,311 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:07:50,317 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 13:07:50,318 INFO (StartupInfoLogger.java:59)- Started Application in 4.38 seconds (JVM running for 17575.51)
+2019-11-06 13:07:50,322 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 13:08:10,846 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:08:11,690 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 13:08:11,691 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 13:08:13,908 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,947 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,949 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,953 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,957 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,970 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,971 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,987 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,996 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy237] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,996 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:13,997 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:14,009 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:14,010 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:08:14,124 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 13:08:14,125 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:08:14,125 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 13:08:14,126 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 13:08:14,148 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 13:08:14,148 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2444 ms
+2019-11-06 13:08:14,529 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:08:14,601 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 13:08:14,634 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 13:08:15,888 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 13:08:15,903 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:08:15,910 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 13:08:15,911 INFO (StartupInfoLogger.java:59)- Started Application in 4.395 seconds (JVM running for 17601.104)
+2019-11-06 13:08:15,922 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 13:08:46,531 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 13:08:46,533 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 13:08:46,550 INFO (FrameworkServlet.java:546)- Completed initialization in 17 ms
+2019-11-06 13:08:46,557 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:08:46,844 INFO (DruidDataSource.java:930)- {dataSource-7} inited
+2019-11-06 13:08:46,853 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:08:50,639 INFO (LoginController.java:49)- /Index Open
+2019-11-06 13:08:55,532 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 13:08:55,553 INFO (MainController.java:27)- /main Open
+2019-11-06 13:08:55,724 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 13:09:01,945 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:09:02,087 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:09:04,960 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 13:09:04,964 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 13:10:58,772 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:20:55,389 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 13:20:55,393 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 13:23:25,389 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:24:25,061 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:24:25,068 INFO (DruidDataSource.java:1825)- {dataSource-7} closed
+2019-11-06 13:24:25,919 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 13:24:25,919 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 13:24:28,310 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,340 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,341 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,345 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,350 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,363 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,365 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,382 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,392 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy252] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,393 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,393 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,408 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,409 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:24:28,555 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 13:24:28,556 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:24:28,557 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 13:24:28,557 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 13:24:28,587 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 13:24:28,588 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 2656 ms
+2019-11-06 13:24:28,654 WARN (DirectJDKLog.java:173)- Cannot deserialize session attribute [org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY] for session [DB04A5880B36FAF804D0449B5D15ADB8]
+2019-11-06 13:24:29,224 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:24:29,286 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 13:24:29,310 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 13:24:30,638 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 13:24:30,677 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:24:30,682 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 13:24:30,683 INFO (StartupInfoLogger.java:59)- Started Application in 4.943 seconds (JVM running for 18575.876)
+2019-11-06 13:24:30,685 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 13:25:23,958 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 13:25:23,962 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 13:25:23,989 INFO (FrameworkServlet.java:546)- Completed initialization in 27 ms
+2019-11-06 13:25:23,991 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:25:24,280 INFO (DruidDataSource.java:930)- {dataSource-8} inited
+2019-11-06 13:25:24,287 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:25:26,552 INFO (LoginController.java:49)- /Index Open
+2019-11-06 13:25:32,515 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 13:25:32,537 INFO (MainController.java:27)- /main Open
+2019-11-06 13:25:32,761 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 13:25:34,187 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 13:25:36,240 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:25:36,350 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:25:38,479 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 13:25:38,485 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 13:25:49,650 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:28:32,755 INFO (getCode.java:847)- ===读取显示项  广告id:3709===
+2019-11-06 13:28:32,757 INFO (getCode.java:849)- ===读取显示项  广告id:3709结果 1条记录===
+2019-11-06 13:30:37,791 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3709 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:31:11,073 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 13:31:14,636 INFO (operateLog.java:25)- ===用户:admin 新建广告:个让国人 返回结果:{"result":"success","infoName":"个让国人","infoID":3710,"groupid":2,"pubid":0,"advType":0,"BackgroundStyle":"{\"width\":144,\"height\":24,\"basemapStyle\":[]}","playMode":0,"DelIndex":0}===
+2019-11-06 13:31:14,669 INFO (operateLog.java:25)- ===用户:admin 广告id:3710获取显示项返回结果:{"result":"success","itemlist":[]}===
+2019-11-06 13:31:50,555 INFO (operateLog.java:25)- ===用户:admin 广告id:3710保存显示项返回结果:{"result":"success","infoID":3710}===
+2019-11-06 13:31:50,581 INFO (operateLog.java:25)- ===用户:admin 送审核广告id:3710 返回结果:{"result":"success","errorString":""}===
+2019-11-06 13:31:52,130 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:31:52,413 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:31:55,969 INFO (getCode.java:847)- ===读取显示项  广告id:3710===
+2019-11-06 13:31:55,972 INFO (getCode.java:849)- ===读取显示项  广告id:3710结果 1条记录===
+2019-11-06 13:31:59,152 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3710 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:32:21,526 INFO (operateLog.java:25)- ===用户:admin 拒绝广告id:3710 返回结果:{"result":"success"}===
+2019-11-06 13:32:23,084 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 13:32:23,273 INFO (operateLog.java:25)- ===用户:admin 广告id:3710获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":3710,"itembackcolor":"","itembackopacity":100,"itemcontext":"<p>文明驾驶安全8行车文明驾驶安全8行车</p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全8行车文明驾驶安全8行车\"}]]","itemfontno":0,"itemforecolor":"","itemforeopacity":100,"itemheight":24,"itemid":1,"itemleft":0,"itemstyle":"{\"special\":{\"scale\":{\"scaleX\":95,\"scaleY\":100}},\"linkmove\":0,\"rollstop\":0,\"playtype\":1,\"Mandatorytime\":0,\"MandatorytimeLength\":5,\"stoptime\":0,\"playtime\":12.24,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":144,"pageid":1}]}===
+2019-11-06 13:32:36,498 INFO (operateLog.java:25)- ===用户:admin 广告id:3710保存显示项返回结果:{"result":"success","infoID":3710}===
+2019-11-06 13:32:36,535 INFO (operateLog.java:25)- ===用户:admin 送审核广告id:3710 返回结果:{"result":"success","errorString":""}===
+2019-11-06 13:32:38,116 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:32:38,548 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:32:42,247 INFO (getCode.java:847)- ===读取显示项  广告id:3710===
+2019-11-06 13:32:42,259 INFO (getCode.java:849)- ===读取显示项  广告id:3710结果 1条记录===
+2019-11-06 13:32:51,246 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3710 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:42:16,321 INFO (getCode.java:847)- ===读取显示项  广告id:3710===
+2019-11-06 13:42:16,329 INFO (getCode.java:849)- ===读取显示项  广告id:3710结果 1条记录===
+2019-11-06 13:43:16,208 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3710 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 13:43:51,649 INFO (ExecutorConfigurationSupport.java:208)- Shutting down ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:43:51,654 INFO (DruidDataSource.java:1825)- {dataSource-8} closed
+2019-11-06 13:43:52,841 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 16912 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2019-11-06 13:43:52,842 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2019-11-06 13:43:56,166 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$9be39d5a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,218 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'mybatis-org.mybatis.spring.boot.autoconfigure.MybatisProperties' of type [org.mybatis.spring.boot.autoconfigure.MybatisProperties] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,220 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration' of type [org.mybatis.spring.boot.autoconfigure.MybatisAutoConfiguration$$EnhancerBySpringCGLIB$$573f77bd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,225 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$a38ebac9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,233 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'dataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,251 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,252 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'sqlSessionTemplate' of type [org.mybatis.spring.SqlSessionTemplate] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,279 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,290 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy267] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,291 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,292 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,316 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$246b268d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,317 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-06 13:43:56,487 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2019-11-06 13:43:56,488 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:43:56,489 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2019-11-06 13:43:56,489 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2019-11-06 13:43:56,526 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2019-11-06 13:43:56,526 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 3669 ms
+2019-11-06 13:43:56,587 WARN (DirectJDKLog.java:173)- Cannot deserialize session attribute [org.apache.shiro.subject.support.DefaultSubjectContext_PRINCIPALS_SESSION_KEY] for session [DB04A5880B36FAF804D0449B5D15ADB8]
+2019-11-06 13:43:57,164 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2019-11-06 13:43:57,266 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2019-11-06 13:43:57,298 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2019-11-06 13:43:59,002 INFO (OptionalLiveReloadServer.java:57)- LiveReload server is running on port 35729
+2019-11-06 13:43:59,025 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2019-11-06 13:43:59,045 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2019-11-06 13:43:59,048 INFO (StartupInfoLogger.java:59)- Started Application in 6.493 seconds (JVM running for 19744.24)
+2019-11-06 13:43:59,051 INFO (ConditionEvaluationDeltaLoggingListener.java:70)- Condition evaluation unchanged
+2019-11-06 13:44:19,686 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-06 13:44:19,691 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2019-11-06 13:44:19,736 INFO (FrameworkServlet.java:546)- Completed initialization in 43 ms
+2019-11-06 13:44:19,746 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:44:20,285 INFO (DruidDataSource.java:930)- {dataSource-9} inited
+2019-11-06 13:44:20,309 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:44:22,216 INFO (LoginController.java:49)- /Index Open
+2019-11-06 13:44:24,681 INFO (operateLog.java:25)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2019-11-06 13:44:24,717 INFO (MainController.java:27)- /main Open
+2019-11-06 13:44:25,107 INFO (operateLog.java:25)- ===用户:admin/getGroup===
+2019-11-06 13:44:31,096 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 13:44:31,413 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 13:44:33,787 INFO (getCode.java:847)- ===读取显示项  广告id:3710===
+2019-11-06 13:44:33,798 INFO (getCode.java:849)- ===读取显示项  广告id:3710结果 1条记录===
+2019-11-06 13:45:03,497 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3710 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===
+2019-11-06 14:05:52,322 INFO (operateLog.java:25)- ===用户:admin 拒绝广告id:3710 返回结果:{"result":"success"}===
+2019-11-06 14:05:53,672 INFO (operateLog.java:25)- ===用户:admin/getadvEditListbyGrpid===
+2019-11-06 14:05:53,824 INFO (operateLog.java:25)- ===用户:admin 广告id:3710获取显示项返回结果:{"result":"success","itemlist":[{"delindex":0,"infoSN":3710,"itembackcolor":"","itembackopacity":100,"itemcontext":"<p>文明驾驶安全8行车文明驾驶安全8行车</p>","itemcontextjson":"[[{\"fontName\":\"SimSun\",\"fontSize\":16,\"foreColor\":\"#ff0000\",\"backColor\":\"#000000\",\"itemType\":0,\"value\":\"文明驾驶安全8行车文明驾驶安全8行车\"}]]","itemfontno":0,"itemforecolor":"","itemforeopacity":100,"itemheight":24,"itemid":1,"itemleft":0,"itemstyle":"{\"special\":{\"scale\":{\"scaleX\":95,\"scaleY\":100}},\"linkmove\":0,\"rollstop\":0,\"playtype\":\"0\",\"Mandatorytime\":0,\"MandatorytimeLength\":5,\"stoptime\":\"3\",\"playtime\":6,\"playspeed\":5,\"looptime\":1,\"gamma\":20}","itemtop":0,"itemtype":0,"itemwidth":144,"pageid":1}]}===
+2019-11-06 14:06:11,132 INFO (operateLog.java:25)- ===用户:admin 广告id:3710保存显示项返回结果:{"result":"success","infoID":3710}===
+2019-11-06 14:06:11,146 INFO (operateLog.java:25)- ===用户:admin 送审核广告id:3710 返回结果:{"result":"success","errorString":""}===
+2019-11-06 14:06:12,355 INFO (auditMangerController.java:33)- /auditManger Open
+2019-11-06 14:06:12,479 INFO (operateLog.java:25)- ===用户:admin/getadvListbyGrpidState===
+2019-11-06 14:06:14,893 INFO (getCode.java:847)- ===读取显示项  广告id:3710===
+2019-11-06 14:06:14,895 INFO (getCode.java:849)- ===读取显示项  广告id:3710结果 1条记录===
+2019-11-06 14:06:19,719 INFO (operateLog.java:25)- ===用户:admin 发布广告id:3710 返回结果:{"result":"fail","resultMessage":"读取不到显示项"}===

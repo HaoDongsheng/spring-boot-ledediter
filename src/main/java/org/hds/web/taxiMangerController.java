@@ -3,6 +3,7 @@ package org.hds.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hds.service.IterminalMangerService;
+import org.hds.service.impl.operateLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,19 @@ public class taxiMangerController {
 
 	@Autowired
 	IterminalMangerService terminalMangerSer;
+	@Autowired
+	operateLog operateLog;
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@ResponseBody
+	@RequestMapping(value = "/updateTerminalinfo", method = RequestMethod.GET)
+	public String updateTerminalinfo(@RequestParam("DTUNo") String DTUNo, @RequestParam("groupName") String groupName,
+			HttpServletRequest request) {
+		if (DTUNo.trim().equals("") || groupName.trim().equals("")) {
+			return "ERROR4";
+		}
+		return terminalMangerSer.updateTerminalinfobySerial(DTUNo.trim(), groupName.trim());
+	}
 
 	@RequestMapping("/taxiManger")
 	public String projectManger(Model model, HttpServletRequest request) {
@@ -39,8 +52,8 @@ public class taxiMangerController {
 			@RequestParam("pageSize") int pageSize, @RequestParam("searchString") String searchString,
 			@RequestParam("issuperuser") int issuperuser, @RequestParam("projectid") String projectid,
 			@RequestParam("adminname") String adminname, @RequestParam("groupids") String groupids,
-			@RequestParam("sort") String sort, @RequestParam("sortOrder") String sortOrder,
-			HttpServletRequest request) {
+			@RequestParam("adminlevel") int adminlevel, @RequestParam("sort") String sort,
+			@RequestParam("sortOrder") String sortOrder, HttpServletRequest request) {
 		try {
 			JSONObject JSONObject = null;
 
@@ -48,16 +61,20 @@ public class taxiMangerController {
 			if (issuperuser == 0)// 普通用户
 			{
 				JSONObject = terminalMangerSer.getTerminalsbyprojectid(pageNum, pageSize, projectid, searchString,
-						groupids, sort, sortOrder);
+						groupids, adminlevel, sort, sortOrder);
 			} else {
 				JSONObject = terminalMangerSer.getTerminalsbypageNum(pageNum, pageSize, searchString, sort, sortOrder);
 			}
 
 			// JSONObject = new { total = pagerInfo.RecordCount, rows = list };
-			logger.info("===用户:" + adminname + "/getTerminalsbypageNum===");
+
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/getTerminalsbypageNum===",
+					"/getTerminalsbypageNum", logger, false);
 			return JSONObject;
 		} catch (Exception e) {
-			logger.error("===用户:" + adminname + "/getTerminalsbypageNum 异常:" + e.getMessage() + "===");
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/getTerminalsbypageNum 异常:" + e.getMessage() + "===",
+					"/getTerminalsbypageNum", logger, false);
 			return null;
 		}
 	}
@@ -71,10 +88,31 @@ public class taxiMangerController {
 			JSONObject JSONObject = terminalMangerSer.updateTerminalInfo(dtukey, taxiname, groupid, StarLevelset);
 
 			// JSONObject = new { total = pagerInfo.RecordCount, rows = list };
-			logger.info("===用户:" + adminname + "/taxiInfoEdit===");
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/taxiInfoEdit dtukey:" + dtukey + "===",
+					"/taxiInfoEdit", logger, true);
 			return JSONObject;
 		} catch (Exception e) {
-			logger.error("===用户:" + adminname + "/taxiInfoEdit 异常:" + e.getMessage() + "===");
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/taxiInfoEdit dtukey:" + dtukey + " 异常:" + e.getMessage() + "===",
+					"/taxiInfoEdit", logger, true);
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/taxiInfoDelete", method = RequestMethod.POST)
+	public JSONObject taxiInfoEdit(@RequestParam("dtukey") String dtukey, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
+		try {
+			JSONObject JSONObject = terminalMangerSer.deleteTerminalInfo(dtukey);
+
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/taxiInfoDelete dtukey:" + dtukey + "===",
+					"/taxiInfoDelete", logger, true);
+			return JSONObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/taxiInfoDelete dtukey:" + dtukey + " 异常:" + e.getMessage() + "===",
+					"/taxiInfoDelete", logger, true);
 			return null;
 		}
 	}
@@ -99,10 +137,13 @@ public class taxiMangerController {
 			// StarLevelset);
 
 			// JSONObject = new { total = pagerInfo.RecordCount, rows = list };
-			logger.info("===用户:" + adminname + "/taxiInfoEdit===");
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + "/taxiInfoEditbyGroup groupid:" + groupid + "星级:" + StarLevelset + "===",
+					"/taxiInfoEditbyGroup", logger, true);
 			return JSONObject;
 		} catch (Exception e) {
-			logger.error("===用户:" + adminname + "/taxiInfoEdit 异常:" + e.getMessage() + "===");
+			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/taxiInfoEditbyGroup groupid:" + groupid + "星级:"
+					+ StarLevelset + " 异常:" + e.getMessage() + "===", "/taxiInfoEditbyGroup", logger, true);
 			return null;
 		}
 	}

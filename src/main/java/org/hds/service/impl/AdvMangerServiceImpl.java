@@ -12,14 +12,20 @@ import org.hds.mapper.basemapMapper;
 import org.hds.mapper.groupMapper;
 import org.hds.mapper.infocodeMapper;
 import org.hds.mapper.itemMapper;
+import org.hds.mapper.oldadvMapper;
 import org.hds.mapper.playlistMapper;
 import org.hds.mapper.playlistcodeMapper;
+import org.hds.mapper.sensitiveMapper;
+import org.hds.mapper.userMapper;
 import org.hds.mapper.videoMapper;
 import org.hds.model.advertisement;
 import org.hds.model.basemap;
 import org.hds.model.group;
 import org.hds.model.item;
+import org.hds.model.oldadv;
 import org.hds.model.playlist;
+import org.hds.model.sensitive;
+import org.hds.model.user;
 import org.hds.model.video;
 import org.hds.service.IAdvMangerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +54,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	videoMapper videoMapper;
 	@Autowired
 	getCode getCode;
+	@Autowired
+	oldadvMapper oldadvMapper;
+	@Autowired
+	userMapper userMapper;
+	@Autowired
+	sensitiveMapper sensitiveMapper;
 
 	@Override
 	public JSONArray getadvlist(JSONObject adminInfoJsonObject) {
@@ -169,14 +181,28 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject getadvListDelbyGrpid(int Grpid, int pageNum, int pageSize) {
+	public JSONObject getadvListDelbyGrpid(int Grpid, int pageNum, int pageSize, String sort, String sortOrder) {
+
+		String colName = "lifeDie";
+		switch (sort) {
+		case "infoname":
+			colName = "advName";
+			break;
+		case "timelenght":
+			colName = "playTimelength";
+			break;
+		default:
+			colName = sort;
+			break;
+		}
 
 		JSONObject jObject = new JSONObject();
 		int delCount = advertisementMapper.selectDelCountBygroupid(Grpid);
 		int startoffset = (pageNum - 1) * pageSize;
 
 		JSONArray itemJSONArray = new JSONArray();
-		List<advertisement> advlist = advertisementMapper.selectDelBygroupid(Grpid, startoffset, pageSize);
+		List<advertisement> advlist = advertisementMapper.selectDelBygroupid(Grpid, startoffset, pageSize, colName,
+				sortOrder);
 		if (advlist != null && advlist.size() > 0) {
 			for (int j = 0; j < advlist.size(); j++) {
 				JSONObject jitem = new JSONObject();
@@ -327,8 +353,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 			int i = 1;
 			String newInfoNameString = "";
 			while (true) {
-				if (advertisementMapper.selectCountByName(infoName + i, groupid) <= 0) {
-					newInfoNameString = infoName + i;
+				if (advertisementMapper.selectCountByName(infoName + "_copy" + i, groupid) <= 0) {
+					newInfoNameString = infoName + "_copy" + i;
 					break;
 				}
 				i += 1;
@@ -374,6 +400,59 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				}
 
 			}
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		} finally {
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject deleteInfo2old(int infoSN) {
+		JSONObject jObject = new JSONObject();
+		try {
+			advertisement adv = advertisementMapper.selectByPrimaryKey(infoSN);
+
+			List<item> itemlist = itemMapper.selectByadid(infoSN);
+
+			JSONArray jsonArray = new JSONArray();
+			if (itemlist != null && !itemlist.isEmpty()) {
+				for (item objitem : itemlist) {
+					jsonArray.add(objitem);
+				}
+			}
+
+			oldadv record = new oldadv();
+			record.setInfosn(adv.getinfoSN());
+			record.setAdvname(adv.getAdvname());
+			record.setGroupid(adv.getGroupid());
+			record.setLifeact(adv.getlifeAct());
+			record.setLifedie(adv.getlifeDie());
+
+			record.setAdvtype(adv.getAdvtype());
+			record.setInfostate(adv.getinfoState());
+			record.setCreater(adv.getcreater());
+			record.setCreatedate(adv.getcreateDate());
+			record.setAuditor(adv.getauditor());
+
+			record.setAuditdate(adv.getauditDate());
+			record.setPublisher(adv.getpublisher());
+			record.setPublishdate(adv.getpublishDate());
+			record.setDeleter(adv.getdeleter());
+			record.setDeletedate(adv.getdeleteDate());
+
+			record.setBackgroundstyle(adv.getBackgroundstyle());
+			record.setPlaymode(adv.getPlaymode());
+			record.setPubid(adv.getPubid());
+			record.setPlaytimelength(adv.getplayTimelength());
+			record.setItemlist(jsonArray.toJSONString());
+
+			oldadvMapper.insert(record);
+
+			advertisementMapper.deleteByPrimaryKey(infoSN);
+
+			jObject.put("result", "success");
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
@@ -587,6 +666,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	public JSONObject Publishinfobyid(int infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		advertisement adv = advertisementMapper.selectByPrimaryKey(infoSN);
+		int plt = adv.getplayTimelength();
+		if (plt < 2) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", "广告时长不能小于2秒");
+			return jObject;
+		}
 		int pubid = getCode.GetpubidbyGroupid(adv.getGroupid());
 		try {
 			if (pubid == 0) {
@@ -644,10 +729,10 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 					break;
 				}
 			}
+			return jObject;
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
 			return jObject;
 		}
 	}
@@ -682,6 +767,37 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	public JSONObject AuditInfobyid(int infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
+//			StringBuilder textBuilder = new StringBuilder();
+//			List<item> itemlist = itemMapper.selectByadid(infoSN);
+//			if (itemlist != null && itemlist.size() > 0) {
+//				for (int i = 0; i < itemlist.size(); i++) {
+//					item item = itemlist.get(i);
+//
+//					String contextJson = item.getItemcontextjson();
+//					JSONArray jonArray = JSONArray.parseArray(contextJson);
+//					for (int z = 0; z < jonArray.size(); z++) {
+//						for (int q = 0; q < jonArray.getJSONArray(z).size(); q++) {
+//							if (jonArray.getJSONArray(z).getJSONObject(q).getIntValue("itemType") == 0) {
+//								textBuilder.append(jonArray.getJSONArray(z).getJSONObject(q).getString("value"));
+//							}
+//						}
+//					}
+//				}
+//			}
+//			ClassPathResource classPathResource = new ClassPathResource("static/不良词汇表.txt");
+//
+//			InputStream inputStream = classPathResource.getInputStream();
+//			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+//			String errorString = "";
+//			String s = "";
+//			while ((s = br.readLine()) != null) {
+//				int index = textBuilder.indexOf(s);
+//				if (index != -1) {
+//					errorString = s;
+//					break;
+//				}
+//			}
+
 			Date now = new Date();
 			DateFormat d1 = DateFormat.getDateTimeInstance();
 			advertisement record = new advertisement();
@@ -703,24 +819,156 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
+	public JSONObject getSensitive(String adminname) {
+		JSONObject jObject = new JSONObject();
+		try {
+			user user = userMapper.selectByPrimaryName(adminname);
+			int issuperuser = user.getIssuperuser();
+			String projectid = user.getProjectid();
+			JSONArray jArray = new JSONArray();
+			List<String> prdelStrings = new ArrayList<String>();
+			if (issuperuser == 0) {
+				List<sensitive> sensitivelist = sensitiveMapper.selectByprojectid(projectid);
+				for (int i = 0; i < sensitivelist.size(); i++) {
+					if (sensitivelist.get(i).getDelindex() == 0) {
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put("svid", sensitivelist.get(i).getId());
+						jsonObject.put("projectid", sensitivelist.get(i).getProjectid());
+						jsonObject.put("svstring", sensitivelist.get(i).getSensitivestring());
+						jsonObject.put("svdelindex", sensitivelist.get(i).getDelindex());
+						jArray.add(jsonObject);
+					} else {
+						prdelStrings.add(sensitivelist.get(i).getSensitivestring());
+					}
+				}
+			}
+			List<sensitive> sensitivelist = sensitiveMapper.selectByprojectid("super");
+			for (int i = 0; i < sensitivelist.size(); i++) {
+				if (sensitivelist.get(i).getDelindex() == 0
+						&& !prdelStrings.contains(sensitivelist.get(i).getSensitivestring())) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("svid", sensitivelist.get(i).getId());
+					jsonObject.put("projectid", sensitivelist.get(i).getProjectid());
+					jsonObject.put("svstring", sensitivelist.get(i).getSensitivestring());
+					jsonObject.put("svdelindex", sensitivelist.get(i).getDelindex());
+					jArray.add(jsonObject);
+				}
+			}
+
+			jObject.put("result", "success");
+			jObject.put("sensitivelist", jArray.toJSONString());
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		} finally {
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject addSensitive(String sensitiveString, String adminname) {
+		JSONObject jObject = new JSONObject();
+		try {
+			user user = userMapper.selectByPrimaryName(adminname);
+			int issuperuser = user.getIssuperuser();
+			String projectid = user.getProjectid();
+
+			int count = sensitiveMapper.selectcountByprojectidString("super", sensitiveString);
+			if (count == 0 && issuperuser == 0) {
+				count = sensitiveMapper.selectcountByprojectidString(projectid, sensitiveString);
+			}
+			if (count == 0) {
+				sensitive record = new sensitive();
+				record.setDelindex(0);
+				if (issuperuser == 0) {
+					record.setProjectid(projectid);
+				} else {
+					record.setProjectid("super");
+				}
+				record.setSensitivestring(sensitiveString);
+				sensitiveMapper.insert(record);
+				jObject.put("result", "success");
+				jObject.put("svid", record.getId());
+				jObject.put("projectid", record.getProjectid());
+				jObject.put("svstring", record.getSensitivestring());
+				jObject.put("svdelindex", record.getDelindex());
+			} else {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "敏感词:" + sensitiveString + "已存在!");
+			}
+
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		} finally {
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject deleteSensitive(String sensitiveIdlist, String adminname) {
+		JSONObject jObject = new JSONObject();
+		try {
+			user user = userMapper.selectByPrimaryName(adminname);
+			int issuperuser = user.getIssuperuser();
+			String projectid = user.getProjectid();
+			String[] svidArray = sensitiveIdlist.split(",");
+
+			if (issuperuser == 0) {
+				for (int i = 0; i < svidArray.length; i++) {
+					int svid = Integer.parseInt(svidArray[i]);
+					sensitive sv = sensitiveMapper.selectByPrimaryKey(svid);
+					if (sv.getProjectid().equals("super")) {
+						sensitive record = new sensitive();
+						record.setDelindex(1);
+						record.setProjectid(projectid);
+						record.setSensitivestring(sv.getSensitivestring());
+						sensitiveMapper.insert(record);
+					} else {
+						sensitiveMapper.deleteByPrimaryKey(svid);
+					}
+				}
+			} else {
+				for (int i = 0; i < svidArray.length; i++) {
+					int svid = Integer.parseInt(svidArray[i]);
+					sensitiveMapper.deleteByPrimaryKey(svid);
+				}
+			}
+			jObject.put("result", "success");
+
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		} finally {
+			return jObject;
+		}
+	}
+
+	@Override
 	public int Updatainfo(int infoSN, JSONObject jsoninfo) {
 		try {
-			advertisement advertisement = new advertisement();
-			advertisement.setinfoSN(infoSN);
-			advertisement.setAdvname(jsoninfo.getString("advname"));
-			advertisement.setlifeAct(jsoninfo.getString("lifeAct"));
-			advertisement.setlifeDie(jsoninfo.getString("lifeDie"));
-			advertisement.setAdvtype("0");
-			advertisement.setBackgroundstyle(jsoninfo.getString("BackgroundStyle"));
-			advertisement.setDelindex(0);
-			advertisement.setGroupid(jsoninfo.getIntValue("groupid"));
-			advertisement.setPlaymode("0");
-			advertisement.setPubid(0);//
-			// advertisement.setplayTimelength(jsoninfo.getIntValue("playTimelength"));
+			if (advertisementMapper.selectCountByName2(jsoninfo.getString("advname"), jsoninfo.getIntValue("groupid"),
+					infoSN) > 0) {
+				return 2;
+			} else {
+				advertisement advertisement = new advertisement();
+				advertisement.setinfoSN(infoSN);
+				advertisement.setAdvname(jsoninfo.getString("advname"));
+				advertisement.setlifeAct(jsoninfo.getString("lifeAct"));
+				advertisement.setlifeDie(jsoninfo.getString("lifeDie"));
+				advertisement.setAdvtype("0");
+				advertisement.setBackgroundstyle(jsoninfo.getString("BackgroundStyle"));
+				advertisement.setDelindex(0);
+				advertisement.setGroupid(jsoninfo.getIntValue("groupid"));
+				advertisement.setPlaymode("0");
+				advertisement.setPubid(0);//
+				// advertisement.setplayTimelength(jsoninfo.getIntValue("playTimelength"));
 
-			advertisementMapper.updateByPrimaryKeySelective(advertisement);
+				advertisementMapper.updateByPrimaryKeySelective(advertisement);
 
-			return 0;
+				return 0;
+			}
+
 		} catch (Exception e) {
 			return 1;
 		}

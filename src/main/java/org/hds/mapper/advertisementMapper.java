@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -89,6 +90,10 @@ public interface advertisementMapper {
 			"where advName = #{0} and groupid = #{1} and delindex=0 and (lifeDie>curdate() or lifeDie='')" })
 	int selectCountByName(String advName, Integer groupid);
 
+	@Select({ "select", "count(*)", "from t_advertisement",
+			"where advName = #{0} and groupid = #{1} and delindex=0 and infoSN <> #{2} and (lifeDie>curdate() or lifeDie='')" })
+	int selectCountByName2(String advName, Integer groupid, Integer infoSN);
+
 	@Select({ "select",
 			"infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
 			"from t_advertisement", "where groupid = #{0} and delindex = #{1} and (lifeDie>=curdate() or lifeDie='')",
@@ -119,7 +124,7 @@ public interface advertisementMapper {
 			"infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
 			"from t_advertisement",
 			"where groupid = #{0} and (delindex = 1 or (lifeDie<curdate() and lifeDie<>'' and lifeDie is not null))",
-			"order by infoSN asc LIMIT #{1},#{2}" })
+			"order by ${sort}", "${sortOrder}", "LIMIT #{1},#{2}" })
 	@Results({ @Result(column = "infoSN", property = "infoSN", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "advName", property = "advname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER),
@@ -140,7 +145,8 @@ public interface advertisementMapper {
 			@Result(column = "delindex", property = "delindex", jdbcType = JdbcType.INTEGER),
 			@Result(column = "playTimelength", property = "playTimelength", jdbcType = JdbcType.INTEGER),
 			@Result(column = "BackgroundStyle", property = "backgroundstyle", jdbcType = JdbcType.LONGVARCHAR) })
-	List<advertisement> selectDelBygroupid(Integer groupid, int startoffset, int pageSize);
+	List<advertisement> selectDelBygroupid(Integer groupid, int startoffset, int pageSize, @Param("sort") String sort,
+			@Param("sortOrder") String sortOrder);
 
 	@Select({ "select",
 			"infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
@@ -197,7 +203,7 @@ public interface advertisementMapper {
 	@Select({ "select",
 			"infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, pubid, playTimelength, delindex, BackgroundStyle",
 			"from t_advertisement",
-			"where groupid = #{groupid,jdbcType=INTEGER} and infoState=3 and pubid<>'0' and pubid<>'[0]' and delindex=0 and (lifeDie>=curdate() or lifeDie='') order by infoSN desc" })
+			"where groupid = #{groupid,jdbcType=INTEGER} and infoState=3 and pubid<>'0' and pubid<>'[0]' and delindex=0 and (lifeDie>=curdate() or lifeDie='') order by advName asc,publishDate desc" })
 	@Results({ @Result(column = "infoSN", property = "infoSN", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "advName", property = "advname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER),

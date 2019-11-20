@@ -10,12 +10,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import sun.font.FontDesignMetrics;
 
 public class GJ_codingCls {
 	private final int Fixedbyte = 54;// 协议体中，除数据内容以外的字节。
 	private byte[] byte10 = new byte[10];
+	private boolean JM = false;
 
 	private int SendMaxPackege;
 
@@ -39,6 +41,31 @@ public class GJ_codingCls {
 		} else {
 			SendMaxPackege = 4096;
 		}
+	}
+
+	public GJ_codingCls(int SendMaxPackegeLen, boolean jm, boolean isBigPack) {
+
+		if (isBigPack) {
+			SendMaxPackege = SendMaxPackegeLen;
+		} else {
+			if (SendMaxPackegeLen < 512) {
+				SendMaxPackege = 256;
+			} else if (SendMaxPackegeLen < 768) {
+				SendMaxPackege = 512;
+			} else if (SendMaxPackegeLen < 1024) {
+				SendMaxPackege = 768;
+			} else if (SendMaxPackegeLen < 2048) {
+				SendMaxPackege = 1024;
+			} else if (SendMaxPackegeLen < 3072) {
+				SendMaxPackege = 2048;
+			} else if (SendMaxPackegeLen < 4096) {
+				SendMaxPackege = 3072;
+			} else {
+				SendMaxPackege = 4096;
+			}
+		}
+
+		this.JM = jm;
 	}
 
 	private byte[] ListTobyte(List<Byte> list) {
@@ -122,6 +149,56 @@ public class GJ_codingCls {
 			// 更改长度值 24=流水号+屏号+保留+头尾-2
 			tByte.set(4, intTobyte((tByte.size() + 22) / 256));
 			tByte.set(5, intTobyte((tByte.size() + 22) % 256));
+
+			byte jmvalue = 0; // 真正密钥
+			if (JM)// 加密
+			{
+				/*
+				 * 计算真正秘钥,修改14,15位置的值，加密和伪秘钥
+				 */
+				int jmkey = new Random().nextInt(255);
+				while (true) {
+					if (jmkey != 0 && jmkey != 64 && jmkey != 128 && jmkey != 196) {
+						break;
+					} else {
+						jmkey = new Random().nextInt(255);
+					}
+				}
+				byte byteKey = intTobyte(jmkey);
+
+				byte[] byteArr = new byte[8]; // 一个字节八位
+				for (int i = 7; i > 0; i--) {
+					byteArr[i] = (byte) (byteKey & 1); // 获取最低位
+					byteKey = (byte) (byteKey >> 1); // 每次右移一位
+				}
+
+				int jmmode = byteArr[6] ^ byteArr[7]; // 加密方式
+
+				if (jmmode == 0) // 结果0：543bit为加密值的十位数，210bit为加密值的个位数。
+				{
+					byte[] byteSS = new byte[4];
+					byteSS[0] = 0;
+					byteSS[1] = byteArr[2];
+					byteSS[2] = byteArr[1];
+					byteSS[3] = byteArr[0];
+
+					byte[] byteGG = new byte[4];
+					byteGG[0] = 0;
+					byteGG[1] = byteArr[5];
+					byteGG[2] = byteArr[4];
+					byteGG[3] = byteArr[3];
+					// byteArrayToInt(b)
+
+					jmvalue = intTobyte(byteArrayToInt(byteSS) * 10 + byteArrayToInt(byteGG));
+				} else // 结果1：加密值为去掉67bit的，二进制值。
+				{
+					jmvalue = (byte) (byteKey & 31);
+				}
+
+				tByte.set(14, intTobyte(1));// 加密
+				tByte.set(15, byteKey);// 密钥
+			}
+
 			GJ_CRCcls crc = new GJ_CRCcls();// crc校验
 			int crcvalue = crc.CRC_16(ListTobyte(tByte), 4, tByte.size() - 1);
 
@@ -133,6 +210,17 @@ public class GJ_codingCls {
 			tByte.add(intTobyte(0x4E));//
 			tByte.add(intTobyte(0x7E));//
 
+			if (JM)// 加密
+			{
+				/*
+				 * 加密
+				 */
+				int jmLenght = (int) (tByte.get(30)) * 256 + (int) (tByte.get(31));// 指令参数数据长度;
+
+				for (int i = 32; i < jmLenght + 32; i++) {
+					tByte.set(i, intTobyte(tByte.get(i) ^ jmvalue));
+				}
+			}
 			byte[] mybytedata = GJ_ZhuanYi(ListTobyte(tByte));// 改动2-15
 
 			return mybytedata;// 改动2-15
@@ -266,10 +354,13 @@ public class GJ_codingCls {
 			byteArrayInsList(mylist, byteLife(playlist.getM_lifeend()));// 生命周期结束
 			mylist.add(intTobyte(playlist.getM_Timequantum().size() % 256));// 时间段总数 以分为单位 4字节
 			for (int i = 0; i < playlist.getM_Timequantum().size(); i++) {
-				int tvalue = timevalueMM(playlist.getM_Timequantum().get(i).getM_playstart());// 开始
+				int tvalue = Integer.parseInt(playlist.getM_Timequantum().get(i).getM_playstart());// 开始
 				mylist.add(intTobyte(tvalue / 256));
 				mylist.add(intTobyte(tvalue % 256));
-				tvalue = timevalueMM(playlist.getM_Timequantum().get(i).getM_playend());// 结束
+				tvalue = Integer.parseInt(playlist.getM_Timequantum().get(i).getM_playend());// 结束
+				if (tvalue == 0) {
+					tvalue = 24 * 60;
+				}
 				mylist.add(intTobyte(tvalue / 256));
 				mylist.add(intTobyte(tvalue % 256));
 			}

@@ -9,18 +9,19 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ServletComponentScan
 @MapperScan("org.hds.mapper")
-@ComponentScan(basePackages = {"org.hds.service","org.hds.service.impl","org.hds.web"})
+@ComponentScan(basePackages = { "org.hds.service", "org.hds.service.impl", "org.hds.web", "org.hds.config" })
+//@ComponentScan(basePackages = { "org.hds.service", "org.hds.service.impl", "org.hds.web" })
 public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);		
-		
+		SpringApplication.run(Application.class, args);
+
 		try {
-			//NettyClient client=new NettyClient();
-			//client.star();	
+			// NettyClient client=new NettyClient();
+			// client.star();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-	}	
+
+	}
 }

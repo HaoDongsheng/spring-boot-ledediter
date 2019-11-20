@@ -3,6 +3,7 @@ package org.hds.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hds.service.IAdvMangerService;
+import org.hds.service.impl.operateLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,74 +22,92 @@ public class auditMangerController {
 
 	@Autowired
 	IAdvMangerService advMangerSer;
-	final Logger logger=LoggerFactory.getLogger(this.getClass());	
-	
-	@RequestMapping("/auditManger")    
-    public String auditManger(Model model,HttpServletRequest request){	
-		try
-		{			
+	@Autowired
+	operateLog operateLog;
+
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@RequestMapping("/auditManger")
+	public String auditManger(Model model, HttpServletRequest request) {
+		try {
 			logger.info("/auditManger Open");
 			return "auditManger";
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return null;
 		}
-    }
-	
+	}
+
 	@ResponseBody
-	@RequestMapping(value = "/getadvListbyGrpidState", method = RequestMethod.POST) 
-    public JSONArray getadvListbyGrpidState(@RequestParam("Grpid") int Grpid,@RequestParam("adminname") String adminname,HttpServletRequest request){		
-		try
-		{						
-			JSONArray JsonArray = advMangerSer.getadvListbyGrpidState(Grpid,1);
-			logger.info("===用户:"+adminname+"/getadvListbyGrpidState===");
+	@RequestMapping(value = "/getadvListbyGrpidState", method = RequestMethod.POST)
+	public JSONArray getadvListbyGrpidState(@RequestParam("Grpid") int Grpid,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONArray JsonArray = advMangerSer.getadvListbyGrpidState(Grpid, 1);
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/getadvListbyGrpidState===",
+					"/getadvListbyGrpidState", logger, false);
 			return JsonArray;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/getadvListbyGrpidState 异常:" + e.getMessage() + "===",
+					"/getadvListbyGrpidState", logger, false);
+			return null;
 		}
-		catch(Exception e){
-			logger.error("===用户:"+adminname+"/getadvListbyGrpidState 异常:"+e.getMessage()+"===");
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/PublishInfobyid", method = RequestMethod.POST)
+	public JSONObject PublishInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONObject JObject = advMangerSer.Publishinfobyid(infoid, adminid);
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + " 发布广告id:" + infoid + " 返回结果:" + JObject.toJSONString() + "===",
+					"/PublishInfobyid", logger, true);
+			return JObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/PublishInfobyid 发布广告id:" + infoid + "异常:" + e.getMessage() + "===",
+					"/PublishInfobyid", logger, true);
 			return null;
 		}
-    }
-	
+	}
+
 	@ResponseBody
-	@RequestMapping(value = "/PublishInfobyid", method = RequestMethod.POST)    
-    public JSONObject PublishInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
-		try {			
-			JSONObject JObject =advMangerSer.Publishinfobyid(infoid,adminid);
-			logger.info("===用户:"+adminname+" 发布广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+	@RequestMapping(value = "/RefuseInfobyid", method = RequestMethod.POST)
+	public JSONObject RefuseInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONObject JObject = advMangerSer.RefuseInfobyid(infoid, adminid);
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + " 拒绝广告id:" + infoid + " 返回结果:" + JObject.toJSONString() + "===",
+					"/RefuseInfobyid", logger, true);
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminname+"/PublishInfobyid 发布广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/RefuseInfobyid 拒绝广告id:" + infoid + "异常:" + e.getMessage() + "===",
+					"/RefuseInfobyid", logger, true);
 			return null;
-		}		   
-    }
-	
+		}
+	}
+
 	@ResponseBody
-	@RequestMapping(value = "/RefuseInfobyid", method = RequestMethod.POST)    
-    public JSONObject RefuseInfobyid(@RequestParam("infoid") int infoid,@RequestParam("adminid") int adminid,@RequestParam("adminname") String adminname,HttpServletRequest request){
-		try {			
-			JSONObject JObject =advMangerSer.RefuseInfobyid(infoid,adminid);
-			logger.info("===用户:"+adminname+" 拒绝广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
+	@RequestMapping(value = "/getInfobytesbyid", method = RequestMethod.POST)
+	public JSONObject getInfobytesbyid(@RequestParam("infoid") int infoid, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
+		try {
+
+			JSONObject JObject = advMangerSer.getbyteslistbyid(infoid);
+
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + " 获取编码广告id:" + infoid + " 返回结果:" + JObject.toJSONString() + "===",
+					"/getInfobytesbyid", logger, false);
 			return JObject;
 		} catch (Exception e) {
-			logger.error("===用户:"+adminname+"/RefuseInfobyid 拒绝广告id:"+infoid+"异常:"+e.getMessage()+"===");
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/getInfobytesbyid 获取编码广告id:" + infoid + "异常:" + e.getMessage() + "===",
+					"/getInfobytesbyid", logger, false);
 			return null;
-		}		   
-    }
-	
-	@ResponseBody
-	@RequestMapping(value = "/getInfobytesbyid", method = RequestMethod.POST)    
-    public JSONObject getInfobytesbyid(@RequestParam("infoid") int infoid,@RequestParam("adminname") String adminname,HttpServletRequest request){
-		try {			
-						
-			JSONObject JObject =advMangerSer.getbyteslistbyid(infoid);
-			
-			logger.info("===用户:"+adminname+" 获取编码广告id:"+infoid+" 返回结果:"+JObject.toJSONString()+"===");
-			return JObject;
-		} catch (Exception e) {
-			logger.error("===用户:"+adminname+"/getInfobytesbyid 获取编码广告id:"+infoid+"异常:"+e.getMessage()+"===");
-			return null;
-		}		   
-    }
+		}
+	}
 }

@@ -66,7 +66,31 @@ $().ready(function() {
 	
 });
 */
-$(function() {
+var slider;
+$(function() {	
+	slider = new SliderUnlock("#slider",{
+        successLabelTip : "验证成功"    
+    },function(){
+        //alert("验证成功,即将跳转至素材火");
+//        window.location.href="https://www.sucaihuo.com";
+        //以下四行设置恢复初始，不需要可以删除
+//        setTimeout(function(){
+//            $("#labelTip").html("拖动滑块验证");
+//            $("#labelTip").css("color","#787878");
+//            },2000);
+        //slider.init();
+    });
+	slider.init();
+
+	var loginErrorCount = 0;
+	if(localStorage.getItem("loginErrorCount")!=null)
+		{loginErrorCount=parseInt(localStorage.getItem("loginErrorCount"));}	
+
+		if(loginErrorCount>=3)
+			{
+			$('#slider').css("display","block");
+			}	   
+		
 	$("#login_sign_up").click(function() {
 		$("#register_form").css("display", "block");
 		$("#login_form").css("display", "none");
@@ -109,8 +133,21 @@ $(function() {
 	      });
 	
 	$("#sign_in").click(function() {
-		var adminName = $("#login_username").val(); 
-		var adminPwd = $("#login_password").val(); 
+		var loginErrorCount = 0;
+    	if(localStorage.getItem("loginErrorCount")!=null)
+    		{loginErrorCount=parseInt(localStorage.getItem("loginErrorCount"));}
+    	if(loginErrorCount>=3)
+			{
+    		var isok = slider.isOk;
+    		if(!isok)
+    			{
+    			alertMessage(1, "警告", "请拖动滑块验证!");
+    			return;
+    			}
+			}
+    	
+	   var adminName = $("#login_username").val(); 
+	   var adminPwd = $("#login_password").val(); 
 	   $.ajax(  
 	    {  
 	        url:"/login",  
@@ -138,13 +175,26 @@ $(function() {
 	            			localStorage.setItem("loginInfo","");
 						}
 	            		
+	            		localStorage.setItem("loginErrorCount",0);
 	            		window.location.href="main";
 	            		localStorage.setItem("adminInfo",JSON.stringify(data.adminInfo));
 	            		sessionStorage.setItem('grpsinfo', null);
 	            		sessionStorage.setItem('selectgrpid',0);
 	            		//var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
 	            	}
-	            else{alertMessage(1, "警告", data.resultMessage);}
+	            else{
+	            	alertMessage(1, "警告", data.resultMessage);
+	            	var loginErrorCount = 0;
+	            	if(localStorage.getItem("loginErrorCount")!=null)
+	            		{loginErrorCount=parseInt(localStorage.getItem("loginErrorCount"));}
+	            	loginErrorCount+=1;
+	            	localStorage.setItem("loginErrorCount",loginErrorCount);
+	   
+	   				if(loginErrorCount>=3)
+	   					{
+	   					$('#slider').css("display","block");
+	   					}	   
+	            }
 	        }
 	    });   
 	});

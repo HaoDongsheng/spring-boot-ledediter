@@ -14,6 +14,7 @@
 	<!-- 在bootstrap.min.js 之前引入 -->	
 	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
+	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap.min.js}" ></script>					
 	
@@ -75,6 +76,19 @@
                    	<strong>公司: </strong>鞍山博海泰克电子设备有限公司
                     &nbsp;&nbsp;
                     <strong>电话: </strong>0412-5234000
+                    &nbsp;&nbsp;                    
+                    <a  id="dropdownUser" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                       <span class="fa fa-user-circle-o" style="font-size: 25px;"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-settings" style="text-align:center"  role="menu" aria-labelledby="dropdownUser">
+                        <div class="media">                             
+                            <div class="media-body">
+                                <h4 id ="dropdownUser_name" class="media-heading"></h4>                                 
+                            </div>
+                        </div>
+                        <hr />
+                        <a href="index" class="btn btn-danger btn-sm">退出</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,11 +143,12 @@
                             <li id='advManger'><a class="menu-top-active" href="advManger">广告编辑</a></li>
                             <li id='auditManger'><a href="auditManger">广告审核</a></li>
                             <li id='infoList'><a href="infoList">广告发布</a></li>
-                            <li id='recycleManger'><a href="recycleManger">回收站</a></li>
-                            <li id='groupManger'><a href="groupManger">分组管理</a></li>
-                            <li id='userManger'><a href="userManger">用户管理</a></li>
-                            <li id='taxiManger'><a href="taxiManger">车辆管理</a></li>
-                            <li id='projectManger' style='display:none;'><a href="projectManger">项目管理</a></li>
+                            <li shiro:hasPermission="advManger" id='recycleManger'><a href="recycleManger">回收站</a></li>
+                            <li id='historyManger'><a href="historyManger">广告统计</a></li>
+                            <li shiro:hasPermission="groupManger" id='groupManger'><a href="groupManger">分组管理</a></li>
+                            <li shiro:hasPermission="userManger" id='userManger'><a href="userManger">用户管理</a></li>
+                            <li shiro:hasPermission="taxiManger" id='taxiManger'><a href="taxiManger">车辆管理</a></li>                            
+                            <li shiro:hasRole="admin" id='projectManger'><a href="projectManger">项目管理</a></li>
                             <!-- <li><a href="blank.html">关于</a></li> -->                          
                         </ul>
                     </div>                    
@@ -177,11 +192,11 @@
 		    </div>
 		    <div class="col-md-10">
 	        <div class="btn-group btn-group-sm">	           		      	
-			    <button id='info_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>	
-			    <button id='info_save' type="button" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>		    
-			    <button id='info_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
-			    <button id='info_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>审核</button>
-			    <button id='info_copy' type="button" class="btn btn-primary"><i class="fa fa-copy"></i>复制</button>
+			    <button shiro:hasPermission="advManger" id='info_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>	
+			    <button shiro:hasPermission="advManger" id='info_save' type="button" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>		    
+			    <button shiro:hasPermission="advManger" id='info_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
+			    <button shiro:hasPermission="advManger" id='info_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>提交审核</button>
+			    <button shiro:hasPermission="advManger" id='info_copy' type="button" class="btn btn-primary"><i class="fa fa-copy"></i>复制</button>
 			    <button id='info_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
 			    <button id='info_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
 			    <button id='info_play' type="button" class="btn btn-primary"><i class="fa fa-play"></i>模拟显示</button>
@@ -191,10 +206,10 @@
 		                  
         <div class="row">
 		<div class="col-md-2">
-		<div class='list-group-item' style='text-align: center;background:#C36464;'>
+		<div class='list-group-item' style='text-align: center;background:#C36464;box-shadow: 10px 10px 5px #888888;'>
 		<a class='text-white'>草稿箱<span id='badge_draft' class="badge badge-light">0</span></a>
 		</div>
-		<div id='infolist_draft' class="list-group">
+		<div id='infolist_draft' class="list-group" style="box-shadow: 10px 10px 5px #888888;">
 		</div>				
 			  			 
 		</div>
@@ -203,7 +218,7 @@
 	
 		<div id="content">
 						
-        <div class="card">
+        <div class="card" style="box-shadow: 10px 10px 5px #888888;">
 		  <div class="card-header">广告编辑</div>
 		  <div class="card-body">					  
 	  	  	<div id="workarea" style="height:400px;">
@@ -218,18 +233,18 @@
 				</div>				
 			</div>
 			 
-			<!-- 
-			<div class="btn-group" style="width:100%;overflow:hidden;">
-			<a href="javascript:void(0)" id='pre'><i class="fa fa-chevron-left" style="font-size:50px;"></i></a>
-			<div id="layer_items" class="btn-group" style="width:100%;overflow:hidden;">			
-			</div>			
-			<a href="javascript:void(0)" id='next' style="float:right"><i class="fa fa-chevron-right" style="font-size:50px;"></i></a>				
-			</div>
-			 -->			
+			
+<!-- 			<div class="btn-group" style="width:100%;overflow:hidden;"> -->
+<!-- 			<a href="javascript:void(0)" id='pre'><i class="fa fa-chevron-left" style="font-size:50px;"></i></a> -->
+<!-- 			<div id="layer_items" class="btn-group" style="width:100%;overflow:hidden;">			 -->
+<!-- 			</div>			 -->
+<!-- 			<a href="javascript:void(0)" id='next' style="float:right"><i class="fa fa-chevron-right" style="font-size:50px;"></i></a>				 -->
+<!-- 			</div> -->
+			 			
     	  </div> 								  
 		</div>
 													
-		<div class="card">
+		<div id='info_parameter' class="card" style="margin-top:30px;box-shadow: 10px 10px 5px #888888;">
 		  <div class="card-header">参数设置</div>
 		  <div class="card-body">
 		  <!-- 			
@@ -287,25 +302,25 @@
 			      <option selected value='0' class="small text-left">静止</option>
 			      <option value='1' class="small text-left">左滚</option>
 			      <option value='2' class="small text-left">上滚</option>
-			      <option value='3' class="small text-left">左拉帘</option>
-			      <option value='4' class="small text-left">右拉帘</option>				      
-			      <option value='5' class="small text-left">左右拉帘</option>
-			      <option value='6' class="small text-left">上拉帘</option>
-			      <option value='7' class="small text-left">下拉帘</option>
-			      <option value='8' class="small text-left">上下拉帘</option>
-			      <option value='9' class="small text-left">渐亮</option>
-			      <option value='10' class="small text-left">渐灭</option>				      
+<!-- 			      <option value='3' class="small text-left">左拉帘</option> -->
+<!-- 			      <option value='4' class="small text-left">右拉帘</option>				       -->
+<!-- 			      <option value='5' class="small text-left">左右拉帘</option> -->
+<!-- 			      <option value='6' class="small text-left">上拉帘</option> -->
+<!-- 			      <option value='7' class="small text-left">下拉帘</option> -->
+<!-- 			      <option value='8' class="small text-left">上下拉帘</option> -->
+<!-- 			      <option value='9' class="small text-left">渐亮</option> -->
+<!-- 			      <option value='10' class="small text-left">渐灭</option>				       -->
 			      <option value='11' class="small text-left">左移进</option>
-			      <option value='12' class="small text-left">右移进</option>
-			      <option value='13' class="small text-left">左右移进</option>
-			      <option value='14' class="small text-left">隔行左右对进</option>
-			      <option value='15' class="small text-left">上移进</option>				      
+<!-- 			      <option value='12' class="small text-left">右移进</option> -->
+<!-- 			      <option value='13' class="small text-left">左右移进</option> -->
+<!-- 			      <option value='14' class="small text-left">隔行左右对进</option> -->
+<!-- 			      <option value='15' class="small text-left">上移进</option>				       -->
 			      <option value='16' class="small text-left">下移进</option>
-			      <option value='17' class="small text-left">上下隔行移进</option>
-			      <option value='18' class="small text-left">闪烁</option>
-			      <option value='19' class="small text-left">百叶</option>
-			      <option value='20' class="small text-left">放大 左上角->全屏</option>				      
-			      <option value='21' class="small text-left">放大 中间->全屏</option>
+<!-- 			      <option value='17' class="small text-left">上下隔行移进</option> -->
+<!-- 			      <option value='18' class="small text-left">闪烁</option> -->
+<!-- 			      <option value='19' class="small text-left">百叶</option> -->
+<!-- 			      <option value='20' class="small text-left">放大 左上角->全屏</option>				       -->
+<!-- 			      <option value='21' class="small text-left">放大 中间->全屏</option> -->
 			      </select>
 			    <!-- 
 		    	<div class="row">
@@ -405,7 +420,7 @@
 		<div class="col-md-2">
 		 	<div id="tool_right" style="width: 100%;height: 100%;">
 			    <div id="layer" width="100%" height="100%">	    
-			    	<button id="creat_layer" type="button" class="btn btn-primary btn-block"><i class="fa fa-plus-circle" style="font-size:20px;color:white"></i>添加图层</button>
+			    	<button  shiro:hasPermission="advManger" id="creat_layer" type="button" class="btn btn-primary btn-block"><i class="fa fa-plus-circle" style="font-size:20px;color:white"></i>添加图层</button>
 			    	<div id="layer_timelength" style="padding:5px 5px;border:2px solid #d0e4fe;background-color:#C36464;text-align:center;">				    	
 			    	</div>
 			    	<!-- <button id="delete_layer" type="button" class="btn btn-primary btn-block"><i class="fa fa-times-circle" style="font-size:20px;color:white"></i>删除图层</button> -->
@@ -747,6 +762,43 @@
 		    </div>
 		  </div>
 		</div>
+		
+		<!-- 模态框  敏感词-->
+		<div class="modal fade" data-backdrop="static" id="modal_sensitive_select">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 
+		      <!-- 模态框头部 -->
+		      <div class="modal-header">
+		        <h4 class="modal-title">敏感词管理</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body">	
+		      <div class="row">
+			      <div class="col-md-12" style="margin-bottom:15px;">
+			      <input id="input_sensitive" type="text" class="form-control">			      
+			      </div>
+			      <div class="col-md-12" style="margin-bottom:15px;">			      
+	              <a id="btn_sensitive_add" href="javascript:void(0)" class="btn btn-primary btn-sm">添加</a>
+	              <a id="btn_sensitive_delete"href="javascript:void(0)" class="btn btn-danger btn-sm">删除</a>	              
+	              </div>
+	              <div class="col-md-12" style="margin-bottom:15px;">
+			      <select id="svlist" multiple="" class="form-control" style="max-height:400px;">
+	              </select>	 
+	              </div> 
+              </div>					  					
+		      </div>
+		 
+		  		<!-- 模态框底部 -->
+		        <div class="modal-footer">
+<!-- 		          <button id="btn_selectsensitive" type="button" class="btn btn-primary">确定</button>  -->
+		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		        </div>
+		    </div>
+		  </div>
+		</div>
 			
 		<!-- 模态框  添加编辑分类-->
 		<div class="modal fade" data-backdrop="static" id="modal_picnav_add">
@@ -792,6 +844,31 @@
 	        <div class="modal-footer">
 	          <button id="btn_saveModel" type="button" class="btn btn-primary">确定</button>
 	          <button id="btn_saveModelColse" type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+	        </div>
+	   
+	      </div>
+	     </div>
+	     </div>
+	     
+	      <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_sensitive">
+	    <div class="modal-dialog modal-sm">
+	      <div class="modal-content">
+	   
+	        <!-- 模态框头部 -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">是否确定?</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	   
+	        <!-- 模态框主体 -->
+	        <div class="modal-body">	         	
+	        </div>
+	   
+	        <!-- 模态框底部 -->
+	        <div class="modal-footer">
+	          <button id="btn_sensitive_ok" type="button" class="btn btn-primary">确定</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 	        </div>
 	   
 	      </div>

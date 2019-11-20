@@ -1,7 +1,5 @@
 $(function(){
-	
-	$(".modal" ).draggable();
-		
+			
 	//initBTabel();
 	
 	getGroup();
@@ -131,7 +129,8 @@ function initBTabel()
         cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
         pagination: true,                   //是否显示分页（*）
         sortable: true,                     //是否启用排序
-        sortOrder: "asc",                   //排序方式        
+        sortOrder: "asc",                   //排序方式
+        sortName:"lifeDie",
         sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
         queryParams:queryParams,			//请求服务器时所传的参数        
         pageNumber:1,                       //初始化加载第一页，默认第一页
@@ -163,19 +162,23 @@ function initBTabel()
             
         }, {
             field: 'infoname',
-            title: '广告名称'
+            title: '广告名称',
+            sortable:true
             
         }, {
             field: 'lifeAct',
-            title: '开始日期'
+            title: '开始日期',
+            sortable:true
          
         }, {
             field: 'lifeDie',
-            title: '结束日期'
+            title: '结束日期',
+            sortable:true
          
         }, {
             field: 'timelenght',
-            title: '播放时长(秒)'
+            title: '播放时长(秒)',
+            sortable:true
           
         } , {
         	field: 'operate',
@@ -299,8 +302,33 @@ window.operateEvents = {
     	          }  
     	    });	
         },
-        'click .delete': function (e, value, row, index) {                	
-        	alertMessage(1, "警告", "没做完等等");
+        'click .delete': function (e, value, row, index) {                	        	        	
+        	var infoid = row.infosn;
+        	$.ajax({  
+    	        url:"/DeleteInfo2old", 
+    	        data:{
+    	        	infosn:infoid,    	        	
+    	        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
+    	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+    				},  
+    	        type:"post",  
+    	        dataType:"json", 
+    	        success:function(data)  
+    	        {       	  
+    	        	if(data.result=="success")
+    	        		{    	     
+    	        			$("#recycle_table").bootstrapTable("remove", {field: "infosn",values: [parseInt(infoid)]});
+    	        			alertMessage(0, "成功", "删除成功");
+    	        		}
+    	        	else
+    	        		{
+    	        			alertMessage(1, "警告", data.resultMessage);
+    	        		}
+    	        },  
+    	        error: function() { 
+    	        	alertMessage(2, "异常", "ajax 函数  DeleteInfo2old 错误");     	        	            
+    	          }  
+    	    });
         },
         'click .SerialPort': function (e, value, row, index) {   
         	

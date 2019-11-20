@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.hds.NettyClient;
 import org.hds.GJ_coding.GJ_ADitemcls;
 import org.hds.GJ_coding.GJ_ADscriptcls;
 import org.hds.GJ_coding.GJ_LoopADidlistcls;
@@ -73,6 +73,21 @@ public class getCode {
 	basemapMapper basemapMapper;
 	@Autowired
 	itemMapper itemMapper;
+
+	public static boolean isCarnumberNO(String carnumber) {
+		/*
+		 * 1.常规车牌号：仅允许以汉字开头，后面可录入六个字符，由大写英文字母和阿拉伯数字组成。如：粤B12345；
+		 * 2.武警车牌：允许前两位为大写英文字母，后面可录入五个或六个字符，由大写英文字母和阿拉伯数字组成，其中第三位可录汉字也可录大写英文字母及阿拉伯数字，
+		 * 第三位也可空，如：WJ警00081、WJ京1234J、WJ1234X。
+		 * 3.最后一个为汉字的车牌：允许以汉字开头，后面可录入六个字符，前五位字符，由大写英文字母和阿拉伯数字组成，而最后一个字符为汉字，汉字包括“挂”、“学”、“
+		 * 警”、“军”、“港”、“澳”。如：粤Z1234港。 4.新军车牌：以两位为大写英文字母开头，后面以5位阿拉伯数字组成。如：BA12345。
+		 */
+		String carnumRegex = "^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[警京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]{0,1} [A-Z0-9]{5}$|^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[警京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]{0,1} [A-Z0-9]{6}$";
+		if (carnumber.equals(""))
+			return false;
+		else
+			return carnumber.matches(carnumRegex);
+	}
 
 	// 生成发布id
 	public int GetpubidbyGroupid(int groupid) {
@@ -782,7 +797,7 @@ public class getCode {
 	public int GetCodeListbyid(advertisement adv, int pubid) {
 		try {
 			int MaxPackLength = taxigroupMapper.selectByPrimaryKey(adv.getGroupid()).getMaxPackLength();
-			GJ_codingCls cls = new GJ_codingCls(MaxPackLength);
+			GJ_codingCls cls = new GJ_codingCls(MaxPackLength, false, false);
 
 			GJ_ADscriptcls adscript = new GJ_ADscriptcls();
 			adscript.setM_adid(pubid);// 发布id
@@ -912,7 +927,7 @@ public class getCode {
 
 					switch (m_type) {
 					case 0/* 图文 */: {
-						BufferedImage bufferedImage = DrawTextGraphics.getImagebyJsonArray(
+						BufferedImage bufferedImage = DrawTextGraphics.getImagebyJsonArray1(
 								JsonItemStyle.getIntValue("playtype"), JarrContext, jsonspecial, item.getItemwidth(),
 								item.getItemheight());
 						// BufferedImage bufferedImage =
@@ -1084,6 +1099,7 @@ public class getCode {
 				if (PackLength > 250 * 1024) {
 					return 8;
 				}
+
 				infocode record = new infocode();
 				record.setinfoSN(adv.getinfoSN());
 				record.setGroupid(adv.getGroupid());
@@ -1232,16 +1248,16 @@ public class getCode {
 	}
 
 	// 获取多生命周期时段数据
-	public JSONArray GetJsonArrayinfolist(JSONArray jArrayLoop) {
+	public JSONArray GetJsonArrayinfolist(JSONArray jArrayLoop, boolean isnow) {
 		try {
 			JSONArray arrayjs = new JSONArray();
-
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 加上时间
 			if (jArrayLoop != null && jArrayLoop.size() > 0) {
 				// 获取日期集合
 				List<String> datelist = new ArrayList<String>();
 				for (int i = 0; i < jArrayLoop.size(); i++) {
 					JSONObject jTemJsonObject = jArrayLoop.getJSONObject(i);
-					int m_ADid = jTemJsonObject.getIntValue("infosn");
+					int m_ADid = jTemJsonObject.getIntValue("infoid");
 					int timelenght = jTemJsonObject.getIntValue("timelenght");
 					String lifeAct = jTemJsonObject.getString("lifeAct");
 					String lifeDie = jTemJsonObject.getString("lifeDie");
@@ -1252,8 +1268,14 @@ public class getCode {
 					if (lifeDie.equals("")) {
 						lifeDie = "2100-09-09";
 					}
-
-					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 加上时间
+					if (isnow) {
+						// 生命周期过期不生成数据
+						int idie = Integer.parseInt(lifeDie.replace("-", ""));
+						Date now = new Date();
+						if (idie < Integer.parseInt(simpleDateFormat.format(now).replace("-", ""))) {
+							continue;
+						}
+					}
 					// 必须捕获异常
 					try {
 						java.util.Date date = simpleDateFormat.parse(lifeDie);
@@ -1281,8 +1303,6 @@ public class getCode {
 						JSONObject joJsonObject = new JSONObject();
 						String lifeAct = datelist.get(l);
 						String lifeDie = datelist.get(l + 1);
-
-						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 加上时间
 						// 必须捕获异常
 						try {
 							java.util.Date date = simpleDateFormat.parse(lifeDie);
@@ -1305,7 +1325,7 @@ public class getCode {
 				// 广告加入时间段JSONArray
 				for (int i = 0; i < jArrayLoop.size(); i++) {
 					JSONObject jTemJsonObject = jArrayLoop.getJSONObject(i);
-					int m_ADid = jTemJsonObject.getIntValue("infosn");
+					int m_ADid = jTemJsonObject.getIntValue("infoid");
 					int timelenght = jTemJsonObject.getIntValue("timelenght");
 					String lifeAct = jTemJsonObject.getString("lifeAct");
 					String lifeDie = jTemJsonObject.getString("lifeDie");
@@ -1320,6 +1340,13 @@ public class getCode {
 					int iact = Integer.parseInt(lifeAct.replace("-", ""));
 					int idie = Integer.parseInt(lifeDie.replace("-", ""));
 
+					if (isnow) {
+						// 生命周期过期不生成数据
+						Date now = new Date();
+						if (idie < Integer.parseInt(simpleDateFormat.format(now).replace("-", ""))) {
+							continue;
+						}
+					}
 					for (int l = 0; l < arrayjs.size(); l++) {
 						JSONObject jsonO = arrayjs.getJSONObject(l);
 						int ala = Integer.parseInt(jsonO.getString("lifeAct").replace("-", ""));
@@ -1366,11 +1393,151 @@ public class getCode {
 		}
 	}
 
-	// 播放列表编码
+	// 获取多生命周期时段数据
+	public JSONArray GetJsonArrayinfolist2(JSONArray jArrayLoop, boolean isnow) {
+		try {
+			JSONArray arrayjs = new JSONArray();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // 加上时间
+			if (jArrayLoop != null && jArrayLoop.size() > 0) {
+				// 获取日期集合
+				List<String> datelist = new ArrayList<String>();
+				for (int i = 0; i < jArrayLoop.size(); i++) {
+					JSONObject jTemJsonObject = jArrayLoop.getJSONObject(i);
+					int m_ADid = jTemJsonObject.getIntValue("infoid");
+					int timelenght = jTemJsonObject.getIntValue("timelenght");
+					String lifeAct = jTemJsonObject.getString("lifeAct");
+					String lifeDie = jTemJsonObject.getString("lifeDie");
+
+					if (lifeAct == null || lifeDie == null) {
+						advertisement advm = advertisementMapper.selectByPrimaryKey(m_ADid);
+						lifeAct = advm.getlifeAct();
+						lifeDie = advm.getlifeDie();
+					}
+					if (lifeAct.equals("")) {
+						lifeAct = "1999-09-09";
+					}
+					if (lifeDie.equals("")) {
+						lifeDie = "2100-09-09";
+					}
+					if (isnow) {
+						// 生命周期过期不生成数据
+						int idie = Integer.parseInt(lifeDie.replace("-", ""));
+						Date now = new Date();
+						if (idie < Integer.parseInt(simpleDateFormat.format(now).replace("-", ""))) {
+							continue;
+						}
+					}
+					// 必须捕获异常
+					try {
+						java.util.Date date = simpleDateFormat.parse(lifeDie);
+						Calendar calendar = new GregorianCalendar();
+						calendar.setTime(date);
+						calendar.add(Calendar.DATE, 1);
+						date = calendar.getTime();
+
+						lifeDie = simpleDateFormat.format(date);
+					} catch (ParseException px) {
+					}
+
+					if (!datelist.contains(lifeAct)) {
+						datelist.add(lifeAct);
+					}
+					if (!datelist.contains(lifeDie)) {
+						datelist.add(lifeDie);
+					}
+				}
+				Collections.sort(datelist);
+
+				// 获取时间段JSONArray
+				if (datelist.size() > 0) {
+					for (int l = 0; l < datelist.size() - 1; l++) {
+						JSONObject joJsonObject = new JSONObject();
+						String lifeAct = datelist.get(l);
+						String lifeDie = datelist.get(l + 1);
+						// 必须捕获异常
+						try {
+							java.util.Date date = simpleDateFormat.parse(lifeDie);
+							Calendar calendar = new GregorianCalendar();
+							calendar.setTime(date);
+							calendar.add(Calendar.DATE, -1);
+							date = calendar.getTime();
+
+							lifeDie = simpleDateFormat.format(date);
+						} catch (ParseException px) {
+						}
+						if (isnow) {
+							// 生命周期过期不生成数据
+							int idie = Integer.parseInt(lifeDie.replace("-", ""));
+							Date now = new Date();
+							if (idie < Integer.parseInt(simpleDateFormat.format(now).replace("-", ""))) {
+								continue;
+							}
+						}
+						joJsonObject.put("lifeAct", lifeAct);
+						joJsonObject.put("lifeDie", lifeDie);
+						joJsonObject.put("totalTimeLength", 0);
+						joJsonObject.put("advlist", new JSONArray());
+						arrayjs.add(joJsonObject);
+					}
+				}
+				// 广告加入时间段JSONArray
+				for (int i = 0; i < jArrayLoop.size(); i++) {
+					JSONObject jTemJsonObject = jArrayLoop.getJSONObject(i);
+					int m_ADid = jTemJsonObject.getIntValue("infoid");
+					int timelenght = jTemJsonObject.getIntValue("timelenght");
+					String lifeAct = jTemJsonObject.getString("lifeAct");
+					String lifeDie = jTemJsonObject.getString("lifeDie");
+
+					if (lifeAct == null || lifeDie == null) {
+						advertisement advm = advertisementMapper.selectByPrimaryKey(m_ADid);
+						lifeAct = advm.getlifeAct();
+						lifeDie = advm.getlifeDie();
+					}
+
+					if (lifeAct.equals("")) {
+						lifeAct = "1999-09-09";
+					}
+					if (lifeDie.equals("")) {
+						lifeDie = "2100-09-09";
+					}
+
+					int iact = Integer.parseInt(lifeAct.replace("-", ""));
+					int idie = Integer.parseInt(lifeDie.replace("-", ""));
+					if (isnow) {
+						// 生命周期过期不生成数据
+						Date now = new Date();
+						if (idie < Integer.parseInt(simpleDateFormat.format(now).replace("-", ""))) {
+							continue;
+						}
+					}
+					for (int l = 0; l < arrayjs.size(); l++) {
+						JSONObject jsonO = arrayjs.getJSONObject(l);
+						int ala = Integer.parseInt(jsonO.getString("lifeAct").replace("-", ""));
+						int ald = Integer.parseInt(jsonO.getString("lifeDie").replace("-", ""));
+
+						if (!(idie < ala || iact > ald)) {
+							JSONObject jObject = new JSONObject();
+							jObject.put("infoid", m_ADid);
+							jObject.put("timelenght", timelenght);
+							jObject.put("offsetlist", jTemJsonObject.getJSONArray("offsetlist"));
+							arrayjs.getJSONObject(l).getJSONArray("advlist").add(jObject);
+						}
+					}
+				}
+			}
+
+			return arrayjs;
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	// 播放列表编码,生成单个列表编码,暂时不用了
 	public int GetplaylistCodeListbyid(playlist playlist, int pubid, int groupid) {
 		try {
 			int MaxPackLength = taxigroupMapper.selectByPrimaryKey(groupid).getMaxPackLength();
-			GJ_codingCls cls = new GJ_codingCls(MaxPackLength);
+			GJ_codingCls cls = new GJ_codingCls(950, false, true);
 
 			if (playlist != null) {
 				GJ_Playlistcls gj_Playlistcls = new GJ_Playlistcls();
@@ -1408,7 +1575,7 @@ public class getCode {
 						List<GJ_LoopADidlistcls> m_Loop_adidlist = new ArrayList<GJ_LoopADidlistcls>();
 						for (int i = 0; i < jArrayLoop.size(); i++) {
 							GJ_LoopADidlistcls aDidlistcls = new GJ_LoopADidlistcls();
-							int m_ADid = jArrayLoop.getJSONObject(i).getIntValue("infosn");
+							int m_ADid = jArrayLoop.getJSONObject(i).getIntValue("infoid");
 
 							advertisement advertisement = advertisementMapper.selectByPrimaryKey(m_ADid);
 
@@ -1469,7 +1636,6 @@ public class getCode {
 					break;
 				case 2: {
 					m_Scheduling.setM_mode((byte) 1);
-
 					m_Scheduling.setM_Template_cycle(jsonTimequantum.getIntValue("listcycle"));
 				}
 					;
@@ -1537,7 +1703,7 @@ public class getCode {
 						playlistcodeMapper.updateByplaylistSN(record);
 					}
 
-					NettyClient.TcpSocketSendPublish(advlist, null);
+					// NettyClient.TcpSocketSendPublish(advlist, null);
 				}
 				return 0;
 			} else {
@@ -1553,7 +1719,7 @@ public class getCode {
 			int groupid) {
 		try {
 			int MaxPackLength = taxigroupMapper.selectByPrimaryKey(groupid).getMaxPackLength();
-			GJ_codingCls cls = new GJ_codingCls(MaxPackLength);
+			GJ_codingCls cls = new GJ_codingCls(950, false, true);
 
 			if (playlist != null) {
 				GJ_Playlistcls gj_Playlistcls = new GJ_Playlistcls();
@@ -1589,7 +1755,14 @@ public class getCode {
 				m_Scheduling.setM_mode((byte) 1);
 				gj_Playlistcls.setM_Scheduling(m_Scheduling);
 
-				m_Scheduling.setM_Template_cycle(playlist.getIntValue("totalTimeLength"));
+				int totalTimeLength = playlist.getIntValue("totalTimeLength");
+				if (totalTimeLength == 0) {
+					m_Scheduling.setM_Template_cycle(jsonTimequantum.getIntValue("listcycle"));
+
+				} else {
+					m_Scheduling.setM_Template_cycle(totalTimeLength);
+				}
+
 				String containADID = "";// 包含的广告发布id
 				JSONArray jArrayLoop = playlist.getJSONArray("advlist");
 				if (jArrayLoop != null && jArrayLoop.size() > 0) {
@@ -1642,6 +1815,11 @@ public class getCode {
 						}
 						jArray.add(buf.toString().trim());
 					}
+
+					if (PackLength > 100 * 1024) {
+						return 8;
+					}
+
 					if (containADID.length() > 0) {
 						containADID = containADID.substring(0, containADID.length() - 1);
 					}

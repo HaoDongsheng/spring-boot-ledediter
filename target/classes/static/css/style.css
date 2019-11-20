@@ -48,16 +48,16 @@ body {
 }
 .login-icon {
     height: 60px;
-width: 60px;
-padding: 13px;
-border-radius: 50%;
-font-size: 30px;
-margin-bottom: 20px;
-color: #fff;
-text-align: center;
-cursor:pointer;
-background-color:#F0677C;
--webkit-border-radius:50%;
+	width: 60px;
+	padding: 13px;
+	border-radius: 50%;
+	font-size: 30px;
+	margin-bottom: 20px;
+	color: #fff;
+	text-align: center;
+	cursor:pointer;
+	background-color:#F0677C;
+	-webkit-border-radius:50%;
     -moz-border-radius:50%;
 }
 .copyrights{
@@ -235,6 +235,10 @@ footer {
     background-color: #BDB76B;
 }
 
+.bk-clr-eight {
+    background-color: #6B8E23;
+}
+
 
 .dashboard-div-icon {
     height: 50px;
@@ -330,8 +334,12 @@ footer {
 
 .tooltipT {
     visibility: hidden;
-    font-size:10px;
-    color: #ff0000;  
+    font-size:16px;
+    color: #ffffff;  
+    pointer-events:none;
+    background-color:#6495edaa;
+    border-radius:10px;
+    font-weight:bold;
     position: absolute;
     z-index: 1;
 }

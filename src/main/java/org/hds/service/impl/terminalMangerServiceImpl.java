@@ -11,6 +11,7 @@ import org.hds.mapper.groupMapper;
 import org.hds.mapper.projectMapper;
 import org.hds.mapper.terminalMapper;
 import org.hds.model.advertisement;
+import org.hds.model.group;
 import org.hds.model.terminal;
 import org.hds.service.IterminalMangerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LED_ID", terminal.getLedId());
 					jterminal.put("SIMNo", terminal.getSimno());
 					jterminal.put("DtuKey", terminal.getDtukey());
+					jterminal.put("disconnect", terminal.getDisconnect());
 					String Projectname = "无项目";
 					if (terminal.getProjectid() == null) {
 						jterminal.put("projectid", Projectname);
@@ -72,7 +74,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 
 					JSONArray jadvArray = new JSONArray();
 					if (terminal.getGroupid() != null && terminal.getAdidlist() != null
-							&& terminal.getAdidlist() != "") {
+							&& !terminal.getAdidlist().trim().equals("")) {
 						String[] adidStrings = terminal.getAdidlist().split(",");
 						for (int j = 0; j < adidStrings.length; j++) {
 							int adid = Integer.parseInt(adidStrings[j]);
@@ -82,7 +84,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 							if (advertisement != null) {
 								String Advname = advertisement.getAdvname();
 								String lifeDie = advertisement.getlifeDie();
-								if (lifeDie == "") {
+								if (lifeDie.equals("")) {
 									lifeDie = "2100-09-09";
 								}
 								int Delindex = advertisement.getDelindex();
@@ -126,6 +128,14 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LedVersion", terminal.getLedversion());
 					jterminal.put("StateLedVersion", terminal.getStateledversion());
 					jterminal.put("RegisterDate", terminal.getRegisterdate());
+
+					String Lastresponsetime = "2000-01-01 0:00:00";
+					if (terminal.getLedLastresponsetime() != null) {
+						Lastresponsetime = terminal.getLedLastresponsetime();
+					}
+
+					jterminal.put("LED_LastResponseTime", Lastresponsetime);
+
 					jterminal.put("StarLevel", terminal.getStarlevel());
 					jterminal.put("StarLevelSet", terminal.getStarlevelset());
 
@@ -143,27 +153,40 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 
 	@Override
 	public JSONObject getTerminalsbyprojectid(int pageNum, int pageSize, String projectid, String searchString,
-			String groupids, String sort, String sortOrder) {
+			String groupids, int adminlevel, String sort, String sortOrder) {
 		JSONObject jObject = new JSONObject();
 		try {
 			int terminalCount = 0;
-			if (groupids != null && groupids != "") {
-				List<String> listids = Arrays.asList(groupids.split(","));
-				terminalCount = terminalMapper.selectCountbyprojectidgrp(projectid, searchString, listids);
-			} else {
-				terminalCount = terminalMapper.selectCountbyprojectid(projectid, searchString);
-			}
+			List<terminal> terminalList = null;
 			int startoffset = (pageNum - 1) * pageSize;
 
-			List<terminal> terminalList = null;
-			if (groupids != null && groupids != "") {
-				List<String> listids = Arrays.asList(groupids.split(","));
-				terminalList = terminalMapper.SelectTerminalsByprojectidgrp(startoffset, pageSize, projectid,
-						searchString, listids, sort, sortOrder);
-			} else {
+			if (groupids == null || groupids == "" || adminlevel < 2) {
+				terminalCount = terminalMapper.selectCountbyprojectid(projectid, searchString);
+
 				terminalList = terminalMapper.SelectTerminalsByprojectid(startoffset, pageSize, projectid, searchString,
 						sort, sortOrder);
+			} else {
+				List<String> listids = Arrays.asList(groupids.split(","));
+				terminalCount = terminalMapper.selectCountbyprojectidgrp(projectid, searchString, listids);
+
+				terminalList = terminalMapper.SelectTerminalsByprojectidgrp(startoffset, pageSize, projectid,
+						searchString, listids, sort, sortOrder);
 			}
+
+//			if (groupids != null && groupids != "") {
+//				List<String> listids = Arrays.asList(groupids.split(","));
+//				terminalCount = terminalMapper.selectCountbyprojectidgrp(projectid, searchString, listids);
+//
+//				terminalList = terminalMapper.SelectTerminalsByprojectidgrp(startoffset, pageSize, projectid,
+//						searchString, listids, sort, sortOrder);
+//
+//			} else {
+//				terminalCount = terminalMapper.selectCountbyprojectid(projectid, searchString);
+//
+//				terminalList = terminalMapper.SelectTerminalsByprojectid(startoffset, pageSize, projectid, searchString,
+//						sort, sortOrder);
+//			}
+
 			JSONArray jsonArray = new JSONArray();
 			if (terminalList != null && terminalList.size() > 0) {
 				for (int i = 0; i < terminalList.size(); i++) {
@@ -182,6 +205,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LED_ID", terminal.getLedId());
 					jterminal.put("SIMNo", terminal.getSimno());
 					jterminal.put("DtuKey", terminal.getDtukey());
+					jterminal.put("disconnect", terminal.getDisconnect());
 					String Projectname = "无项目";
 					if (terminal.getProjectid() == null) {
 						jterminal.put("projectid", Projectname);
@@ -195,7 +219,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LedStateString", terminal.getLedstatestring());
 					JSONArray jadvArray = new JSONArray();
 					if (terminal.getGroupid() != null && terminal.getAdidlist() != null
-							&& terminal.getAdidlist() != "") {
+							&& !terminal.getAdidlist().trim().equals("")) {
 						String[] adidStrings = terminal.getAdidlist().split(",");
 						for (int j = 0; j < adidStrings.length; j++) {
 							int adid = Integer.parseInt(adidStrings[j]);
@@ -205,7 +229,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 							if (advertisement != null) {
 								String Advname = advertisement.getAdvname();
 								String lifeDie = advertisement.getlifeDie();
-								if (lifeDie == "") {
+								if (lifeDie.equals("")) {
 									lifeDie = "2100-09-09";
 								}
 								int Delindex = advertisement.getDelindex();
@@ -247,6 +271,10 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LedVersion", terminal.getLedversion());
 					jterminal.put("StateLedVersion", terminal.getStateledversion());
 					jterminal.put("RegisterDate", terminal.getRegisterdate());
+					String Lastresponsetime = "2000-01-01 0:00:00";
+					if (terminal.getLedLastresponsetime() != null) {
+						Lastresponsetime = terminal.getLedLastresponsetime();
+					}
 					jterminal.put("StarLevel", terminal.getStarlevel());
 					jterminal.put("StarLevelSet", terminal.getStarlevelset());
 
@@ -266,15 +294,28 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 	public JSONObject updateTerminalInfo(String dtukey, String taxiname, int groupid, int StarLevelset) {
 		JSONObject jObject = new JSONObject();
 		try {
+			String projectid = groupMapper.selectByPrimaryKey(groupid).getProjectid();
+
+			int pdisconnect = projectMapper.selectByPrimaryKey(projectid).getDisconnect();
+
 			terminal record = new terminal();
 			record.setDtukey(dtukey);
 			record.setName(taxiname);
+			int disconnect = 0;
+			record.setDisconnect(disconnect);
+			if (pdisconnect == 1) {
+				if (getCode.isCarnumberNO(taxiname)) {
+					disconnect = 1;
+					record.setDisconnect(disconnect);
+				}
+			}
 			record.setGroupid(groupid);
-			record.setProjectid(groupMapper.selectByPrimaryKey(groupid).getProjectid());
+			record.setProjectid(projectid);
 			record.setStarlevelset(StarLevelset);
 			terminalMapper.updateByPrimaryKeySelective(record);
 
 			jObject.put("result", "success");
+			jObject.put("disconnect", disconnect);
 			jObject.put("projectName", projectMapper
 					.selectByPrimaryKey(groupMapper.selectByPrimaryKey(groupid).getProjectid()).getProjectname());
 			jObject.put("groupName", groupMapper.selectByPrimaryKey(groupid).getGroupname());
@@ -284,6 +325,29 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 			// 写入项目表，发布广告改动时间数据
 			projectMapper.updateTerminalUpdateTimeByPrimaryKey(groupMapper.selectByPrimaryKey(groupid).getProjectid(),
 					d1.format(now));
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject deleteTerminalInfo(String dtukey) {
+		JSONObject jObject = new JSONObject();
+		try {
+
+			String projectid = terminalMapper.selectByPrimaryKey(dtukey).getProjectid();
+
+			terminalMapper.deleteByPrimaryKey(dtukey);
+
+			Date now = new Date();
+			DateFormat d1 = DateFormat.getDateTimeInstance();
+			// 写入项目表，发布广告改动时间数据
+			projectMapper.updateTerminalUpdateTimeByPrimaryKey(projectid, d1.format(now));
+
+			jObject.put("result", "success");
 			return jObject;
 		} catch (Exception e) {
 			jObject.put("result", "fail");
@@ -340,6 +404,66 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
 			return jObject;
+		}
+	}
+
+	@Override
+	public String updateTerminalinfobySerial(String DTUNo, String groupName) {
+
+		try {
+			group itemgroup = groupMapper.selectBygroupName(groupName);
+			if (itemgroup == null) {
+				return "ERROR3";
+			} else {
+				String projectid = itemgroup.getProjectid();
+				int defaulGrpid = itemgroup.getGroupid();
+				if (defaulGrpid == 0) {
+					return "ERROR3";
+				}
+				int DefaultStartlevel = 5;
+
+				terminal itemTerminal = terminalMapper.selectByPrimaryKey(DTUNo);
+				if (itemTerminal != null)// 存在终端,修改
+				{
+					try {
+						itemTerminal.setProjectid(projectid);
+						itemTerminal.setGroupid(defaulGrpid);
+						itemTerminal.setStarlevelset(DefaultStartlevel);
+						int result = terminalMapper.updateByPrimaryKeySelective(itemTerminal);
+						if (result <= 0) {
+							return "ERROR2";
+						}
+					} catch (Exception e) {
+						return "ERROR2";
+					}
+
+				} else// 不存在终端,插入
+				{
+					try {
+						itemTerminal = new terminal();
+						itemTerminal.setDtukey(DTUNo);
+						itemTerminal.setName(DTUNo);
+						itemTerminal.setProjectid(projectid);
+						itemTerminal.setGroupid(defaulGrpid);
+						itemTerminal.setStarlevelset(DefaultStartlevel);
+						int result = terminalMapper.insertSelective(itemTerminal);
+						if (result <= 0) {
+							return "ERROR1";
+						}
+					} catch (Exception e) {
+						return "ERROR1";
+					}
+				}
+
+				Date now = new Date();
+				DateFormat d1 = DateFormat.getDateTimeInstance();
+				// 写入项目表，发布广告改动时间数据
+				projectMapper.updateTerminalUpdateTimeByPrimaryKey(projectid, d1.format(now));
+			}
+
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR255";
 		}
 	}
 }

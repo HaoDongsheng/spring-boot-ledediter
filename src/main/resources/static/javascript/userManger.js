@@ -1,7 +1,6 @@
 var arrpms=["广告编辑","广告审核","广告发布","分组管理","用户管理","车辆管理"];
 var isDisplayProjectid=false;
 $(function(){
-	$( ".modal" ).draggable();
 	
 	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
 	
@@ -378,11 +377,11 @@ function getGroup(projectid,groups)
 function getprojectList()
 {
 	$.ajax({  
-        url:"/getProjectList",          
+        url:"/getProjectListbyuser",          
         type:"post",  
         dataType:"json", 
         data:{
-        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        	adminInfo:localStorage.getItem("adminInfo")
         	},
         success:function(data)  
         {       	  
@@ -408,7 +407,7 @@ function getprojectList()
         		}        	
         },  
         error: function() {
-        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");              
+        	alertMessage(2, "异常", "ajax 函数  getProjectListbyuser 错误");              
           }  
     });
 }
@@ -419,8 +418,8 @@ function getuserList()
         url:"/getUserList",          
         type:"post",  
         dataType:"json", 
-        data:{
-        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+        data:{        	
+        	adminInfo:localStorage.getItem("adminInfo")
         	},
         success:function(data)  
         {       	  

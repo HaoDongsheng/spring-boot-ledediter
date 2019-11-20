@@ -18,6 +18,9 @@ public interface basemapMapper {
 	@Delete({ "delete from t_basemap", "where Id = #{id,jdbcType=INTEGER}" })
 	int deleteByPrimaryKey(Integer id);
 
+	@Delete({ "delete from t_basemap", "where projectid = #{0}" })
+	int deleteByprojectid(String projectid);
+
 	@Insert({ "insert into t_basemap (Id, basemapname, projectid,imgtype,", "basemapclassify, basemaptype, ",
 			"basemapstyle,basemapdata,delindex)",
 			"values (#{id,jdbcType=INTEGER}, #{basemapname,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}, #{imgtype,jdbcType=INTEGER},",
