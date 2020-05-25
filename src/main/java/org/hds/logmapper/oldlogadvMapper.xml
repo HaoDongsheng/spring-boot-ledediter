@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hds.logmapper.oldlogadvMapper">
+  <resultMap id="BaseResultMap" type="org.hds.model.oldlogadv">
+    <result column="infoSN" jdbcType="VARCHAR" property="infosn" />
+    <result column="advName" jdbcType="VARCHAR" property="advname" />
+    <result column="groupid" jdbcType="INTEGER" property="groupid" />
+    <result column="lifeAct" jdbcType="VARCHAR" property="lifeact" />
+    <result column="lifeDie" jdbcType="VARCHAR" property="lifedie" />
+    <result column="advType" jdbcType="VARCHAR" property="advtype" />
+    <result column="infoState" jdbcType="INTEGER" property="infostate" />
+    <result column="creater" jdbcType="INTEGER" property="creater" />
+    <result column="createDate" jdbcType="VARCHAR" property="createdate" />
+    <result column="auditor" jdbcType="VARCHAR" property="auditor" />
+    <result column="auditDate" jdbcType="VARCHAR" property="auditdate" />
+    <result column="publisher" jdbcType="INTEGER" property="publisher" />
+    <result column="publishDate" jdbcType="VARCHAR" property="publishdate" />
+    <result column="deleter" jdbcType="VARCHAR" property="deleter" />
+    <result column="deleteDate" jdbcType="VARCHAR" property="deletedate" />
+    <result column="playMode" jdbcType="VARCHAR" property="playmode" />
+    <result column="pubid" jdbcType="INTEGER" property="pubid" />
+    <result column="playTimelength" jdbcType="INTEGER" property="playtimelength" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.hds.model.oldlogadv">
+    <result column="BackgroundStyle" jdbcType="LONGVARCHAR" property="backgroundstyle" />
+    <result column="itemlist" jdbcType="LONGVARCHAR" property="itemlist" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    infoSN, advName, groupid, lifeAct, lifeDie, advType, infoState, creater, 
+    createDate, auditor, auditDate, publisher, publishDate, deleter, deleteDate, playMode, 
+    pubid, playTimelength
+  </sql>
+  <sql id="Blob_Column_List">
+    BackgroundStyle, itemlist
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_oldadv
+    where infoSN = #{infoSN,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryinfosn" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_oldadv
+    where infoSN = #{infoSN,jdbcType=VARCHAR}
+  </select>
+  <select id="selectDelBygroupid" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_oldadv
+    where groupid = #{groupid,jdbcType=INTEGER} 
+    <if test="infoname != null and infoname != ''">
+		and advName like concat('%', #{infoname,jdbcType=VARCHAR}, '%')
+	</if>
+	and (not lifeAct &gt; #{lifeDie,jdbcType=VARCHAR} or lifeAct='')  and (not lifeDie &lt; #{lifeAct,jdbcType=VARCHAR} or lifeDie='') order by ${sort} ${sortOrder} LIMIT #{startoffset,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+  <select id="selectDelCountBygroupid" resultType="java.lang.Integer">
+    select 
+   	count(*)
+    from t_oldadv
+    where groupid = #{groupid,jdbcType=INTEGER}
+    <if test="infoname != null and infoname != ''">
+		and advName like concat('%', #{infoname,jdbcType=VARCHAR}, '%')
+	</if>
+    and (not lifeAct &gt; #{lifeDie,jdbcType=VARCHAR} or lifeAct='')  and (not lifeDie &lt; #{lifeAct,jdbcType=VARCHAR} or lifeDie='')
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_oldadv
+    where infoSN = #{infoSN,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.hds.model.oldlogadv">
+    insert into t_oldadv (infoSN, advName, 
+      groupid, lifeAct, lifeDie, 
+      advType, infoState, creater, 
+      createDate, auditor, auditDate, 
+      publisher, publishDate, deleter, 
+      deleteDate, playMode, pubid, 
+      playTimelength, BackgroundStyle, itemlist)
+    values (#{infosn,jdbcType=INTEGER}, #{advname,jdbcType=VARCHAR}, 
+      #{groupid,jdbcType=INTEGER}, #{lifeact,jdbcType=VARCHAR}, #{lifedie,jdbcType=VARCHAR}, 
+      #{advtype,jdbcType=VARCHAR}, #{infostate,jdbcType=INTEGER}, #{creater,jdbcType=INTEGER}, 
+      #{createdate,jdbcType=VARCHAR}, #{auditor,jdbcType=VARCHAR}, #{auditdate,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=INTEGER}, #{publishdate,jdbcType=VARCHAR}, #{deleter,jdbcType=VARCHAR}, 
+      #{deletedate,jdbcType=VARCHAR}, #{playmode,jdbcType=VARCHAR}, #{pubid,jdbcType=INTEGER}, 
+      #{playtimelength,jdbcType=INTEGER}, #{backgroundstyle,jdbcType=LONGVARCHAR}, #{itemlist,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.hds.model.oldlogadv">
+    insert into t_oldadv
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="infosn != null">
+        infoSN,
+      </if>
+      <if test="advname != null">
+        advName,
+      </if>
+      <if test="groupid != null">
+        groupid,
+      </if>
+      <if test="lifeact != null">
+        lifeAct,
+      </if>
+      <if test="lifedie != null">
+        lifeDie,
+      </if>
+      <if test="advtype != null">
+        advType,
+      </if>
+      <if test="infostate != null">
+        infoState,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createdate != null">
+        createDate,
+      </if>
+      <if test="auditor != null">
+        auditor,
+      </if>
+      <if test="auditdate != null">
+        auditDate,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="deleter != null">
+        deleter,
+      </if>
+      <if test="deletedate != null">
+        deleteDate,
+      </if>
+      <if test="playmode != null">
+        playMode,
+      </if>
+      <if test="pubid != null">
+        pubid,
+      </if>
+      <if test="playtimelength != null">
+        playTimelength,
+      </if>      
+      <if test="backgroundstyle != null">
+        BackgroundStyle,
+      </if>
+      <if test="itemlist != null">
+        itemlist,
+      </if>      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="infosn != null">
+        #{infosn,jdbcType=INTEGER},
+      </if>
+      <if test="advname != null">
+        #{advname,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="lifeact != null">
+        #{lifeact,jdbcType=VARCHAR},
+      </if>
+      <if test="lifedie != null">
+        #{lifedie,jdbcType=VARCHAR},
+      </if>
+      <if test="advtype != null">
+        #{advtype,jdbcType=VARCHAR},
+      </if>
+      <if test="infostate != null">
+        #{infostate,jdbcType=INTEGER},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null">
+        #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditdate != null">
+        #{auditdate,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleter != null">
+        #{deleter,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedate != null">
+        #{deletedate,jdbcType=VARCHAR},
+      </if>
+      <if test="playmode != null">
+        #{playmode,jdbcType=VARCHAR},
+      </if>
+      <if test="pubid != null">
+        #{pubid,jdbcType=INTEGER},
+      </if>
+      <if test="playtimelength != null">
+        #{playtimelength,jdbcType=INTEGER},
+      </if>      
+      <if test="backgroundstyle != null">
+        #{backgroundstyle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="itemlist != null">
+        #{itemlist,jdbcType=LONGVARCHAR},
+      </if>      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.hds.model.oldlogadv">
+    update t_oldadv
+    <set>
+      <if test="advname != null">
+        advName = #{advname,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        groupid = #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="lifeact != null">
+        lifeAct = #{lifeact,jdbcType=VARCHAR},
+      </if>
+      <if test="lifedie != null">
+        lifeDie = #{lifedie,jdbcType=VARCHAR},
+      </if>
+      <if test="advtype != null">
+        advType = #{advtype,jdbcType=VARCHAR},
+      </if>
+      <if test="infostate != null">
+        infoState = #{infostate,jdbcType=INTEGER},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        createDate = #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null">
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditdate != null">
+        auditDate = #{auditdate,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleter != null">
+        deleter = #{deleter,jdbcType=VARCHAR},
+      </if>
+      <if test="deletedate != null">
+        deleteDate = #{deletedate,jdbcType=VARCHAR},
+      </if>
+      <if test="playmode != null">
+        playMode = #{playmode,jdbcType=VARCHAR},
+      </if>
+      <if test="pubid != null">
+        pubid = #{pubid,jdbcType=INTEGER},
+      </if>
+      <if test="playtimelength != null">
+        playTimelength = #{playtimelength,jdbcType=INTEGER},
+      </if>      
+      <if test="backgroundstyle != null">
+        BackgroundStyle = #{backgroundstyle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="itemlist != null">
+        itemlist = #{itemlist,jdbcType=LONGVARCHAR},
+      </if>      
+    </set>
+    where infoSN = #{infoSN,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.hds.model.oldlogadv">
+    update t_oldadv
+    set advName = #{advname,jdbcType=VARCHAR},
+      groupid = #{groupid,jdbcType=INTEGER},
+      lifeAct = #{lifeact,jdbcType=VARCHAR},
+      lifeDie = #{lifedie,jdbcType=VARCHAR},
+      advType = #{advtype,jdbcType=VARCHAR},
+      infoState = #{infostate,jdbcType=INTEGER},
+      creater = #{creater,jdbcType=INTEGER},
+      createDate = #{createdate,jdbcType=VARCHAR},
+      auditor = #{auditor,jdbcType=VARCHAR},
+      auditDate = #{auditdate,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      deleter = #{deleter,jdbcType=VARCHAR},
+      deleteDate = #{deletedate,jdbcType=VARCHAR},
+      playMode = #{playmode,jdbcType=VARCHAR},
+      pubid = #{pubid,jdbcType=INTEGER},
+      playTimelength = #{playtimelength,jdbcType=INTEGER},      
+      BackgroundStyle = #{backgroundstyle,jdbcType=LONGVARCHAR},
+      itemlist = #{itemlist,jdbcType=LONGVARCHAR}
+    where  infoSN = #{infoSN,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.hds.model.oldlogadv">
+    update t_oldadv
+    set advName = #{advname,jdbcType=VARCHAR},
+      groupid = #{groupid,jdbcType=INTEGER},
+      lifeAct = #{lifeact,jdbcType=VARCHAR},
+      lifeDie = #{lifedie,jdbcType=VARCHAR},
+      advType = #{advtype,jdbcType=VARCHAR},
+      infoState = #{infostate,jdbcType=INTEGER},
+      creater = #{creater,jdbcType=INTEGER},
+      createDate = #{createdate,jdbcType=VARCHAR},
+      auditor = #{auditor,jdbcType=VARCHAR},
+      auditDate = #{auditdate,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      deleter = #{deleter,jdbcType=VARCHAR},
+      deleteDate = #{deletedate,jdbcType=VARCHAR},
+      playMode = #{playmode,jdbcType=VARCHAR},
+      pubid = #{pubid,jdbcType=INTEGER},
+      playTimelength = #{playtimelength,jdbcType=INTEGER},      
+    where  infoSN = #{infoSN,jdbcType=VARCHAR}
+  </update>
+</mapper>

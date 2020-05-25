@@ -1,5 +1,6 @@
 package org.hds.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public interface IterminalMangerService {
@@ -16,4 +17,8 @@ public interface IterminalMangerService {
 	public JSONObject updateTerminalInfobygroup(String projectid, int groupid, int StarLevelset);
 
 	public String updateTerminalinfobySerial(String DTUNo, String groupName);
+
+	public JSONArray getGroupbyProjectid(String projectid, JSONObject jsonObject);
+
+	public JSONObject getTerminalsUpdate(JSONArray DtukeyArray);
 }

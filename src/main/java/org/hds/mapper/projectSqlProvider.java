@@ -37,12 +37,12 @@ public class projectSqlProvider {
 			sql.VALUES("IsOurModule", "#{IsOurModule,jdbcType=INTEGER}");
 		}
 
-		if (record.getDisconnect() != null) {
-			sql.VALUES("disconnect", "#{disconnect,jdbcType=INTEGER}");
-		}
-
 		if (record.getConnectParameters() != null) {
 			sql.VALUES("ConnectParameters", "#{ConnectParameters,jdbcType=VARCHAR}");
+		}
+
+		if (record.getProjectLimit() != null) {
+			sql.VALUES("projectLimit", "#{projectLimit,jdbcType=LONGVARCHAR}");
 		}
 
 		return sql.toString();
@@ -76,12 +76,12 @@ public class projectSqlProvider {
 			sql.SET("IsOurModule = #{IsOurModule,jdbcType=INTEGER}");
 		}
 
-		if (record.getDisconnect() != null) {
-			sql.SET("disconnect = #{disconnect,jdbcType=INTEGER}");
-		}
-
 		if (record.getConnectParameters() != null) {
 			sql.SET("ConnectParameters = #{ConnectParameters,jdbcType=VARCHAR}");
+		}
+
+		if (record.getProjectLimit() != null) {
+			sql.SET("projectLimit = #{projectLimit,jdbcType=LONGVARCHAR}");
 		}
 
 		sql.WHERE("projectId = #{projectid,jdbcType=VARCHAR}");

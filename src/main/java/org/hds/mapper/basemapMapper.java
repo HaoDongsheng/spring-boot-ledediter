@@ -64,7 +64,7 @@ public interface basemapMapper {
 			"Id, basemapname, projectid,imgtype, basemapclassify, basemaptype,basemapstyle, basemapdata,delindex",
 			"from t_basemap",
 			"where (projectid = #{0} or projectid='0') and imgtype =#{1} and basemapclassify=#{2} and delindex = 0",
-			"order by projectid asc,Id asc" })
+			"order by projectid asc,Id desc", "LIMIT #{3},#{4}" })
 	@Results({ @Result(column = "Id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "basemapname", property = "basemapname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
@@ -74,12 +74,18 @@ public interface basemapMapper {
 			@Result(column = "basemapstyle", property = "basemapstyle", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "basemapdata", property = "basemapdata", jdbcType = JdbcType.LONGVARCHAR),
 			@Result(column = "delindex", property = "delindex", jdbcType = JdbcType.INTEGER) })
-	List<basemap> selectbasemapbyproject(String projectid, Integer imgtype, String basemapclassify);
+	List<basemap> selectbasemapbyproject(String projectid, Integer imgtype, String basemapclassify, int startoffset,
+			int pageSize);
+
+	@Select({ "select", "count(*)", "from t_basemap",
+			"where (projectid = #{0} or projectid='0') and imgtype =#{1} and basemapclassify=#{2} and delindex = 0",
+			"order by projectid asc,Id asc" })
+	int selectbasemapbyprojectCount(String projectid, Integer imgtype, String basemapclassify);
 
 	@Select({ "select",
 			"Id, basemapname, projectid,imgtype, basemapclassify, basemaptype,basemapstyle, basemapdata,delindex",
 			"from t_basemap", "where (projectid = #{0} or projectid='0') and imgtype =#{1} and delindex = 0",
-			"order by projectid asc,Id asc" })
+			"order by projectid asc,Id desc", "LIMIT #{2},#{3}" })
 	@Results({ @Result(column = "Id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "basemapname", property = "basemapname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
@@ -89,7 +95,12 @@ public interface basemapMapper {
 			@Result(column = "basemapstyle", property = "basemapstyle", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "basemapdata", property = "basemapdata", jdbcType = JdbcType.LONGVARCHAR),
 			@Result(column = "delindex", property = "delindex", jdbcType = JdbcType.INTEGER) })
-	List<basemap> selectbasemap2byproject(String projectid, Integer imgtype);
+	List<basemap> selectbasemap2byproject(String projectid, Integer imgtype, int startoffset, int pageSize);
+
+	@Select({ "select", "count(*)", "from t_basemap",
+			"where (projectid = #{0} or projectid='0') and imgtype =#{1} and delindex = 0",
+			"order by projectid asc,Id asc" })
+	int selectbasemap2byprojectCount(String projectid, Integer imgtype);
 
 	@Select({ "select", "distinct(basemapclassify)", "from t_basemap",
 			"where (projectid = #{0} or projectid='0') and imgtype =#{1} and delindex = 0 order by Id asc" })

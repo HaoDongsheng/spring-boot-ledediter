@@ -1,15 +1,33 @@
+var selectProjectid = "";
 $(function(){	
 	initBTabel()
 	
-	getprojectList();
-	
-	getGroup();
+	getprojectList();		
 	
 	getProvinceList();
 	//模态确定按钮
 	$('#btn_group_edit').click(function(){
 		 model_eidtgroup();
 	});
+	
+	$('#group_edit_packLength').change(function(){
+		var group_packLength = parseInt($("#group_edit_packLength").val());
+    	$("#group_edit_batchCount").empty();
+    	switch (group_packLength) {
+		case 768:			
+			for(var i=0;i<5;i++)
+				{
+				$("#group_edit_batchCount").append("<option value='"+ (i+1)*8 +"'>"+ (i+1)*8 +"</option>")
+				}
+			break;
+		case 1024:			
+			for(var i=0;i<5;i++)
+				{
+				$("#group_edit_batchCount").append("<option value='"+ (i+1)*6 +"'>"+ (i+1)*6 +"</option>")
+				}
+			break;
+		}    		
+	});	
 	
 	$('#select_ProvinceList').change(function(){
 		getCityList($('#select_ProvinceList').val());
@@ -71,22 +89,19 @@ $(function(){
 	    });
 	});	
 	
+	$('#select_project').change(function() {
+		
+		selectProjectid = $('#select_project').val();
+		getGroup($('#select_project').val());
+	});
+	
 	$('#btn_table_add').click(function(){
 
 		$('#group_eidt_name').val('');
 		$('#group_eidt_width').val(128);
 		$('#group_eidt_height').val(32);	
 		
-		$("#group_edit_enable").parents('.col-md-6').css('display','inline');
-		
-		if($('#group_edit_project option').length > 1)
-		{
-			$('#group_edit_project').parents('.col-md-6').css('display','inline');			
-		}
-		else
-		{
-			$('#group_edit_project').parents('.col-md-6').css('display','none');			
-		}
+		$("#group_edit_enable").parents('.col-md-6').css('display','inline');		
 		
 		$('#modal_group_edit').attr("data-type",0);
 		$('#modal_group_edit').modal('show');				
@@ -128,7 +143,7 @@ $(function(){
 				ProvinceName:"北京",
 				CityName:"北京",
 				BrightnessTimeArray:$("#time1").val()+"|"+$("#time2").val()+"|"+$("#time3").val()+"|"+$("#time4").val()+"|"+$("#time5").val()+"|"+$("#time6").val()+"|"+$("#time7").val()+"|"+$("#time8").val(),
-				BrightnessValueArray:$("#brightness1").val()+"|"+$("#brightness2").val()+"|"+$("#brightness3").val()+"|"+$("#brightness4").val()+"|"+$("#brightness5").val()+"|"+$("#brightness6").val()+"|"+$("#brightness7").val()+"|"+$("#brightness8").val()				
+				BrightnessValueArray:$("#brightnessB1").val()+"|"+$("#brightnessB2").val()+"|"+$("#brightnessB3").val()+"|"+$("#brightnessB4").val()+"|"+$("#brightnessB5").val()+"|"+$("#brightnessB6").val()+"|"+$("#brightnessB7").val()+"|"+$("#brightnessB8").val()				
 			};
 		set_parameter(parameter);
 	});
@@ -182,6 +197,10 @@ function initBTabel()
         }, {
             field: 'maxPackLength',
             title: '最大包长'
+            
+        }, {
+            field: 'batchCount',
+            title: '批量数'
             
         }, {
             field: 'group_screenwidth',
@@ -252,10 +271,27 @@ window.operateEvents = {
 			
 			$('#group_edit_name').val(row.group_name);
 			$('#group_edit_packLength').val(row.maxPackLength);
+			
+			$("#group_edit_batchCount").empty();
+	    	switch (row.maxPackLength) {
+			case 768:			
+				for(var i=0;i<5;i++)
+					{
+					$("#group_edit_batchCount").append("<option value='"+ (i+1)*8 +"'>"+ (i+1)*8 +"</option>")
+					}
+				break;
+			case 1024:			
+				for(var i=0;i<5;i++)
+					{
+					$("#group_edit_batchCount").append("<option value='"+ (i+1)*6 +"'>"+ (i+1)*6 +"</option>")
+					}
+				break;
+			}
+	    	
+			$('#group_edit_batchCount').val(row.batchCount);
 			$('#group_edit_width').val(row.group_screenwidth);
 			$('#group_edit_height').val(row.group_screenheight);	
-						
-			$('#group_edit_project').parents('.col-md-6').css('display','none');
+									
 			$("#group_edit_enable").parents('.col-md-6').css('display','none');
         	$('#modal_group_edit').attr("data-type",row.group_sn);
         	$('#modal_group_edit').attr("data-index",index);
@@ -312,42 +348,81 @@ window.operateEvents = {
 //获取项目列表
 function getprojectList()
 {
-	$.ajax({  
-        url:"/getProjectListbyuser",          
-        type:"post",  
-        dataType:"json", 
-        data:{
-        	adminInfo:localStorage.getItem("adminInfo")
-        	},
-        success:function(data)  
-        {       	  
-        	if(data!=null && data.length>0)    		
-        		{    
-        			$('#group_edit_project').empty();
-	        		for(var i=0;i<data.length;i++)
-					{	
-	        			var project = data[i];
-	        			var projectId = project.projectid;
-	        			var projectName = project.projectname;
-	        			var option="";
-        				if(i==0)
-						{
-        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";						
-						}
-        				else
-						{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
-        				
-	        			$('#group_edit_project').append(option);
-					}	        		
-        		}        	
-        },  
-        error: function() { 
-        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
-          }  
-    });
+	if($('#select_project').length>0)
+		{
+		$.ajax({  
+	        url:"/getProjectListbyuser",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null && data.length>0)    		
+	        		{    
+	        			$('#select_project').empty();
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{
+	        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";		
+	        					
+	        					getGroup(projectId);
+	        					selectProjectid = projectId;
+							}
+	        				else
+							{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
+	        				
+		        			$('#select_project').append(option);
+						}	        		
+	        		}        	
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
+		}
+	else
+		{
+		$.ajax({  
+	        url:"/getProjectListbyuser",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null && data.length>0)    		
+	        		{    	        			
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{		        					
+	        					getGroup(projectId);
+	        					selectProjectid = projectId;
+	        					break;
+							}
+						}	        		
+	        		}        	
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
+		}
 }
 //获取分组
-function getGroup()
+function getGroup(selectProjectid)
 {
 	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
 	if(grpsinfo==null || grpsinfo.length<=0)
@@ -373,16 +448,21 @@ function getGroup()
 	        				var grpname = grpsinfo[i].grpname;
 	        				var screenwidth = grpsinfo[i].screenwidth;
 	        				var screenheight = grpsinfo[i].screenheight;
-	        					        				
-	        				var item={
-	        						group_sn:grpid,
-	        						group_name:grpname,
-	        						maxPackLength:grpsinfo[i].maxPackLength,
-	        						group_screenwidth:screenwidth,
-	        						group_screenheight:screenheight
-		        			};
-		        			
-		        			ArrayTable.push(item);
+	        				var projectid = grpsinfo[i].projectid;
+	        					 
+	        				if(selectProjectid == projectid)
+	        					{
+		        				var item={
+		        						group_sn:grpid,
+		        						group_name:grpname,
+		        						maxPackLength:grpsinfo[i].maxPackLength,
+		        						batchCount:grpsinfo[i].batchCount,
+		        						group_screenwidth:screenwidth,
+		        						group_screenheight:screenheight
+			        			};
+			        			
+			        			ArrayTable.push(item);
+	        					}
 	        			}
 	        			$("#groupManger_table").bootstrapTable('load', ArrayTable);        			
 	        		}
@@ -405,16 +485,21 @@ function getGroup()
 				var grpname = grpsinfo[i].grpname;
 				var screenwidth = grpsinfo[i].screenwidth;
 				var screenheight = grpsinfo[i].screenheight;	
-				
-				var item={
-						group_sn:grpid,
-						group_name:grpname,
-						maxPackLength:grpsinfo[i].maxPackLength,
-						group_screenwidth:screenwidth,
-						group_screenheight:screenheight
-    			};
-    			
-    			ArrayTable.push(item);
+				var projectid = grpsinfo[i].projectid;
+				 
+				if(selectProjectid == projectid)
+					{
+					var item={
+							group_sn:grpid,
+							group_name:grpname,
+							maxPackLength:grpsinfo[i].maxPackLength,
+							batchCount:grpsinfo[i].batchCount,
+							group_screenwidth:screenwidth,
+							group_screenheight:screenheight
+	    			};
+	    			
+	    			ArrayTable.push(item);
+					}
 			}
 			
 			$("#groupManger_table").bootstrapTable('load', ArrayTable);
@@ -540,6 +625,10 @@ function getSelectCityList(ProvinceName,CityName)
 //编辑模态确定按钮
 function model_eidtgroup()
 {
+	if(selectProjectid=="" || selectProjectid==null)
+		{
+		alertMessage(1, "警告", "项目id不能为空!");return;
+		}
 	var grpname = $('#group_edit_name').val();
 	var grpwidth = $('#group_edit_width').val();
 	var grpheight = $('#group_edit_height').val();
@@ -560,8 +649,9 @@ function model_eidtgroup()
 	        type:"post", 
 	        data:{	        	
 	        	grpname:grpname,
-	        	projectid:$('#group_edit_project').val(),
+	        	projectid:selectProjectid,
 	        	packLength:parseInt($('#group_edit_packLength').val()),
+	        	batchCount:parseInt($('#group_edit_batchCount').val()),
 	        	grpwidth:grpwidth,
 	        	grpheight:grpheight,
 	        	grpheight:grpheight,
@@ -579,6 +669,7 @@ function model_eidtgroup()
 	        						group_sn:data.groupid,
 	        						group_name:grpname,
 	        						maxPackLength:parseInt($('#group_edit_packLength').val()),
+	        						batchCount:parseInt($('#group_edit_batchCount').val()),
 	        						group_screenwidth:grpwidth,
 	        						group_screenheight:grpheight
 		        			};
@@ -594,6 +685,8 @@ function model_eidtgroup()
 		        			grpitem.screenwidth=grpwidth;
 		        			grpitem.screenheight=grpheight;
 		        			grpitem.maxPackLength=parseInt($('#group_edit_packLength').val());
+		        			grpitem.batchCount=parseInt($('#group_edit_batchCount').val());
+		        			grpitem.projectid=selectProjectid;
 		        			grpitem.pubid=100;
 		        			grpitem.plpubid=100;
 		        			grpitem.delindex=0;
@@ -620,6 +713,7 @@ function model_eidtgroup()
 	        	grpid:parseInt($("#modal_group_edit").attr("data-type")),
 	        	grpname:grpname,
 	        	packLength:parseInt($('#group_edit_packLength').val()),
+	        	batchCount:parseInt($('#group_edit_batchCount').val()),
 	        	grpwidth:grpwidth,
 	        	grpheight:grpheight,
 	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
@@ -634,6 +728,7 @@ function model_eidtgroup()
 		        			var item={		        					
 		        					group_name:grpname,
 		        					maxPackLength:parseInt($('#group_edit_packLength').val()),
+		        					batchCount:parseInt($('#group_edit_batchCount').val()),
 		        					group_screenwidth:grpwidth,		        					
 		        					group_screenheight:grpheight
 		        			};		        			
@@ -652,6 +747,7 @@ function model_eidtgroup()
 		        					{		        					
 				        				grpsinfo[i].grpname=grpname;
 				        				grpsinfo[i].maxPackLength=parseInt($('#group_edit_packLength').val());
+				        				grpsinfo[i].batchCount=parseInt($('#group_edit_batchCount').val());
 				        				grpsinfo[i].screenwidth=grpwidth;
 				        				grpsinfo[i].screenheight=grpheight;
 				        				break;

@@ -15,6 +15,10 @@ import java.util.Random;
 import sun.font.FontDesignMetrics;
 
 public class GJ_codingCls {
+
+//	@Value("${package.type}")
+//	private int packageType;
+
 	private final int Fixedbyte = 54;// 协议体中，除数据内容以外的字节。
 	private byte[] byte10 = new byte[10];
 	private boolean JM = false;
@@ -261,7 +265,7 @@ public class GJ_codingCls {
 	/// </summary>
 	/// <param name="bytedata"></param>
 	/// <returns></returns>
-	private byte[] GJ_FanZhuanYi(byte[] bytedata) {
+	public byte[] GJ_FanZhuanYi(byte[] bytedata) {
 		List<Byte> tByte = new ArrayList<Byte>();
 		tByte.add(intTobyte(0x7E));
 		for (int i = 1; i < bytedata.length - 1; i++) {
@@ -430,10 +434,112 @@ public class GJ_codingCls {
 			mylist.add(intTobyte(playlist.getM_crc() % 256));//
 
 			return GJ_SplitData(type, version, "alst", playlist.getM_id(), ListTobyte(mylist));
+
 		} catch (Exception e) {
 			return null;
 		}
+	}
 
+	/// <summary>
+	/// 添加播放列表alst
+	/// </summary>
+	public byte[] GJ_AddPlayListSingle(int type, int version, GJ_Playlistcls playlist) {
+		List<Byte> mylist = new ArrayList<Byte>();
+		try {
+			byte[] tt = new byte[] {};
+
+			mylist.add(intTobyte(playlist.getM_id() / 256));// 列表id
+			mylist.add(intTobyte(playlist.getM_id() % 256));
+
+			mylist.add(intTobyte(0));// 总长度4byte
+			mylist.add(intTobyte(0));// 总长度4byte
+
+			mylist.add(playlist.getM_level());// 优先级
+			byteArrayInsList(mylist, byte10);// 保留10个字节
+			byteArrayInsList(mylist, byteLife(playlist.getM_lifestart()));// 生命周期开始
+			byteArrayInsList(mylist, byteLife(playlist.getM_lifeend()));// 生命周期结束
+			mylist.add(intTobyte(playlist.getM_Timequantum().size() % 256));// 时间段总数 以分为单位 4字节
+			for (int i = 0; i < playlist.getM_Timequantum().size(); i++) {
+				int tvalue = Integer.parseInt(playlist.getM_Timequantum().get(i).getM_playstart());// 开始
+				mylist.add(intTobyte(tvalue / 256));
+				mylist.add(intTobyte(tvalue % 256));
+				tvalue = Integer.parseInt(playlist.getM_Timequantum().get(i).getM_playend());// 结束
+				if (tvalue == 0) {
+					tvalue = 24 * 60;
+				}
+				mylist.add(intTobyte(tvalue / 256));
+				mylist.add(intTobyte(tvalue % 256));
+			}
+			mylist.add(playlist.getM_Scheduling().getM_mode());// 优先级
+
+			switch (playlist.getM_Scheduling().getM_mode()) {
+			case 0:// 0x00按指定id顺序排挡。排挡内容：广告总数+广告id集合。
+				byteArrayInsList(mylist, byte10);// 保留10个字节
+				mylist.add(intTobyte(playlist.getM_Scheduling().getM_Loop_adidlist().size() / 256));// 广告总数
+				mylist.add(intTobyte(playlist.getM_Scheduling().getM_Loop_adidlist().size() % 256));// 广告总数
+				for (int i = 0; i < playlist.getM_Scheduling().getM_Loop_adidlist().size(); i++) {
+					mylist.add(intTobyte(playlist.getM_Scheduling().getM_Loop_adidlist().get(i).getM_ADid() / 256));// 广告id
+					mylist.add(intTobyte(playlist.getM_Scheduling().getM_Loop_adidlist().get(i).getM_ADid() % 256));
+					byteArrayInsList(mylist,
+							byteLife(playlist.getM_Scheduling().getM_Loop_adidlist().get(i).getM_ADidlifestart()));// 生命周期开始
+					byteArrayInsList(mylist,
+							byteLife(playlist.getM_Scheduling().getM_Loop_adidlist().get(i).getM_ADidlifeend()));// 生命周期结束
+					// tt = intToByteArray(playlist.getM_Scheduling().getM_Loop_adidlist().get(i));
+					// byteArrayInsList(mylist, tt);
+				}
+				break;
+			case 1:// 0x01模板排挡：
+				byteArrayInsList(mylist, byte10);// 保留10个字节
+				tt = intToByteArray(playlist.getM_Scheduling().getM_Template_cycle());// 周期
+				byteArrayInsList(mylist, tt);
+				mylist.add(intTobyte(playlist.getM_Scheduling().getM_Template_adlist().size() / 256));// 广告总数
+				mylist.add(intTobyte(playlist.getM_Scheduling().getM_Template_adlist().size() % 256));// 广告总数
+				for (int i = 0; i < playlist.getM_Scheduling().getM_Template_adlist().size(); i++) {
+					mylist.add(intTobyte(playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_adid() / 256));// 广告id
+					mylist.add(intTobyte(playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_adid() % 256));//
+
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+
+					byteArrayInsList(mylist,
+							byteLife(playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_ADlifestart()));// 生命周期开始
+					byteArrayInsList(mylist,
+							byteLife(playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_ADlifeend()));// 生命周期结束
+
+					tt = intToByteArray(playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_adplaytime());// 广告播放时长
+					byteArrayInsList(mylist, tt);
+					mylist.add(intTobyte(0));// 播放时间偏移量总数
+					mylist.add(intTobyte(
+							playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_timeoffset().size() % 256));// 播放时间偏移量总数
+					for (int j = 0; j < playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_timeoffset()
+							.size(); j++) {
+						tt = intToByteArray(Integer.parseInt(
+								playlist.getM_Scheduling().getM_Template_adlist().get(i).getM_timeoffset().get(j)));// 偏移量
+						byteArrayInsList(mylist, tt);
+					}
+				}
+
+				break;
+			default:
+				return null;
+			}
+
+			// 更改长度值
+			mylist.set(2, intTobyte((mylist.size() + 2) / 256));
+			mylist.set(3, intTobyte((mylist.size() + 2) % 256));
+
+			GJ_CRCcls crc = new GJ_CRCcls();// crc校验
+			playlist.setM_crc(crc.CRC_16(ListTobyte(mylist)));
+			mylist.add(intTobyte(playlist.getM_crc() / 256));//
+			mylist.add(intTobyte(playlist.getM_crc() % 256));//
+
+			return ListTobyte(mylist);
+
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/// <summary>
@@ -556,6 +662,107 @@ public class GJ_codingCls {
 			mylist.add(intTobyte(adscript.getM_crc() % 256));//
 
 			return GJ_SplitData(type, version, "aadv", adscript.getM_adid(), ListTobyte(mylist));
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// 添加广告
+	/// </summary>
+	public byte[] GJ_AddAdScriptSingle(int type, int version, GJ_ADscriptcls adscript) {
+		List<Byte> mylist = new ArrayList<Byte>();
+		try {
+			byte[] tt = new byte[] {};
+
+			mylist.add(intTobyte(adscript.getM_adid() / 256));// 广告id
+			mylist.add(intTobyte(adscript.getM_adid() % 256));//
+
+			mylist.add(intTobyte(0));// 总长度4byte
+			mylist.add(intTobyte(0));// 总长度4byte
+			mylist.add(intTobyte(0));// 总长度4byte
+			mylist.add(intTobyte(0));// 总长度4byte
+
+			mylist.add(adscript.getM_adtype());// 广告类型
+			byteArrayInsList(mylist, byte10);// 保留10个字节
+
+			mylist.add(intTobyte(adscript.getM_basemapwidth() / 256));// 底图宽
+			mylist.add(intTobyte(adscript.getM_basemapwidth() % 256));//
+			mylist.add(intTobyte(adscript.getM_basemapheight() / 256));// 底图高
+			mylist.add(intTobyte(adscript.getM_basemapheight() % 256));//
+			mylist.add(adscript.getM_framemode());// 边框样式
+			mylist.add(adscript.getM_framespeed());// 边框速度
+			mylist.add(adscript.getM_transparency());// 透明度
+			byteArrayInsList(mylist, byte10);// 保留10个字节
+
+			int basemaplen = 0;
+
+			switch (adscript.getM_basemalistmode()) {
+			case 1:// 全彩3字节
+				basemaplen = (adscript.getM_basemapwidth() * adscript.getM_basemapheight() + 3) * 3
+						* adscript.getM_basemalist().size();
+				break;
+			case 2:// 纯色
+				basemaplen = ((adscript.getM_basemapwidth() * adscript.getM_basemapheight() / 8) + 3)
+						* adscript.getM_basemalist().size();
+				break;
+			case 3:// 全彩2字节
+				basemaplen = (adscript.getM_basemapwidth() * adscript.getM_basemapheight() + 3) * 2
+						* adscript.getM_basemalist().size();
+				break;
+			default:
+				break;
+			}
+
+			tt = intToByteArray(basemaplen);
+			byteArrayInsList(mylist, tt);
+			mylist.add(intTobyte(adscript.getM_basemalist().size() % 256));// 底图总数
+
+			for (int i = 0; i < adscript.getM_basemalist().size(); i++) {
+				switch ((int) (adscript.getM_basemalistmode())) {
+				case 1:// 全彩3字节
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					byteArrayInsList(mylist, picturetobyte(adscript.getM_basemalist().get(i)));// 读图片
+					break;
+				case 2:// 纯色
+					byteArrayInsList(mylist, picturetobyteCUNSE(adscript.getM_basemalist().get(i)));
+					break;
+				case 3:// 全彩2字节
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					mylist.add(intTobyte(0));
+					byteArrayInsList(mylist, picturetobyte2byte(adscript.getM_basemalist().get(i)));
+					break;
+				default:
+					break;
+				}
+			}
+
+			mylist.add(intTobyte(adscript.getM_HDRmode()));// 播放模式
+			mylist.add(intTobyte(adscript.getM_playtime() / 256));// 播放总时长
+			mylist.add(intTobyte(adscript.getM_playtime() % 256));//
+			mylist.add(intTobyte(adscript.getM_aditem().size() / 256));// 显示项总数
+			mylist.add(intTobyte(adscript.getM_aditem().size() % 256));//
+			for (int i = 0; i < adscript.getM_aditem().size(); i++) {
+				byteArrayInsList(mylist, itemtobyte(adscript.getM_aditem().get(i)));// 显示项
+			}
+
+			tt = intToByteArray(mylist.size() + 2);// 更改长度值
+			mylist.set(2, tt[0]);
+			mylist.set(3, tt[1]);
+			mylist.set(4, tt[2]);
+			mylist.set(5, tt[3]);
+
+			GJ_CRCcls crc = new GJ_CRCcls();// crc校验
+			adscript.setM_crc(crc.CRC_16(ListTobyte(mylist)));
+			mylist.add(intTobyte(adscript.getM_crc() / 256));//
+			mylist.add(intTobyte(adscript.getM_crc() % 256));//
+
+			return ListTobyte(mylist);
+
 		} catch (Exception e) {
 			return null;
 		}

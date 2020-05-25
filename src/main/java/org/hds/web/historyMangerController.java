@@ -83,8 +83,26 @@ public class historyMangerController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/RefreshHistoryData", method = RequestMethod.POST)
+	public JSONObject RefreshHistoryData(@RequestParam("groupid") int groupid,
+			@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONObject JSONObject = historyMangerSer.gethistorybyDate(startDate, endDate, groupid);
+
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/RefreshHistoryData===", "/RefreshHistoryData",
+					logger, false);
+			return JSONObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/RefreshHistoryData 异常:" + e.getMessage() + "===",
+					"/RefreshHistoryData", logger, false);
+			return null;
+		}
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/getplaylistinfo", method = RequestMethod.POST)
-	public JSONObject getplaylistinfo(@RequestParam("playlistsn") int playlistsn,
+	public JSONObject getplaylistinfo(@RequestParam("playlistsn") String playlistsn,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = historyMangerSer.getplaylistinfobysn(playlistsn);

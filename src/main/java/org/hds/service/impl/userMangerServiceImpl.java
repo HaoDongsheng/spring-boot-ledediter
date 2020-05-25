@@ -54,28 +54,20 @@ public class userMangerServiceImpl implements IuserMangerService {
 	}
 
 	@Override
-	public JSONArray getUserList(JSONObject adminInfoJsonObject) {
+	public JSONArray getUserList(String projectid, JSONObject adminInfoJsonObject) {
 		try {
 			JSONArray JsonArray = null;
 
-			int isSuperuser = adminInfoJsonObject.getIntValue("issuperuser");
-			if (isSuperuser == 0)// 普通用户
-			{
-				int adminid = adminInfoJsonObject.getIntValue("adminid");
-				int adminlevel = adminInfoJsonObject.getIntValue("adminlevel");
-				List<user> adminlist = new ArrayList<user>();
-				if (adminlevel == 1) {
-					adminlist = adminMapper.selectByprojectid(adminInfoJsonObject.getString("projectid"));
-				} else {
-					adminlist.add(adminMapper.selectByPrimaryKey(adminid));
-				}
-				// List<user> adminlist = adminMapper.selectByParentid(adminid);
-				JsonArray = JSONArray.parseArray(JSON.toJSONString(adminlist));
-			} else// 超级用户
-			{
-				List<user> adminlist = adminMapper.selectAll();
-				JsonArray = JSONArray.parseArray(JSON.toJSONString(adminlist));
+			int adminid = adminInfoJsonObject.getIntValue("adminid");
+			int adminlevel = adminInfoJsonObject.getIntValue("adminlevel");
+			List<user> adminlist = new ArrayList<user>();
+			if (adminlevel < 2) {
+				adminlist = adminMapper.selectByprojectid(projectid);
+			} else {
+				adminlist.add(adminMapper.selectByPrimaryKey(adminid));
 			}
+			// List<user> adminlist = adminMapper.selectByParentid(adminid);
+			JsonArray = JSONArray.parseArray(JSON.toJSONString(adminlist));
 
 			return JsonArray;
 
@@ -211,6 +203,43 @@ public class userMangerServiceImpl implements IuserMangerService {
 			} else {
 				jObject.put("result", "fail");
 				jObject.put("resultMessage", "删除用户失败");
+			}
+
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject ChangPassword(int adminid, String oldPwd, String newPwd) {
+		JSONObject jObject = new JSONObject();
+		try {
+			user user = adminMapper.selectByPrimaryKey(adminid);
+
+			String hashAlgorithmNameString = "MD5";
+			Object credentials = oldPwd;
+			Object salt = ByteSource.Util.bytes(user.getAdminname());
+			int hashIterations = 1024;
+			Object result = new SimpleHash(hashAlgorithmNameString, credentials, salt, hashIterations);
+
+			if (result.toString().equals(user.getAdminpwd())) {
+				credentials = newPwd;
+				result = new SimpleHash(hashAlgorithmNameString, credentials, salt, hashIterations);
+				String codeString = Encryption.encode(newPwd);
+
+				user.setAdminpwd(result.toString());
+				user.setAdminRemarks(codeString);
+
+				adminMapper.updateByPrimaryKeySelective(user);
+
+				jObject.put("result", "success");
+			} else {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "旧密码不正确!");
 			}
 
 			return jObject;

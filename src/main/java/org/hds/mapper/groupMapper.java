@@ -21,9 +21,10 @@ public interface groupMapper {
 	@Delete({ "delete from t_group", "where projectid = #{0}" })
 	int deleteByprojectid(String projectid);
 
-	@Insert({ "insert into t_group (groupid, groupName, maxPackLength,Para2_User,Para3_TimeLight,Para1_Basic,",
+	@Insert({
+			"insert into t_group (groupid, groupName, maxPackLength,batchCount,Para2_User,Para3_TimeLight,Para1_Basic,",
 			"screenwidth,screenheight,projectid,pubid, plpubid, DelIndex)",
-			"values (#{groupid,jdbcType=INTEGER}, #{groupname,jdbcType=VARCHAR}, #{maxPackLength,jdbcType=INTEGER}, #{Para2_User,jdbcType=VARCHAR}, #{Para3_TimeLight,jdbcType=VARCHAR}, #{Para1_Basic,jdbcType=VARCHAR},",
+			"values (#{groupid,jdbcType=INTEGER}, #{groupname,jdbcType=VARCHAR}, #{maxPackLength,jdbcType=INTEGER}, #{batchCount,jdbcType=INTEGER}, #{Para2_User,jdbcType=VARCHAR}, #{Para3_TimeLight,jdbcType=VARCHAR}, #{Para1_Basic,jdbcType=VARCHAR},",
 			"#{screenwidth,jdbcType=INTEGER},#{screenheight,jdbcType=INTEGER},#{projectid,jdbcType=VARCHAR},#{pubid,jdbcType=INTEGER},#{plpubid,jdbcType=INTEGER}, #{delindex,jdbcType=INTEGER})" })
 	@Options(useGeneratedKeys = true, keyProperty = "groupid", keyColumn = "groupid") // 添加该行，product中的id将被自动添加
 	int insert(group record);
@@ -32,11 +33,12 @@ public interface groupMapper {
 	int insertSelective(group record);
 
 	@Select({ "select",
-			"groupid, groupName,maxPackLength,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight, projectid, pubid, plpubid, DelIndex",
+			"groupid, groupName,maxPackLength,batchCount,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight, projectid, pubid, plpubid, ptMode, displayMode, DelIndex",
 			"from t_group", "where groupid = #{groupid,jdbcType=INTEGER}" })
 	@Results({ @Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "groupName", property = "groupname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "maxPackLength", property = "maxPackLength", jdbcType = JdbcType.INTEGER),
+			@Result(column = "batchCount", property = "batchCount", jdbcType = JdbcType.INTEGER),
 			@Result(column = "Para2_User", property = "Para2_User", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para3_TimeLight", property = "Para3_TimeLight", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para1_Basic", property = "Para1_Basic", jdbcType = JdbcType.VARCHAR),
@@ -45,15 +47,18 @@ public interface groupMapper {
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER),
 			@Result(column = "plpubid", property = "plpubid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ptMode", property = "ptMode", jdbcType = JdbcType.INTEGER),
+			@Result(column = "displayMode", property = "displayMode", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "DelIndex", property = "delindex", jdbcType = JdbcType.INTEGER) })
 	group selectByPrimaryKey(Integer groupid);
 
 	@Select({ "select",
-			"groupid, groupName,maxPackLength,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight, projectid, pubid, plpubid, DelIndex",
+			"groupid, groupName,maxPackLength,batchCount,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight, projectid, pubid, plpubid, ptMode, displayMode, DelIndex",
 			"from t_group", "where groupName = #{0}" })
 	@Results({ @Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "groupName", property = "groupname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "maxPackLength", property = "maxPackLength", jdbcType = JdbcType.INTEGER),
+			@Result(column = "batchCount", property = "batchCount", jdbcType = JdbcType.INTEGER),
 			@Result(column = "Para2_User", property = "Para2_User", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para3_TimeLight", property = "Para3_TimeLight", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para1_Basic", property = "Para1_Basic", jdbcType = JdbcType.VARCHAR),
@@ -62,15 +67,18 @@ public interface groupMapper {
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER),
 			@Result(column = "plpubid", property = "plpubid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ptMode", property = "ptMode", jdbcType = JdbcType.INTEGER),
+			@Result(column = "displayMode", property = "displayMode", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "DelIndex", property = "delindex", jdbcType = JdbcType.INTEGER) })
 	group selectBygroupName(String groupName);
 
 	@Select({ "select",
-			"groupid, groupName,maxPackLength,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight,projectid, pubid, plpubid, DelIndex",
+			"groupid, groupName,maxPackLength,batchCount,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight,projectid, pubid, plpubid, ptMode, displayMode, DelIndex",
 			"from t_group", "where delIndex = 0" })
 	@Results({ @Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "groupName", property = "groupname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "maxPackLength", property = "maxPackLength", jdbcType = JdbcType.INTEGER),
+			@Result(column = "batchCount", property = "batchCount", jdbcType = JdbcType.INTEGER),
 			@Result(column = "Para2_User", property = "Para2_User", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para3_TimeLight", property = "Para3_TimeLight", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para1_Basic", property = "Para1_Basic", jdbcType = JdbcType.VARCHAR),
@@ -79,15 +87,18 @@ public interface groupMapper {
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER),
 			@Result(column = "plpubid", property = "plpubid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ptMode", property = "ptMode", jdbcType = JdbcType.INTEGER),
+			@Result(column = "displayMode", property = "displayMode", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "DelIndex", property = "delindex", jdbcType = JdbcType.INTEGER) })
 	List<group> selectAll();
 
 	@Select({ "select",
-			"groupid, groupName,maxPackLength,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight,projectid, pubid, plpubid, DelIndex",
+			"groupid, groupName,maxPackLength,batchCount,Para2_User,Para3_TimeLight,Para1_Basic,screenwidth,screenheight,projectid, pubid, plpubid, ptMode, displayMode, DelIndex",
 			"from t_group", "where delIndex = 0 and projectid=#{0}" })
 	@Results({ @Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER, id = true),
 			@Result(column = "groupName", property = "groupname", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "maxPackLength", property = "maxPackLength", jdbcType = JdbcType.INTEGER),
+			@Result(column = "batchCount", property = "batchCount", jdbcType = JdbcType.INTEGER),
 			@Result(column = "Para2_User", property = "Para2_User", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para3_TimeLight", property = "Para3_TimeLight", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "Para1_Basic", property = "Para1_Basic", jdbcType = JdbcType.VARCHAR),
@@ -96,6 +107,8 @@ public interface groupMapper {
 			@Result(column = "projectid", property = "projectid", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER),
 			@Result(column = "plpubid", property = "plpubid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "ptMode", property = "ptMode", jdbcType = JdbcType.INTEGER),
+			@Result(column = "displayMode", property = "displayMode", jdbcType = JdbcType.VARCHAR),
 			@Result(column = "DelIndex", property = "delindex", jdbcType = JdbcType.INTEGER) })
 	List<group> selectbyProjectid(String projectid);
 
@@ -119,16 +132,20 @@ public interface groupMapper {
 	@Select({ "select", "count(*)", "from t_group", "where groupName = #{0} and groupid <> #{1}" })
 	int selectCountByNameid(String grpName, int grpid);
 
+	@Select({ "select", "count(*)", "from t_group", "where projectid = #{0} and groupid = #{1}" })
+	int selectCountBypgid(String projectid, int grpid);
+
 	@UpdateProvider(type = groupSqlProvider.class, method = "updateByPrimaryKeySelective")
 	int updateByPrimaryKeySelective(group record);
 
 	@Update({ "update t_group", "set groupName = #{groupname,jdbcType=VARCHAR},",
-			"maxPackLength = #{maxPackLength,jdbcType=INTEGER},", "Para2_User = #{Para2_User,jdbcType=VARCHAR},",
-			"Para3_TimeLight = #{Para3_TimeLight,jdbcType=VARCHAR},", "Para1_Basic = #{Para1_Basic,jdbcType=VARCHAR},",
-			"screenwidth = #{screenwidth,jdbcType=INTEGER},", "screenheight = #{screenheight,jdbcType=INTEGER},",
-			"projectid = #{projectid,jdbcType=VARCHAR},", "pubid = #{pubid,jdbcType=INTEGER},",
-			"plpubid = #{plpubid,jdbcType=INTEGER},", "DelIndex = #{delindex,jdbcType=INTEGER}",
-			"where groupid = #{groupid,jdbcType=INTEGER}" })
+			"maxPackLength = #{maxPackLength,jdbcType=INTEGER},", "batchCount = #{batchCount,jdbcType=INTEGER},",
+			"Para2_User = #{Para2_User,jdbcType=VARCHAR},", "Para3_TimeLight = #{Para3_TimeLight,jdbcType=VARCHAR},",
+			"Para1_Basic = #{Para1_Basic,jdbcType=VARCHAR},", "screenwidth = #{screenwidth,jdbcType=INTEGER},",
+			"screenheight = #{screenheight,jdbcType=INTEGER},", "projectid = #{projectid,jdbcType=VARCHAR},",
+			"pubid = #{pubid,jdbcType=INTEGER},", "plpubid = #{plpubid,jdbcType=INTEGER},",
+			"ptMode = #{ptMode,jdbcType=INTEGER},", "displayMode = #{displayMode,jdbcType=VARCHAR},",
+			"DelIndex = #{delindex,jdbcType=INTEGER}", "where groupid = #{groupid,jdbcType=INTEGER}" })
 	int updateByPrimaryKey(group record);
 
 	@Update({ "update t_group", "set pubid = #{pubid,jdbcType=INTEGER}",

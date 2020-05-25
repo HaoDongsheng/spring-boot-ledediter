@@ -38,10 +38,11 @@ public class userMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/getUserList", method = RequestMethod.POST)
-	public JSONArray getUserList(@RequestParam("adminInfo") String adminInfo, HttpServletRequest request) {
+	public JSONArray getUserList(@RequestParam("projectid") String projectid,
+			@RequestParam("adminInfo") String adminInfo, HttpServletRequest request) {
 		JSONObject adminInfoJsonObject = JSONObject.parseObject(adminInfo);
 		try {
-			JSONArray JsonArray = userMangerSer.getUserList(adminInfoJsonObject);
+			JSONArray JsonArray = userMangerSer.getUserList(projectid, adminInfoJsonObject);
 
 			operateLog.writeLog(adminInfoJsonObject.getString("adminname"), 0,
 					"===用户:" + adminInfoJsonObject.getString("adminname") + "/getUserList===", "/getUserList", logger,
@@ -146,8 +147,27 @@ public class userMangerController {
 			return JObject;
 		} catch (Exception e) {
 			operateLog.writeLog(adminname, 0,
-					"===用户:" + adminname + "/EditUser 删除用户id:" + adminid + " 异常:" + e.getMessage() + "===",
+					"===用户:" + adminname + "/DeleteUser 删除用户id:" + adminid + " 异常:" + e.getMessage() + "===",
 					"/DeleteUser", logger, true);
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/ChangPassword", method = RequestMethod.POST)
+	public JSONObject DeleteUser(@RequestParam("adminid") int adminid, @RequestParam("oldPwd") String oldPwd,
+			@RequestParam("newPwd") String newPwd, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
+		try {
+			JSONObject JObject = userMangerSer.ChangPassword(adminid, oldPwd, newPwd);
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + " 修改用户id:" + adminid + " 密码 返回结果:" + JObject.toJSONString() + "===",
+					"/ChangPassword", logger, true);
+			return JObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + "/ChangPassword 修改用户id:" + adminid + " 密码 异常:" + e.getMessage() + "===",
+					"/ChangPassword", logger, true);
 			return null;
 		}
 	}

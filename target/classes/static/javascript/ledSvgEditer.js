@@ -10,8 +10,7 @@ var ue;
 var scrollValue=0;
 var ispermission=true;
 
-$(function(){		
-	
+$(function(){				
 	console.log($(window).height()); //浏览器时下窗口可视区域高度
 	console.log($(document).height()); //浏览器时下窗口文档的高度 
 	console.log($(document.body).height());//浏览器时下窗口文档body的高度
@@ -248,8 +247,9 @@ function initpage()
 	});
 
 	$("#editItem").click(function(){
-		var selcet_div = parseInt($("#select_div").val());
-		switch(selcet_div)
+//		var selcet_div = parseInt($("#select_div").val());
+		var dataType = parseInt($("#myModalEdit").attr("data-type"));
+		switch(dataType)
 		{
 		case 0/*图文*/:{
 			if(selectpageid!=0 && itemmap.hasOwnProperty(selectpageid) && selectitemid!=0)
@@ -859,6 +859,18 @@ function getadvListbyGrpid(grpid)
 			{
 				var screenwidth=grpsinfo[i].screenwidth;
 				var screenheight=grpsinfo[i].screenheight;
+				var displayMode = grpsinfo[i].displayMode;
+				
+				for(var j=0;j<displayMode.length;j++)
+				{					
+					if(displayMode[j]=='0')
+						{								
+						$("#svg_animation_playtype option[value="+j+"]").css("display","none");
+						}
+					else {
+						$("#svg_animation_playtype option[value="+j+"]").css("display","inline");
+					}					
+				}
 				screenw=screenwidth;
 				screenh=screenheight;
 				initSvgcanvas();
@@ -1188,7 +1200,9 @@ function additem(pageid,itemid,left,top,width,height,fontno,backcolor,backopacit
     	}
     else
     	{
-    	item.itemstyle = JSON.parse(itemstyle)
+    	item.itemstyle = JSON.parse(itemstyle);
+    	if(item.itemstyle.special!=null)
+    		{selectspecial = item.itemstyle.special;}
     	}
 	 
 	var arrNode = updateitembfcolorReturnjson(item);
@@ -1527,7 +1541,7 @@ function infoDeletebyid(infoid)
 	$.ajax({  
         url:"/DeleteInfobyid", 
         data:{
-        	infoid:parseInt(infoid),
+        	infoid:infoid,
         	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
@@ -1588,7 +1602,7 @@ function infoAuditbyid(infoid)
 		        			$.ajax({  
 		        		        url:"/AuditInfobyid", 
 		        		        data:{
-		        		        	infoid:parseInt(infoid),
+		        		        	infoid:infoid,
 		        		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
 		        		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 		        					},  
@@ -1639,7 +1653,7 @@ function infoAuditbyid(infoid)
 			$.ajax({  
 		        url:"/AuditInfobyid", 
 		        data:{
-		        	infoid:parseInt(infoid),
+		        	infoid:infoid,
 		        	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
 		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 					},  
@@ -1776,7 +1790,7 @@ function infoCopybyid(infoid)
 	        {       	  
 	        	if(data.result=="success")
 	        		{
-	        			var id = parseInt(data.infoID);
+	        			var id = data.infoID;
 	        			var advname = data.infoName;	        			
 
 						adddivinfo(id,advname);
@@ -2060,56 +2074,71 @@ function getitemsize(itemw,contextJson,type)
 }
 //获取敏感词汇
 function getsensitive()
-{					
-	$.ajax({  
-        url:"/getSensitive",         
-        data:{        	
-        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname       	
-			},  
-        type:"post",  
-        dataType:"json", 
-        success:function(data)  
-        {       	  
-        	if(data.result=="success" && data.sensitivelist!=null)
-        		{            			
-        		var sensitivelist = JSON.parse(data.sensitivelist);
-        		sessionStorage.setItem('sensitivelist', data.sensitivelist);
-        		for(var i=0;i<sensitivelist.length;i++)
-        			{
-        			var svid = sensitivelist[i].svid;
-        			var projectid = sensitivelist[i].projectid;
-        			var svstring = sensitivelist[i].svstring;
-        			$('#svlist').append('<option value='+svid+' data-projectid ="'+projectid+'">'+svstring+'</option>');
-        			}
-        		}
-        	else
-        		{
-        			alertMessage(1, "异常", data.resultMessage);				        			
-        		}
-        },  
-        error: function() { 
-        	alertMessage(2, "异常", "ajax 函数  getSensitive 错误");			        	            
-          }  
-    });	
+{		
+	var sensitivelist = JSON.parse(sessionStorage.getItem('sensitivelist'));
+	if(sensitivelist==null || sensitivelist.length<=0)
+		{
+		$.ajax({  
+	        url:"/getSensitive",         
+	        data:{        	
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname       	
+				},  
+	        type:"post",  
+	        dataType:"json", 
+	        success:function(data)  
+	        {       	  
+	        	if(data.result=="success" && data.sensitivelist!=null)
+	        		{ 
+	        		$('#svlist').empty();
+	        		sensitivelist = JSON.parse(data.sensitivelist);
+	        		sessionStorage.setItem('sensitivelist', data.sensitivelist);
+	        		for(var i=0;i<sensitivelist.length;i++)
+	        			{
+	        			var svid = sensitivelist[i].svid;
+	        			var projectid = sensitivelist[i].projectid;
+	        			var svstring = sensitivelist[i].svstring;
+	        			$('#svlist').append('<option value='+svid+' data-projectid ="'+projectid+'">'+svstring+'</option>');
+	        			}
+	        		}
+	        	else
+	        		{
+	        			alertMessage(1, "异常", data.resultMessage);				        			
+	        		}
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getSensitive 错误");			        	            
+	          }  
+	    });	
+		}
+	else {
+		$('#svlist').empty();
+		for(var i=0;i<sensitivelist.length;i++)
+		{
+		var svid = sensitivelist[i].svid;
+		var projectid = sensitivelist[i].projectid;
+		var svstring = sensitivelist[i].svstring;
+		$('#svlist').append('<option value='+svid+' data-projectid ="'+projectid+'">'+svstring+'</option>');
+		}
+	}
 }
 //
 function SendCallback(SN,infocodelist,i)
 {
-	var timesRun = 0;
+	var timesRun = 0,reSend = 0;
 	var interval = setInterval(function(){
 		if(infocodelist.length > i)
 		{		    
-		    timesRun += 1;  
-		    if(timesRun >= 10){    
-		    	$('#progress').css('height','0px');				
-		        var closeJsonObj={
-		    			command:"closeSerialPort",
-						commandSN:getSN()
-		    		};	        
-		        wssend(JSON.stringify(closeJsonObj));		    	
-		    	alertMessage(1, "警告", "通讯不畅");
-		        clearInterval(interval);    		        
-		    }
+//		    timesRun += 1;  
+//		    if(timesRun >= 10){    
+//		    	$('#progress').css('height','0px');				
+//		        var closeJsonObj={
+//		    			command:"closeSerialPort",
+//						commandSN:getSN()
+//		    		};	        
+//		        wssend(JSON.stringify(closeJsonObj));		    	
+//		    	alertMessage(1, "警告", "通讯不畅");
+//		        clearInterval(interval);    		        
+//		    }
 		    
 		    if(receiveMap[SN]!=null)
 			{
@@ -2125,7 +2154,31 @@ function SendCallback(SN,infocodelist,i)
 				
 				
 				clearInterval(interval);
-			}			    
+			}
+		    
+		    timesRun += 1;  
+		    if(timesRun >= 10){ 		    	
+		    	var JsonObj={
+						command:"sendSerialData",
+						commandSN:SN,
+						sendData:infocodelist[i]
+					};
+			    wssend(JSON.stringify(JsonObj));
+			    
+		    	reSend += 1;
+		    }
+		    
+		    if(reSend >= 3)
+		    	{
+		    	$('#progress').css('height','0px');
+		    	var closeJsonObj={
+		    			command:"closeSerialPort",
+						commandSN:getSN()
+		    		};	        
+		        wssend(JSON.stringify(closeJsonObj));		    	
+		    	alertMessage(1, "警告", "通讯不畅");
+		        clearInterval(interval); 
+		    	}
 		}
 		else{clearInterval(interval);}
 	}, 500);
@@ -2140,7 +2193,7 @@ function infoSerialPublishbyid(infoid)
 	$.ajax({  
         url:"/getPublishInfobyid", 
         data:{
-        	infoid:parseInt(infoid),         	
+        	infoid:infoid,         	
         	infodata:JSON.stringify(infomap[infoid]),
         	arritem:jsonString,        	
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
@@ -2157,7 +2210,7 @@ function infoSerialPublishbyid(infoid)
         		sendArray.push("7E 46 47 4A 00 36 01 01 00 01 00 00 41 61 00 00 00 00 00 00 00 00 00 00 64 65 6C 65 00 00 00 00 E8 5E 13 03 0C 0F 30 01 02 B4 00 00 00 00 00 00 00 00 00 00 00 00 45 4E 7E");
         		sendArray = sendArray.concat(infocodelist);
         		sendArray = sendArray.concat(plcodelist);
-        		
+        		sendArray.push("7E 46 47 4A 00 36 01 01 00 01 00 00 41 61 00 00 00 00 00 00 00 00 00 00 71 61 64 76 00 00 00 00 BB 58 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 45 4E 7E"); 
         		var length=sendArray.length;
         		var SN = getSN();
         		sendinfoDataCallback(SN,sendArray,0,SendCallback(SN,sendArray,0));        		

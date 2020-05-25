@@ -924,10 +924,10 @@ function DrawDisplayItem(pageid,itemid,isCreat,isSelect,itemleft,itemtop,width,h
 									{
 									case 0:{
 										var background_position = $('.edui-default .edui-for-customimage .edui-icon').css('background-position');
-										$('#myModalEdit').modal('show');
-										$("#select_div").val("0");
+										$('#myModalEdit').modal('show');										
+										$("#myModalEdit").attr("data-type",0);
 										$("#div_tp").css("display","inline");
-										$("#div_gif").css("display","none");
+										$("#div_gif").css("display","none");										
 										//ue.setContent(item.context);
 										tinymce.activeEditor.setContent(item.context);
 										initspecial(item.itemstyle.special);
@@ -937,15 +937,11 @@ function DrawDisplayItem(pageid,itemid,isCreat,isSelect,itemleft,itemtop,width,h
 										initvideo(1);
 									};break;
 									case 4:{
-										$('#myModalEdit').modal('show');
-										$("#select_div").val("1");
+										$('#myModalEdit').modal('show');										
+										$("#myModalEdit").attr("data-type",1);
 										$("#div_tp").css("display","none");
-										$("#div_gif").css("display","inline");
-										initgif();
-										/*
-										$('#modal_gif_select').modal('show');
-										initgif();
-										*/
+										$("#div_gif").css("display","inline");										
+										initgif(1,9,true);
 									};break;
 									}
 									break;

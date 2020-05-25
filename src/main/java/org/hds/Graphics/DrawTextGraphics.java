@@ -462,7 +462,7 @@ public class DrawTextGraphics {
 
 					}
 
-					ImageIO.write(bmp, "bmp", new File("D:/test.bmp"));
+					// ImageIO.write(bmp, "bmp", new File("D:/test.bmp"));
 					// return null;
 					return bmp;
 				} else {
@@ -591,7 +591,7 @@ public class DrawTextGraphics {
 					for (int r = 0; r < JarrContext.size(); r++) {// 多行数据
 						JSONArray Jarrr = JarrContext.getJSONArray(r);
 						JSONArray itemJarrr = new JSONArray();
-						left = (int) Math.floor((double) left / itemwidth) * itemwidth;
+						left = (int) Math.ceil((double) left / itemwidth) * itemwidth;
 						for (int t = 0; t < Jarrr.size(); t++) {// 图文混排数据
 							JSONObject jsonObject = Jarrr.getJSONObject(t);
 							int itemType = jsonObject.getInteger("itemType");
@@ -649,30 +649,38 @@ public class DrawTextGraphics {
 														* sx);
 										if (left % itemwidth + charsW > itemwidth) {
 
-											String ttString = itemJsonObject.getString("value");
-											int ttwidth = (int) Math.ceil(metrics.stringWidth(ttString) * sx);
-											itemJsonObject.put("w", ttwidth);
-											itemJsonObject.put("image", Drawitem(0, top, ttwidth, itemheight, backcolor,
-													forecolor, fontName, fontSize, ttString, jsonspecial));
+											if (itemJsonObject.getString("value").equals("")) {
+												String txtString = itemJsonObject.getString("value") + txtval.charAt(c);
+												itemJsonObject.put("value", txtString);
+												left = (int) (Math.floor((double) left / itemwidth) + 1) * itemwidth;
+												itemJsonObject.put("x", left);
+											} else {
+												String ttString = itemJsonObject.getString("value");
+												int ttwidth = (int) Math.ceil(metrics.stringWidth(ttString) * sx);
+												itemJsonObject.put("w", ttwidth);
+												itemJsonObject.put("image",
+														Drawitem(0, top, ttwidth, itemheight, backcolor, forecolor,
+																fontName, fontSize, ttString, jsonspecial));
 
-											itemJarrr.add(itemJsonObject);
-											left = (int) (Math.floor((double) left / itemwidth) + 1) * itemwidth;
-											firstindex = c;
-											c -= 1;
+												itemJarrr.add(itemJsonObject);
+												left = (int) (Math.floor((double) left / itemwidth) + 1) * itemwidth;
+												firstindex = c;
+												c -= 1;
 
-											itemJsonObject = new JSONObject();
-											itemJsonObject.put("type", 0);
-											itemJsonObject.put("x", left);
-											itemJsonObject.put("y", top);
-											itemJsonObject.put("w", txtwidth);
-											itemJsonObject.put("value", "");
-											itemJsonObject.put("sx", sx);
-											itemJsonObject.put("sy", sy);
-											itemJsonObject.put("fontName", fontName);
-											itemJsonObject.put("fontSize", fontSize);
-											itemJsonObject.put("backColor", backcolor);
-											itemJsonObject.put("foreColor", forecolor);
-											continue;
+												itemJsonObject = new JSONObject();
+												itemJsonObject.put("type", 0);
+												itemJsonObject.put("x", left);
+												itemJsonObject.put("y", top);
+												itemJsonObject.put("w", txtwidth);
+												itemJsonObject.put("value", "");
+												itemJsonObject.put("sx", sx);
+												itemJsonObject.put("sy", sy);
+												itemJsonObject.put("fontName", fontName);
+												itemJsonObject.put("fontSize", fontSize);
+												itemJsonObject.put("backColor", backcolor);
+												itemJsonObject.put("foreColor", forecolor);
+												continue;
+											}
 										} else {
 											String txtString = itemJsonObject.getString("value") + txtval.charAt(c);
 											itemJsonObject.put("value", txtString);
@@ -801,6 +809,7 @@ public class DrawTextGraphics {
 				}
 			}
 //			ImageIO.write(bmp, "bmp", new File("D:/test1.bmp"));
+//			return null;
 			return bmp;
 		} catch (Exception e) {
 			return null;

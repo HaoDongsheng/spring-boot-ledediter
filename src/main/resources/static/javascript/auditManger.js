@@ -302,21 +302,21 @@ window.operateEvents = {
 
 function SendCallback(SN,infocodelist,i)
 {
-	var timesRun = 0;
+	var timesRun = 0,reSend = 0;
 	var interval = setInterval(function(){
 		if(infocodelist.length > i)
 		{
-	    timesRun += 1;  
-	    if(timesRun >= 10){    
-	    	$('#progress').css('height','0px');
-	    	var closeJsonObj={
-	    			command:"closeSerialPort",
-					commandSN:getSN()
-	    		};	        
-	        wssend(JSON.stringify(closeJsonObj));
-	        alertMessage(1, "警告", "通讯不畅");
-	        clearInterval(interval);    		        
-	    }
+//	    timesRun += 1;  
+//	    if(timesRun >= 10){    
+//	    	$('#progress').css('height','0px');
+//	    	var closeJsonObj={
+//	    			command:"closeSerialPort",
+//					commandSN:getSN()
+//	    		};	        
+//	        wssend(JSON.stringify(closeJsonObj));
+//	        alertMessage(1, "警告", "通讯不畅");
+//	        clearInterval(interval);    		        
+//	    }
 	    if(receiveMap[SN]!=null)
 		{
 		receiveData=receiveMap[SN]; 
@@ -331,7 +331,31 @@ function SendCallback(SN,infocodelist,i)
 		
 		
 		clearInterval(interval);
-		}	
+		}
+	    
+	    timesRun += 1;  
+	    if(timesRun >= 10){ 		    	
+	    	var JsonObj={
+					command:"sendSerialData",
+					commandSN:SN,
+					sendData:infocodelist[i]
+				};
+		    wssend(JSON.stringify(JsonObj));
+		    
+	    	reSend += 1;
+	    }
+	    
+	    if(reSend >= 3)
+	    	{
+	    	$('#progress').css('height','0px');
+	    	var closeJsonObj={
+	    			command:"closeSerialPort",
+					commandSN:getSN()
+	    		};	        
+	        wssend(JSON.stringify(closeJsonObj));		    	
+	    	alertMessage(1, "警告", "通讯不畅");
+	        clearInterval(interval); 
+	    	}
 		}
 		else{clearInterval(interval);}
 	}, 500);
@@ -344,7 +368,7 @@ function infoSerialPublishbyid(infoid)
 	$.ajax({  
         url:"/getInfobytesbyid", 
         data:{
-        	infoid:parseInt(infoid),
+        	infoid:infoid,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
@@ -359,7 +383,7 @@ function infoSerialPublishbyid(infoid)
         		sendArray.push("7E 46 47 4A 00 36 01 01 00 01 00 00 41 61 00 00 00 00 00 00 00 00 00 00 64 65 6C 65 00 00 00 00 E8 5E 13 03 0C 0F 30 01 02 B4 00 00 00 00 00 00 00 00 00 00 00 00 45 4E 7E");
         		sendArray = sendArray.concat(infocodelist);
         		sendArray = sendArray.concat(plcodelist);
-        		
+        		sendArray.push("7E 46 47 4A 00 36 01 01 00 01 00 00 41 61 00 00 00 00 00 00 00 00 00 00 71 61 64 76 00 00 00 00 BB 58 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 45 4E 7E");
         		var length=sendArray.length;
         		var SN = getSN();
         		sendinfoDataCallback(SN,sendArray,0,SendCallback(SN,sendArray,0));        		
@@ -542,7 +566,7 @@ function infoPublishbyid(infoid)
 	$.ajax({  
         url:"/PublishInfobyid", 
         data:{
-        	infoid:parseInt(infoid),
+        	infoid:infoid,
         	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
@@ -552,7 +576,7 @@ function infoPublishbyid(infoid)
         {       	  
         	if(data.result=="success")
         		{        		              				        		
-        		$("#auditinfo_table").bootstrapTable("remove", {field: "infosn",values: [parseInt(infoid)]}); 					 
+        		$("#auditinfo_table").bootstrapTable("remove", {field: "infosn",values: [infoid]}); 					 
         		}
         	else
         		{        			
@@ -566,6 +590,8 @@ function infoPublishbyid(infoid)
         	alertMessage(2, "异常", "ajax 函数  PublishInfobyid 错误");        		            
             return false;
             $('#modal_allow').modal('hide');
+          //关闭spinner  
+            spinner.spin();
           }  
     });	 
 }
@@ -575,7 +601,7 @@ function infoRefusebyid(infoid)
 	$.ajax({  
         url:"/RefuseInfobyid", 
         data:{
-        	infoid:parseInt(infoid),
+        	infoid:infoid,
         	adminid:JSON.parse(localStorage.getItem("adminInfo")).adminid,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
@@ -585,7 +611,7 @@ function infoRefusebyid(infoid)
         {       	  
         	if(data.result=="success")
         		{        		              				        		
-        		$("#auditinfo_table").bootstrapTable("remove", {field: "infosn",values: [parseInt(infoid)]}); 					 
+        		$("#auditinfo_table").bootstrapTable("remove", {field: "infosn",values: [infoid]}); 					 
         		}
         	else
         		{

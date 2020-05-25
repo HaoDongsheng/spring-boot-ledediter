@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
@@ -33,7 +33,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/taxiManger.js}" ></script>	
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -138,6 +138,12 @@
                 <div class="col-md-12">
                     <div class="table">
 	        		<div id="taxi_toolbar">
+	        		
+	        		<div class="btn-group">	
+		            <select shiro:hasRole="admin" id="select_project" class="form-control">	        		
+	        		</select>
+	        		</div>
+	        		
 	        		<div class="btn-group">
 	        		<input type="text" id="searchString_id" class="form-control" placeholder="请输入终端名称或DTU编号" />	        		
 	        		<button id="btn_table_search" type="button" class="btn btn-success">

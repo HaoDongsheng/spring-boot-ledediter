@@ -29,6 +29,10 @@ public class terminalSqlProvider {
 			sql.VALUES("SIMNo", "#{simno,jdbcType=VARCHAR}");
 		}
 
+		if (record.getMcu() != null) {
+			sql.VALUES("MCU", "#{mcu,jdbcType=VARCHAR}");
+		}
+
 		if (record.getTaxitype() != null) {
 			sql.VALUES("TaxiType", "#{taxitype,jdbcType=VARCHAR}");
 		}
@@ -153,12 +157,72 @@ public class terminalSqlProvider {
 			sql.VALUES("StarLevelSet", "#{starlevelset,jdbcType=INTEGER}");
 		}
 
-		if (record.getDisconnect() != null) {
-			sql.VALUES("disconnect", "#{disconnect,jdbcType=INTEGER}");
-		}
-
 		if (record.getUpdaterate() != null) {
 			sql.VALUES("UpdateRate", "#{updaterate,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPara1Id() != null) {
+			sql.VALUES("Para1_ID", "#{para1Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara2Id() != null) {
+			sql.VALUES("Para2_ID", "#{para2Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara3Id() != null) {
+			sql.VALUES("Para3_ID", "#{para3Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara6IdSet() != null) {
+			sql.VALUES("Para6_ID_Set", "#{para6IdSet,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara6Id() != null) {
+			sql.VALUES("Para6_ID", "#{para6Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getLicenseplatenumber() != null) {
+			sql.VALUES("LicensePlateNumber", "#{licenseplatenumber,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPositiontime() != null) {
+			sql.VALUES("PositionTime", "#{positiontime,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPositionlongitude() != null) {
+			sql.VALUES("PositionLongitude", "#{positionlongitude,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPositionlatitude() != null) {
+			sql.VALUES("PositionLatitude", "#{positionlatitude,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPositionaddress() != null) {
+			sql.VALUES("PositionAddress", "#{positionaddress,jdbcType=VARCHAR}");
+		}
+
+		if (record.getDtuOnlinetime() != null) {
+			sql.VALUES("DTU_OnlineTime", "#{dtuOnlinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getDtuOfflinetime() != null) {
+			sql.VALUES("DTU_OfflineTime", "#{dtuOfflinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getDtuResponsetime() != null) {
+			sql.VALUES("DTU_ResponseTime", "#{dtuResponsetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedOnlinetime() != null) {
+			sql.VALUES("LED_OnlineTime", "#{ledOnlinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedOfflinetime() != null) {
+			sql.VALUES("LED_OfflineTime", "#{ledOfflinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedResponsetime() != null) {
+			sql.VALUES("LED_ResponseTime", "#{ledResponsetime,jdbcType=TIMESTAMP}");
 		}
 
 		if (record.getAdidlist() != null) {
@@ -190,6 +254,10 @@ public class terminalSqlProvider {
 
 		if (record.getSimno() != null) {
 			sql.SET("SIMNo = #{simno,jdbcType=VARCHAR}");
+		}
+
+		if (record.getMcu() != null) {
+			sql.SET("MCU = #{mcu,jdbcType=VARCHAR}");
 		}
 
 		if (record.getTaxitype() != null) {
@@ -316,12 +384,72 @@ public class terminalSqlProvider {
 			sql.SET("StarLevelSet = #{starlevelset,jdbcType=INTEGER}");
 		}
 
-		if (record.getDisconnect() != null) {
-			sql.SET("disconnect = #{disconnect,jdbcType=INTEGER}");
-		}
-
 		if (record.getUpdaterate() != null) {
 			sql.SET("UpdateRate = #{updaterate,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPara1Id() != null) {
+			sql.SET("Para1_ID = #{para1Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara2Id() != null) {
+			sql.SET("Para2_ID = #{para2Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara3Id() != null) {
+			sql.SET("Para3_ID = #{para3Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara6IdSet() != null) {
+			sql.SET("Para6_ID_Set = #{para6IdSet,jdbcType=INTEGER}");
+		}
+
+		if (record.getPara6Id() != null) {
+			sql.SET("Para6_ID = #{para6Id,jdbcType=INTEGER}");
+		}
+
+		if (record.getLicenseplatenumber() != null) {
+			sql.SET("LicensePlateNumber = #{licenseplatenumber,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPositiontime() != null) {
+			sql.SET("PositionTime = #{positiontime,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPositionlongitude() != null) {
+			sql.SET("PositionLongitude = #{positionlongitude,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPositionlatitude() != null) {
+			sql.SET("PositionLatitude = #{positionlatitude,jdbcType=DOUBLE}");
+		}
+
+		if (record.getPositionaddress() != null) {
+			sql.SET("PositionAddress = #{positionaddress,jdbcType=VARCHAR}");
+		}
+
+		if (record.getDtuOnlinetime() != null) {
+			sql.SET("DTU_OnlineTime = #{dtuOnlinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getDtuOfflinetime() != null) {
+			sql.SET("DTU_OfflineTime = #{dtuOfflinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getDtuResponsetime() != null) {
+			sql.SET("DTU_ResponseTime = #{dtuResponsetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedOnlinetime() != null) {
+			sql.SET("LED_OnlineTime = #{ledOnlinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedOfflinetime() != null) {
+			sql.SET("LED_OfflineTime = #{ledOfflinetime,jdbcType=TIMESTAMP}");
+		}
+
+		if (record.getLedResponsetime() != null) {
+			sql.SET("LED_ResponseTime = #{ledResponsetime,jdbcType=TIMESTAMP}");
 		}
 
 		if (record.getAdidlist() != null) {

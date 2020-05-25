@@ -37,8 +37,10 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/font-awesome-4.7.0/**", "anon");
 		filterChainDefinitionMap.put("/ion.rangeSlider/**", "anon");
 		filterChainDefinitionMap.put("/jquery-ui/**", "anon");
+		filterChainDefinitionMap.put("/jquery/**", "anon");
 		filterChainDefinitionMap.put("/spin/**", "anon");
 		filterChainDefinitionMap.put("/tinymce/**", "anon");
+		filterChainDefinitionMap.put("/jcanvas/**", "anon");
 		filterChainDefinitionMap.put("/javascript/**", "anon");
 		filterChainDefinitionMap.put("/login/**", "anon");
 		// 配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了

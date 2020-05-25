@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
@@ -25,23 +25,23 @@
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-export.js}" ></script>
 	<script type="text/javascript" th:src="@{~/bootstrap-table/tableExport.js}" ></script>
-		
+	<script type="text/javascript" th:src="@{~/spin/spin.min.js}" ></script>
 	<!-- 自定义 核心 JavaScript 文件 -->
 	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>	
 	<script type="text/javascript" th:src="@{~/javascript/historyManger.js}" ></script>
-	
+		
 	<link th:href="@{~/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.min.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.zh-CN.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.zh-CN.js}" ></script>
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-resizable.js}" ></script>
 	<script type="text/javascript" th:src="@{~/bootstrap-table/colResizable-1.6.js}" ></script>	
 	
 	<link th:href="@{~/css/bootstrap-timepicker.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>	
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-timepicker.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -145,68 +145,95 @@
             
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table">
-	        		<div id="toolbar">				     				     
-						<div class="btn-group">		        		
-		        		<select id="grouplist" class="form-control"></select>
-		        		</div>
-		        		<div class="btn-group">		        		
-		        		<select id="select_type" class="form-control">
-		        		<option value=0 selected>广告查询</option>
-		        		<option value=1>列表查询</option>
-		        		</select>		        		
-		        		</div>		
-		        		<div class="btn-group">	
-		        		<input type="text" class="form-control required" id="history_lifeAct" placeholder="开始日期" name="playlistlife" maxlength="20"></input>
-		        		~
-		        		<input type="text" class="form-control required" id="history_lifeDie" placeholder="结束日期" name="playlistlife" maxlength="20"></input>
-		        		</div>		    				     				            
-			        </div>			        			        
-				        
-		         	<table id="history_table" class='table-sm table-striped thead-dark'>						    						    
-				  	</table>
-				  	
+                <div id="toolbar">				     				     
+					<div class="btn-group">		        		
+	        		<select id="grouplist" class="form-control"></select>
+	        		</div>
+	        		<div class="btn-group" style="display:none;">		        		
+	        		<select id="select_type" class="form-control">
+	        		<option value=0 selected>广告查询</option>
+	        		<option value=1>列表查询</option>
+	        		</select>		        		
+	        		</div>		
+	        		<div class="btn-group">	
+	        		<input type="text" class="form-control" id="history_month"></input>
+	        		</div>	
+	        		<div class="btn-group">	
+	        		<button id="btn_table_search" type="button" class="btn btn-success">
+	                <span class="fa fa-search" aria-hidden="true">查询</span>		                	
+	            	</button>
+	        		</div>	        		
+	        		<div class="btn-group">	
+	        		<button id="btn_table_change" type="button" class="btn btn-info">
+	                <span class="fa fa-exchange" aria-hidden="true">切换</span>		                	
+	            	</button>
+	        		</div>
+	        		<div class="btn-group">	
+	        		<button id="btn_table_highlevel" type="button" class="btn btn-danger">
+	                <span class="fa fa-calendar" aria-hidden="true">高级 </span>		                	
+	            	</button>
+	        		</div>	    				     				            
+		        </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                <div id='charts_history' style="height:600px;display:block;"></div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table" style="display:none;">			        			        
 				  	<table id="history_info_table" class='table-sm table-striped thead-dark'>						    						    
 				  	</table>
 				  	</div>
                 </div>
             </div>                     
         </div> 
-        
-        <!-- 模态框 -->
-	    <div class="modal fade" data-backdrop="static" id="modal_details">
-	    <div class="modal-dialog">
+	    
+	    <!-- 模态框 -->
+	    <div class="modal fade" data-backdrop="static" id="modal_search_date">
+	    <div class="modal-dialog modal-sm">
 	      <div class="modal-content">
 	   
 	        <!-- 模态框头部 -->
 	        <div class="modal-header">
-	          <h4 class="modal-title">广告详情</h4>
+	          <h4 class="modal-title">日期选择</h4>
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	   
 	        <!-- 模态框主体 -->
-	        <div class="modal-body">	        
-	        	<div class="table">
-        		<div id="details_toolbar">	
-        		<div class="btn-group">		        		
-        		<select id="select_date" class="form-control"></select>
-        		</div>			     				     										    				     				           
-		        </div>
-			        
-	         	<table id="info_details_table" class='table-sm table-striped thead-dark'>						    						    
-			  	</table>
-			  	</div>
+	        <div class="modal-body">
+	        <div class="row">
+	        <div class="col-md-4">
+	        	开始日期
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" class="form-control required" id="search_lifeAct" placeholder="开始日期" name="playlistlife" maxlength="20"></input>
+	        </div>
+	        </div>
+	        
+	        <div class="row">
+	        <div class="col-md-4">
+	        	结束日期
+	        </div>
+	        <div class="col-md-8">
+	        	<input type="text" class="form-control required" id="search_lifeDie" placeholder="结束日期" name="playlistlife" maxlength="20"></input> 
+	        </div>
+	        </div>			         			    
 	        </div>
 	   
 	        <!-- 模态框底部 -->
-	        <div class="modal-footer">	          
+	        <div class="modal-footer">
+	          <button id="btn_search_date" type="button" class="btn btn-primary">确定</button>
 	          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 	        </div>
 	   
 	      </div>
 	     </div>
-	     </div>
-	            	     
+	     </div>        	     
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
     <footer>

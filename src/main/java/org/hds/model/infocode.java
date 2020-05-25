@@ -1,40 +1,41 @@
 package org.hds.model;
 
 public class infocode {
-    private Integer infoCodeSN;
+	private String infoCodeSN;
 
-    private Integer infoSN;
+	private String infoSN;
 
-    private Integer groupid;
-    
-    private Integer pubid;
+	private Integer groupid;
 
-    private Integer codecrc;
+	private Integer pubid;
 
-    private String codecontext;
+	private Integer codecrc;
 
-    private Integer packCount;
-    
-    private Integer packLength;
-    
-    public Integer getinfoCodeSN() {
-        return infoCodeSN;
-    }
+	private String codecontext;
 
-    public void setinfoCodeSN(Integer infoCodeSN) {
-        this.infoCodeSN = infoCodeSN;
-    }
+	private String singleCodeContext;
 
-    public Integer getinfoSN() {
-        return infoSN;
-    }
+	private Integer packCount;
 
-    public void setinfoSN(Integer infoSN) {
-        this.infoSN = infoSN;
-    }
-    
-      
-    public Integer getGroupid() {
+	private Integer packLength;
+
+	public String getInfoCodeSN() {
+		return infoCodeSN;
+	}
+
+	public void setInfoCodeSN(String infoCodeSN) {
+		this.infoCodeSN = infoCodeSN;
+	}
+
+	public String getInfoSN() {
+		return infoSN;
+	}
+
+	public void setInfoSN(String infoSN) {
+		this.infoSN = infoSN;
+	}
+
+	public Integer getGroupid() {
 		return groupid;
 	}
 
@@ -43,42 +44,50 @@ public class infocode {
 	}
 
 	public Integer getPubid() {
-        return pubid;
-    }
+		return pubid;
+	}
 
-    public void setPubid(Integer pubid) {
-        this.pubid = pubid;
-    }
+	public void setPubid(Integer pubid) {
+		this.pubid = pubid;
+	}
 
-    public Integer getCodecrc() {
-        return codecrc;
-    }
+	public Integer getCodecrc() {
+		return codecrc;
+	}
 
-    public void setCodecrc(Integer codecrc) {
-        this.codecrc = codecrc;
-    }
+	public void setCodecrc(Integer codecrc) {
+		this.codecrc = codecrc;
+	}
 
-    public String getCodecontext() {
-        return codecontext;
-    }
+	public String getCodecontext() {
+		return codecontext;
+	}
 
-    public void setCodecontext(String codecontext) {
-        this.codecontext = codecontext == null ? null : codecontext.trim();
-    }
-    
-    public void setPackCount(Integer packCount) {
-        this.packCount = packCount;
-    }
+	public String getSingleCodeContext() {
+		return singleCodeContext;
+	}
 
-    public Integer getPackCount() {
-        return packCount;
-    }
-    
-    public void setPackLength(Integer packLength) {
-        this.packLength = packLength;
-    }
+	public void setSingleCodeContext(String singleCodeContext) {
+		this.singleCodeContext = singleCodeContext;
+	}
 
-    public Integer getPackLength() {
-        return packLength;
-    }
+	public void setCodecontext(String codecontext) {
+		this.codecontext = codecontext == null ? null : codecontext.trim();
+	}
+
+	public void setPackCount(Integer packCount) {
+		this.packCount = packCount;
+	}
+
+	public Integer getPackCount() {
+		return packCount;
+	}
+
+	public void setPackLength(Integer packLength) {
+		this.packLength = packLength;
+	}
+
+	public Integer getPackLength() {
+		return packLength;
+	}
 }

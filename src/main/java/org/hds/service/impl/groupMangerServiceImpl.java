@@ -2,6 +2,7 @@ package org.hds.service.impl;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.hds.GJ_coding.GJ_Set1cls;
@@ -12,6 +13,7 @@ import org.hds.mapper.projectMapper;
 import org.hds.mapper.terminalMapper;
 import org.hds.mapper.userMapper;
 import org.hds.model.group;
+import org.hds.model.terminal;
 import org.hds.service.IgroupMangerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -32,8 +34,8 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 	userMapper userMapper;
 
 	@Override
-	public JSONObject CreatGroup(String grpname, String projectid, int packLength, int width, int height, int grpbelong,
-			String adminname) {
+	public JSONObject CreatGroup(String grpname, String projectid, int packLength, int batchCount, int width,
+			int height, int grpbelong, String adminname) {
 		JSONObject jObject = new JSONObject();
 		try {
 			int count = taxigroupMapper.selectCountByName(grpname);
@@ -42,7 +44,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				jObject.put("resultMessage", "分组名" + grpname + "已存在!");
 			} else {
 				GJ_Set2cls set2cls = new GJ_Set2cls();
-				set2cls.set_id(1);
+				set2cls.set_id(100);
 				set2cls.set_version(1);
 				set2cls.set_DefaulText("文明驾驶安全行车");
 				set2cls.set_AlarmText("我被打劫,请报警!");
@@ -52,7 +54,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				String setPara2 = JSONObject.toJSONString(set2cls);
 
 				GJ_Set3cls set3cls = new GJ_Set3cls();
-				set3cls.set_id(1);
+				set3cls.set_id(100);
 				set3cls.set_version(1);
 				set3cls.set_SetBrightnessMode(2);
 				set3cls.set_Area_ProvinceName("北京");
@@ -82,7 +84,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				String setPara3 = JSONObject.toJSONString(set3cls);
 
 				GJ_Set1cls set1cls = new GJ_Set1cls();
-				set1cls.set_id(1);
+				set1cls.set_id(100);
 				set1cls.set_version(1);
 				set1cls.set_Showversion(1);
 				set1cls.set_LinkTime(2);
@@ -97,6 +99,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				record.setGroupname(grpname);
 				record.setProjectid(projectid);
 				record.setMaxPackLength(packLength);
+				record.setBatchCount(batchCount);
 				record.setscreenwidth(width);
 				record.setscreenheight(height);
 				record.setPara1_Basic(setPara1);
@@ -140,7 +143,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 	}
 
 	@Override
-	public JSONObject EditGroup(int grpid, String grpname, int packLength, int width, int height) {
+	public JSONObject EditGroup(int grpid, String grpname, int packLength, int batchCount, int width, int height) {
 		JSONObject jObject = new JSONObject();
 		try {
 			int count = taxigroupMapper.selectCountByNameid(grpname, grpid);
@@ -152,6 +155,7 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				record.setGroupid(grpid);
 				record.setGroupname(grpname);
 				record.setMaxPackLength(packLength);
+				record.setBatchCount(batchCount);
 				record.setscreenwidth(width);
 				record.setscreenheight(height);
 
@@ -233,6 +237,25 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 				set2cls.set_ZhaoMingTimeStart(Jparameter.getString("m_ZhaoMingTimeStart"));
 				set2cls.set_ZhaoMingTimeEnd(Jparameter.getString("m_ZhaoMingTimeEnd"));
 				set2cls.set_Playmode(Jparameter.getIntValue("setDisconnectMode"));
+
+				if (Jparameter.getIntValue("setDisconnectMode") == 2) {
+					int grpid = Jparameter.getIntValue("groupid");
+
+					List<terminal> terminals = terminalMapper.SelectTerminalAllBygroupid(grpid);
+					if (terminals != null) {
+						for (int i = 0; i < terminals.size(); i++) {
+							String taxiName = terminals.get(i).getName();
+							if (terminals.get(i).getPara6IdSet() == 0) {
+								if (getCode.isCarnumberNO(taxiName)) {
+									Random random = new Random();
+									int para6_ID_Set = random.nextInt(250) + 1;
+									terminals.get(i).setPara6IdSet(para6_ID_Set);
+									terminalMapper.updateByPrimaryKeySelective(terminals.get(i));
+								}
+							}
+						}
+					}
+				}
 
 				String setPara2 = JSONObject.toJSONString(set2cls);
 				record.setPara2_User(setPara2);

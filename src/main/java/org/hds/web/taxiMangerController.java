@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Controller
@@ -58,13 +59,13 @@ public class taxiMangerController {
 			JSONObject JSONObject = null;
 
 			searchString = "%" + searchString + "%";
-			if (issuperuser == 0)// 普通用户
-			{
-				JSONObject = terminalMangerSer.getTerminalsbyprojectid(pageNum, pageSize, projectid, searchString,
-						groupids, adminlevel, sort, sortOrder);
-			} else {
-				JSONObject = terminalMangerSer.getTerminalsbypageNum(pageNum, pageSize, searchString, sort, sortOrder);
-			}
+//			if (issuperuser == 0)// 普通用户
+//			{
+			JSONObject = terminalMangerSer.getTerminalsbyprojectid(pageNum, pageSize, projectid, searchString, groupids,
+					adminlevel, sort, sortOrder);
+//			} else {
+//				JSONObject = terminalMangerSer.getTerminalsbypageNum(pageNum, pageSize, searchString, sort, sortOrder);
+//			}
 
 			// JSONObject = new { total = pagerInfo.RecordCount, rows = list };
 
@@ -75,6 +76,25 @@ public class taxiMangerController {
 			operateLog.writeLog(adminname, 1,
 					"===用户:" + adminname + "/getTerminalsbypageNum 异常:" + e.getMessage() + "===",
 					"/getTerminalsbypageNum", logger, false);
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/getTerminalsUpdate", method = RequestMethod.POST)
+	public JSONObject getTerminalsUpdate(@RequestParam("Dtukeys") String Dtukeys,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONObject JSONObject = null;
+			JSONArray jArray = JSONArray.parseArray(Dtukeys);
+			JSONObject = terminalMangerSer.getTerminalsUpdate(jArray);
+
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/getTerminalsUpdate===", "/getTerminalsUpdate",
+					logger, false);
+			return JSONObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/getTerminalsUpdate 异常:" + e.getMessage() + "===",
+					"/getTerminalsUpdate", logger, false);
 			return null;
 		}
 	}
@@ -144,6 +164,25 @@ public class taxiMangerController {
 		} catch (Exception e) {
 			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/taxiInfoEditbyGroup groupid:" + groupid + "星级:"
 					+ StarLevelset + " 异常:" + e.getMessage() + "===", "/taxiInfoEditbyGroup", logger, true);
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/gettGroupbyProjectid", method = RequestMethod.POST)
+	public JSONArray getGroupbyProjectid(@RequestParam("projectid") String projectid,
+			@RequestParam("adminInfo") String adminInfo, HttpServletRequest request) {
+		JSONObject jsonObject = JSONObject.parseObject(adminInfo);
+		try {
+			JSONArray JsonArray = terminalMangerSer.getGroupbyProjectid(projectid, jsonObject);
+			operateLog.writeLog(jsonObject.getString("adminname"), 0,
+					"===用户:" + jsonObject.getString("adminname") + "/getGroupbyProjectid===", "/getGroupbyProjectid",
+					logger, false);
+			return JsonArray;
+		} catch (Exception e) {
+			operateLog.writeLog(jsonObject.getString("adminname"), 1,
+					"===用户:" + jsonObject.getString("adminname") + "/getGroupbyProjectid 异常:" + e.getMessage() + "===",
+					"/getGroupbyProjectid", logger, false);
 			return null;
 		}
 	}

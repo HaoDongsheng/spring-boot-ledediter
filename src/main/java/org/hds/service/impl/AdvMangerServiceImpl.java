@@ -1,20 +1,22 @@
 package org.hds.service.impl;
 
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.hds.NettyClient;
 import org.hds.Graphics.DrawTextGraphics;
+import org.hds.logmapper.oldlogadvMapper;
 import org.hds.mapper.advertisementMapper;
 import org.hds.mapper.basemapMapper;
 import org.hds.mapper.groupMapper;
 import org.hds.mapper.infocodeMapper;
 import org.hds.mapper.itemMapper;
-import org.hds.mapper.oldadvMapper;
 import org.hds.mapper.playlistMapper;
 import org.hds.mapper.playlistcodeMapper;
+import org.hds.mapper.projectMapper;
 import org.hds.mapper.sensitiveMapper;
 import org.hds.mapper.userMapper;
 import org.hds.mapper.videoMapper;
@@ -22,8 +24,9 @@ import org.hds.model.advertisement;
 import org.hds.model.basemap;
 import org.hds.model.group;
 import org.hds.model.item;
-import org.hds.model.oldadv;
+import org.hds.model.oldlogadv;
 import org.hds.model.playlist;
+import org.hds.model.project;
 import org.hds.model.sensitive;
 import org.hds.model.user;
 import org.hds.model.video;
@@ -55,11 +58,13 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	@Autowired
 	getCode getCode;
 	@Autowired
-	oldadvMapper oldadvMapper;
+	oldlogadvMapper oldlogadvMapper;
 	@Autowired
 	userMapper userMapper;
 	@Autowired
 	sensitiveMapper sensitiveMapper;
+	@Autowired
+	projectMapper projectMapper;
 
 	@Override
 	public JSONArray getadvlist(JSONObject adminInfoJsonObject) {
@@ -153,6 +158,65 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
+	public JSONObject Deleteinfo2oldbyDay() {
+		JSONObject jObject = new JSONObject();
+		try {
+			JSONObject jsonObject = new JSONObject();
+			JSONArray jArraySuccess = new JSONArray();
+			JSONArray jArrayfail = new JSONArray();
+
+			List<project> projects = projectMapper.selectAll();
+			for (int p = 0; p < projects.size(); p++) {
+				String projectid = projects.get(p).getProjectid();
+				String limit = projects.get(p).getProjectLimit();
+				int daylimit = 60;
+				if (limit != null && !limit.equals("")) {
+					JSONObject jsonLimit = JSONObject.parseObject(limit);
+					if (jsonLimit != null) {
+						daylimit = jsonLimit.getIntValue("ExpTime");
+					}
+				}
+
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar date = Calendar.getInstance();
+				date.setTime(new Date());
+				date.set(Calendar.DATE, date.get(Calendar.DATE) - daylimit);
+				String DeleteDate = df.format(date.getTime());
+
+				List<advertisement> advertisements = advertisementMapper.selectByDeleteDateProjectid(DeleteDate,
+						projectid);
+
+				if (advertisements != null && advertisements.size() > 0) {
+					for (int i = 0; i < advertisements.size(); i++) {
+						JSONObject infojObject = deleteInfo2old(advertisements.get(i).getinfoSN());
+						if (infojObject.getString("result").equals("success")) {
+							jArraySuccess.add(advertisements.get(i).getinfoSN());
+							System.out.println("删除广告" + advertisements.get(i).getinfoSN() + "成功]");
+						} else {
+							jArrayfail.add(advertisements.get(i).getinfoSN());
+							System.out.println("删除广告" + advertisements.get(i).getinfoSN() + "失败]");
+						}
+					}
+				}
+			}
+
+			System.out.println("成功删除广告数量" + jArraySuccess.size() + "个]");
+			System.out.println("失败删除广告数量" + jArrayfail.size() + "个]");
+			jsonObject.put("jArraySuccess", jArraySuccess);
+			jsonObject.put("jArrayfail", jArrayfail);
+
+			jObject.put("result", "success");
+			jObject.put("infoMessage", jsonObject);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		}
+		return jObject;
+	}
+
+	@Override
 	public JSONArray getadvListbyGrpid(int Grpid) {
 		JSONArray itemJSONArray = new JSONArray();
 
@@ -181,7 +245,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject getadvListDelbyGrpid(int Grpid, int pageNum, int pageSize, String sort, String sortOrder) {
+	public JSONObject getadvListDelbyGrpid(int Grpid, int type, String infoName, String lifeAct, String lifeDie,
+			int pageNum, int pageSize, String sort, String sortOrder) {
 
 		String colName = "lifeDie";
 		switch (sort) {
@@ -196,23 +261,63 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 			break;
 		}
 
+		lifeAct = lifeAct == null || lifeAct.equals("") ? "1999-09-09" : lifeAct;
+		lifeDie = lifeDie == null || lifeDie.equals("") ? "2100-09-09" : lifeDie;
+
 		JSONObject jObject = new JSONObject();
-		int delCount = advertisementMapper.selectDelCountBygroupid(Grpid);
+		// int delCount = advertisementMapper.selectDelCountBygroupid(Grpid);
 		int startoffset = (pageNum - 1) * pageSize;
 
+		int delCount = 0;
 		JSONArray itemJSONArray = new JSONArray();
-		List<advertisement> advlist = advertisementMapper.selectDelBygroupid(Grpid, startoffset, pageSize, colName,
-				sortOrder);
-		if (advlist != null && advlist.size() > 0) {
-			for (int j = 0; j < advlist.size(); j++) {
-				JSONObject jitem = new JSONObject();
-				jitem.put("infosn", advlist.get(j).getinfoSN());
-				jitem.put("infoname", advlist.get(j).getAdvname());
-				jitem.put("lifeAct", advlist.get(j).getlifeAct());
-				jitem.put("lifeDie", advlist.get(j).getlifeDie());
-				jitem.put("timelenght", advlist.get(j).getplayTimelength());
 
-				itemJSONArray.add(jitem);
+		if (type == 0) {
+			infoName = "%" + infoName + "%";
+			delCount = advertisementMapper.selectDelCountBygroupid2(Grpid, infoName, lifeAct, lifeDie);
+			List<advertisement> advlist = advertisementMapper.selectDelBygroupid2(Grpid, infoName, lifeAct, lifeDie,
+					startoffset, pageSize, colName, sortOrder);
+
+			if (advlist != null && advlist.size() > 0) {
+				for (int j = 0; j < advlist.size(); j++) {
+					JSONObject jitem = new JSONObject();
+					jitem.put("infosn", advlist.get(j).getinfoSN());
+					jitem.put("infoname", advlist.get(j).getAdvname());
+					jitem.put("lifeAct", advlist.get(j).getlifeAct());
+					jitem.put("lifeDie", advlist.get(j).getlifeDie());
+					jitem.put("timelenght", advlist.get(j).getplayTimelength());
+					JSONArray itemArray = new JSONArray();
+					List<item> ItemList = itemMapper.selectByadid(advlist.get(j).getinfoSN());
+					if (ItemList != null)
+						for (int i = 0; i < ItemList.size(); i++) {
+							itemArray.add(ItemList.get(i).getItemcontext());
+						}
+					jitem.put("items", itemArray);
+
+					itemJSONArray.add(jitem);
+				}
+
+			}
+		} else {
+			delCount = oldlogadvMapper.selectDelCountBygroupid(Grpid, infoName, lifeAct, lifeDie);
+			List<oldlogadv> advlist = oldlogadvMapper.selectDelBygroupid(Grpid, infoName, lifeAct, lifeDie, startoffset,
+					pageSize, sort, sortOrder);
+
+			if (advlist != null && advlist.size() > 0) {
+				for (int j = 0; j < advlist.size(); j++) {
+					JSONObject jitem = new JSONObject();
+					jitem.put("infosn", advlist.get(j).getInfosn());
+					jitem.put("infoname", advlist.get(j).getAdvname());
+					jitem.put("lifeAct", advlist.get(j).getLifeact());
+					jitem.put("lifeDie", advlist.get(j).getLifedie());
+					jitem.put("timelenght", advlist.get(j).getPlaytimelength());
+					JSONArray itemArray = new JSONArray();
+					JSONArray jArray = JSONArray.parseArray(advlist.get(j).getItemlist());
+					for (int i = 0; i < jArray.size(); i++) {
+						itemArray.add(jArray.getJSONObject(i).getString("itemcontext"));
+					}
+					jitem.put("items", itemArray);
+					itemJSONArray.add(jitem);
+				}
 			}
 		}
 
@@ -287,9 +392,9 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
+
 	}
 
 	@Override
@@ -299,6 +404,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		try {
 			if (advertisementMapper.selectCountByName(infoName, groupid) <= 0) {
 				advertisement advertisement = new advertisement();
+				String infoSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				advertisement.setinfoSN(infoSN);
 				advertisement.setAdvname(infoName);
 				advertisement.setlifeAct(lifeAct);
 				advertisement.setlifeDie(lifeDie);
@@ -306,7 +413,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				advertisement.setinfoState(0);
 				advertisement.setcreater(adminid);
 				Date now = new Date();
-				DateFormat d1 = DateFormat.getDateTimeInstance();
+				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				advertisement.setcreateDate(d1.format(now));
 				advertisement.setBackgroundstyle(BackgroundStyle);
 				advertisement.setDelindex(0);
@@ -316,7 +423,6 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				advertisement.setplayTimelength(10);// 默认暂时写10秒
 				int rowCount = advertisementMapper.insert(advertisement);
 				if (rowCount > 0) {
-					int infoSN = advertisement.getinfoSN();
 					jObject.put("result", "success");
 					jObject.put("infoID", infoSN);
 					jObject.put("infoName", infoName);
@@ -340,9 +446,9 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
+
 	}
 
 	@Override
@@ -362,6 +468,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 
 			if (newInfoNameString != "") {
 				advertisement advertisement = new advertisement();
+				String infoSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				advertisement.setinfoSN(infoSN);
 				advertisement.setAdvname(newInfoNameString);
 				advertisement.setlifeAct(lifeAct);
 				advertisement.setlifeDie(lifeDie);
@@ -375,8 +483,6 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				advertisement.setplayTimelength(10);// 默认暂时写10秒
 				int rowCount = advertisementMapper.insert(advertisement);
 				if (rowCount > 0) {
-
-					int infoSN = advertisement.getinfoSN();
 					JSONObject jsoninfo = JSONObject.parseObject(itemlist);
 					JSONObject JitemObject = SaveItem(infoSN, jsoninfo);
 					if (JitemObject.getString("result") == "success") {
@@ -403,13 +509,99 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
+		}
+
+		return jObject;
+	}
+
+	@Override
+	public JSONObject CopyExpinfobyid(String infosn, int groupid, int adminid) {
+		JSONObject jObject = new JSONObject();
+		try {
+			oldlogadv adv = oldlogadvMapper.selectByPrimaryinfosn(infosn);
+			int i = 1;
+			String newInfoNameString = "";
+			while (true) {
+				if (advertisementMapper.selectCountByName(adv.getAdvname() + "_copy" + i, groupid) <= 0) {
+					newInfoNameString = adv.getAdvname() + "_copy" + i;
+					break;
+				}
+				i += 1;
+			}
+
+			if (newInfoNameString != "") {
+				Date now = new Date();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+				advertisement advertisement = new advertisement();
+				String newinfoSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				advertisement.setinfoSN(newinfoSN);
+				advertisement.setAdvname(newInfoNameString);
+				String dts = adv.getLifeact();
+				String dte = adv.getLifedie();
+				if (!dte.equals("") && formatter.parse(adv.getLifedie()).compareTo(now) < 0) {
+					dts = "";
+					dte = "";
+				}
+				advertisement.setlifeAct(dts);
+				advertisement.setlifeDie(dte);
+				advertisement.setAdvtype("0");
+				advertisement.setinfoState(0);
+				advertisement.setcreater(adminid);
+				advertisement.setcreateDate(d1.format(now));
+				advertisement.setinfoState(0);
+				advertisement.setBackgroundstyle(adv.getBackgroundstyle());
+				advertisement.setDelindex(0);
+				advertisement.setGroupid(groupid);
+				advertisement.setPlaymode("0");
+				advertisement.setPubid(0);
+				advertisement.setplayTimelength(adv.getPlaytimelength());// 默认暂时写10秒
+				int rowCount = advertisementMapper.insert(advertisement);
+				if (rowCount > 0) {
+					JSONArray jArray = JSONArray.parseArray(adv.getItemlist());
+					for (int j = 0; j < jArray.size(); j++) {
+						JSONObject jsonObject = jArray.getJSONObject(j);// .getString("itemcontext");
+
+						item item = new item();
+						item.setInfoSN(newinfoSN);
+						item.setPageid(jsonObject.getIntValue("pageid"));
+						item.setItemid(jsonObject.getIntValue("itemid"));
+						item.setItemtype(jsonObject.getIntValue("itemtype"));
+						item.setItemleft(jsonObject.getIntValue("itemleft"));
+						item.setItemtop(jsonObject.getIntValue("itemtop"));
+						item.setItemwidth(jsonObject.getIntValue("itemwidth"));
+						item.setItemheight(jsonObject.getIntValue("itemheight"));
+						item.setItemfontno(jsonObject.getIntValue("itemfontno"));
+						item.setItembackcolor(jsonObject.getString("itembackcolor"));
+						item.setItembackopacity(jsonObject.getIntValue("itembackopacity"));
+						item.setItemforecolor(jsonObject.getString("itemforecolor"));
+						item.setItemforeopacity(jsonObject.getIntValue("itemforeopacity"));
+						item.setDelindex(0);
+						item.setItemstyle(jsonObject.getString("itemstyle"));
+						item.setItemcontext(jsonObject.getString("itemcontext"));
+						item.setItemcontextjson(jsonObject.getString("itemcontextjson"));
+						itemMapper.insert(item);
+					}
+
+					jObject.put("result", "success");
+				} else {
+					jObject.put("result", "fail");
+					jObject.put("resultMessage", "复制写入数据库失败!");
+				}
+
+			}
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
 			return jObject;
 		}
 	}
 
 	@Override
-	public JSONObject deleteInfo2old(int infoSN) {
+	public JSONObject deleteInfo2old(String infoSN) {
 		JSONObject jObject = new JSONObject();
 		try {
 			advertisement adv = advertisementMapper.selectByPrimaryKey(infoSN);
@@ -422,8 +614,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 					jsonArray.add(objitem);
 				}
 			}
-
-			oldadv record = new oldadv();
+			oldlogadvMapper.deleteByPrimaryKey(adv.getinfoSN());
+			oldlogadv record = new oldlogadv();
 			record.setInfosn(adv.getinfoSN());
 			record.setAdvname(adv.getAdvname());
 			record.setGroupid(adv.getGroupid());
@@ -434,12 +626,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 			record.setInfostate(adv.getinfoState());
 			record.setCreater(adv.getcreater());
 			record.setCreatedate(adv.getcreateDate());
-			record.setAuditor(adv.getauditor());
+			record.setAuditor(adv.getauditor() == null ? null : adv.getauditor().toString());
 
 			record.setAuditdate(adv.getauditDate());
 			record.setPublisher(adv.getpublisher());
 			record.setPublishdate(adv.getpublishDate());
-			record.setDeleter(adv.getdeleter());
+			record.setDeleter(adv.getdeleter() == null ? null : adv.getdeleter().toString());
 			record.setDeletedate(adv.getdeleteDate());
 
 			record.setBackgroundstyle(adv.getBackgroundstyle());
@@ -448,28 +640,29 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 			record.setPlaytimelength(adv.getplayTimelength());
 			record.setItemlist(jsonArray.toJSONString());
 
-			oldadvMapper.insert(record);
+			oldlogadvMapper.insertSelective(record);
 
 			advertisementMapper.deleteByPrimaryKey(infoSN);
+			itemMapper.deleteByadid(infoSN);
+			infocodeMapper.deleteByinfoSN(infoSN);
 
 			jObject.put("result", "success");
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+
+		return jObject;
 	}
 
 	@Override
-	public JSONObject DeleteInfobyid(int infoSN, int adminid) {
+	public JSONObject DeleteInfobyid(String infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			int result = 0;
 			int infocodeCount = infocodeMapper.selectCountByinfoSN(infoSN);
 			if (infocodeCount > 0) {
 				advertisement advertisement = advertisementMapper.selectByPrimaryKey(infoSN);
-				;
 				result = DeletePlayListbyinfoSN(advertisement.getGroupid(), infoSN, adminid);
 			}
 
@@ -479,8 +672,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 					advertisementMapper.updateDelindexByid(infoSN, 1);
 				} else {
 					Date now = new Date();
-					DateFormat d1 = DateFormat.getDateTimeInstance();
-
+					SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					advertisementMapper.updateDelindexdateByid(infoSN, 1, adminid, d1.format(now));
 				}
 				List<advertisement> advlist = new ArrayList<advertisement>();
@@ -501,13 +693,13 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
+
 	}
 
 	@Override
-	public JSONObject DeleteinfoCodebyid(int infoSN, int adminid) {
+	public JSONObject DeleteinfoCodebyid(String infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			int result = 0;
@@ -530,12 +722,11 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
-	private int DeletePlayListbyinfoSN(int groupid, int infosn, int adminid) {
+	private int DeletePlayListbyinfoSN(int groupid, String infosn, int adminid) {
 		try {
 			List<playlist> playlists = playlistMapper.selectbygroupid(groupid);
 			if (playlists != null && playlists.size() > 0) {
@@ -545,7 +736,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 					if (jarray != null && jarray.size() > 0) {
 						for (int j = 0; j < jarray.size(); j++) {
 							JSONObject jsonObject = jarray.getJSONObject(j);
-							if (jsonObject.getIntValue("infoid") == infosn) {
+							if (jsonObject.getString("infoid") == infosn) {
 								jarray.remove(j);
 								break;
 							}
@@ -561,7 +752,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject getbyteslistbyTemp(int infoid, JSONObject jsoninfo, JSONObject jsonarritem) {
+	public JSONObject getbyteslistbyTemp(String infoid, JSONObject jsoninfo, JSONObject jsonarritem) {
 		try {
 			JSONObject jObject = new JSONObject();
 			List<byte[]> SendByteList = getCode.GetCodeListbyid(jsoninfo, jsonarritem);
@@ -610,7 +801,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject getbyteslistbyid(int infoSN) {
+	public JSONObject getbyteslistbyid(String infoSN) {
 		try {
 			JSONObject jObject = new JSONObject();
 			advertisement adv = advertisementMapper.selectByPrimaryKey(infoSN);
@@ -663,7 +854,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject Publishinfobyid(int infoSN, int adminid) {
+	public JSONObject Publishinfobyid(String infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		advertisement adv = advertisementMapper.selectByPrimaryKey(infoSN);
 		int plt = adv.getplayTimelength();
@@ -674,6 +865,11 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		}
 		int pubid = getCode.GetpubidbyGroupid(adv.getGroupid());
 		try {
+			if (NettyClient.hdscontrol == 1) {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "权限错误");
+				return jObject;
+			}
 			if (pubid == 0) {
 				jObject.put("result", "fail");
 				jObject.put("resultMessage", "生成发布id错误");
@@ -683,7 +879,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				case 0: {
 					// adv.setPubid(pubid);
 					Date now = new Date();
-					DateFormat d1 = DateFormat.getDateTimeInstance();
+					SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					advertisement record = new advertisement();
 					record.setinfoSN(infoSN);
 					record.setPubid(pubid);
@@ -738,11 +934,11 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject RefuseInfobyid(int infoSN, int adminid) {
+	public JSONObject RefuseInfobyid(String infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			Date now = new Date();
-			DateFormat d1 = DateFormat.getDateTimeInstance();
+			SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			advertisement record = new advertisement();
 			record.setinfoSN(infoSN);
 			record.setauditor(adminid);
@@ -758,13 +954,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
-	public JSONObject AuditInfobyid(int infoSN, int adminid) {
+	public JSONObject AuditInfobyid(String infoSN, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 //			StringBuilder textBuilder = new StringBuilder();
@@ -798,8 +993,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 //				}
 //			}
 
-			Date now = new Date();
-			DateFormat d1 = DateFormat.getDateTimeInstance();
+//			Date now = new Date();
+//			SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			advertisement record = new advertisement();
 			record.setinfoSN(infoSN);
 			record.setinfoState(1);
@@ -813,9 +1008,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
@@ -860,9 +1054,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
@@ -900,9 +1093,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
@@ -939,13 +1131,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
-	public int Updatainfo(int infoSN, JSONObject jsoninfo) {
+	public int Updatainfo(String infoSN, JSONObject jsoninfo) {
 		try {
 			if (advertisementMapper.selectCountByName2(jsoninfo.getString("advname"), jsoninfo.getIntValue("groupid"),
 					infoSN) > 0) {
@@ -975,7 +1166,7 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONObject CopyItem(int oldinfoid, int newinfoid) {
+	public JSONObject CopyItem(String oldinfoid, String newinfoid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			List<item> itemlist = itemMapper.selectByadid(oldinfoid);
@@ -990,13 +1181,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
-	public JSONObject SaveItem(int infoSN, JSONObject jsoninfo) {
+	public JSONObject SaveItem(String infoSN, JSONObject jsoninfo) {
 		JSONObject jObject = new JSONObject();
 		try {
 			itemMapper.deleteByadid(infoSN);
@@ -1036,13 +1226,12 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
-	public JSONObject GetItembyid(int infoSN) {
+	public JSONObject GetItembyid(String infoSN) {
 		JSONObject jObject = new JSONObject();
 		try {
 			List<item> itemlist = itemMapper.selectByadid(infoSN);
@@ -1059,9 +1248,8 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 		} catch (Exception e) {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
-		} finally {
-			return jObject;
 		}
+		return jObject;
 	}
 
 	@Override
@@ -1125,15 +1313,33 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 	}
 
 	@Override
-	public JSONArray getimgbyprojectid(String projectid, int imgtype, String classify) {
+	public JSONObject getimgbyprojectid(String projectid, int imgtype, String classify, int pageNumber, int pageSize) {
+		JSONObject jObject = new JSONObject();
 		JSONArray itemJSONArray = new JSONArray();
 
 		List<basemap> basemaps = null;
+		int startoffset = (pageNumber - 1) * pageSize;
 
+		int itemCount = 0;
 		if (classify == "") {
-			basemaps = basemapMapper.selectbasemap2byproject(projectid, imgtype);
+			basemaps = basemapMapper.selectbasemap2byproject(projectid, imgtype, startoffset, pageSize);
+			itemCount = basemapMapper.selectbasemap2byprojectCount(projectid, imgtype);
+			int pages = (int) Math.ceil(itemCount / (double) pageSize);
+			if (pageNumber > pages && pages > 0) {
+				pageNumber = pages;
+				startoffset = (pageNumber - 1) * pageSize;
+				basemaps = basemapMapper.selectbasemap2byproject(projectid, imgtype, startoffset, pageSize);
+			}
 		} else {
-			basemaps = basemapMapper.selectbasemapbyproject(projectid, imgtype, classify);
+			basemaps = basemapMapper.selectbasemapbyproject(projectid, imgtype, classify, startoffset, pageSize);
+			itemCount = basemapMapper.selectbasemapbyprojectCount(projectid, imgtype, classify);
+
+			int pages = (int) Math.ceil(itemCount / (double) pageSize);
+			if (pageNumber > pages && pages > 0) {
+				pageNumber = pages;
+				startoffset = (pageNumber - 1) * pageSize;
+				basemaps = basemapMapper.selectbasemap2byproject(projectid, imgtype, startoffset, pageSize);
+			}
 		}
 
 		if (basemaps != null && basemaps.size() > 0) {
@@ -1151,8 +1357,10 @@ public class AdvMangerServiceImpl implements IAdvMangerService {
 				itemJSONArray.add(jitem);
 			}
 		}
+		jObject.put("totalCount", itemCount);
+		jObject.put("itemJSONArray", itemJSONArray);
 
-		return itemJSONArray;
+		return jObject;
 	}
 
 	@Override

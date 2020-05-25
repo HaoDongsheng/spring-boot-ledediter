@@ -3,10 +3,12 @@ package org.hds.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.hds.logmapper.oldplaylistMapper;
 import org.hds.mapper.advertisementMapper;
 import org.hds.mapper.groupMapper;
 import org.hds.mapper.infocodeMapper;
@@ -18,8 +20,10 @@ import org.hds.model.advertisement;
 import org.hds.model.group;
 import org.hds.model.infocode;
 import org.hds.model.item;
+import org.hds.model.oldplaylist;
 import org.hds.model.playlist;
 import org.hds.model.playlistcode;
+import org.hds.model.project;
 import org.hds.service.IInfoListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +50,8 @@ public class InfoListServiceImpl implements IInfoListService {
 	getCode getCode;
 	@Autowired
 	projectMapper projectMapper;
+	@Autowired
+	oldplaylistMapper oldplaylistMapper;
 
 	@Override
 	public JSONArray getGroup(JSONObject adminInfoJsonObject) {
@@ -60,31 +66,35 @@ public class InfoListServiceImpl implements IInfoListService {
 				for (int i = 0; i < grplist.size(); i++) {
 					group tg = grplist.get(i);
 					int grpid = tg.getGroupid();
-					if (groupids == null || groupids == "" || adminInfoJsonObject.getInteger("adminlevel") < 2) {
-						String grpName = tg.getGroupname();
-						int screenwidth = tg.getscreenwidth();
-						int screenheight = tg.getscreenheight();
-						int maxPackLength = tg.getMaxPackLength();
+					String grpName = tg.getGroupname();
+					int screenwidth = tg.getscreenwidth();
+					int screenheight = tg.getscreenheight();
+					int maxPackLength = tg.getMaxPackLength();
+					int ptMode = tg.getPtMode() != null ? tg.getPtMode() : 0;
+					String displayMode = tg.getDisplayMode() != null ? tg.getDisplayMode() : "1110000000011001100000";
+					if (groupids == null || groupids.equals("") || adminInfoJsonObject.getInteger("adminlevel") < 2) {
 						JSONObject jgrp = new JSONObject();
 						jgrp.put("grpid", grpid);
 						jgrp.put("grpname", grpName);
 						jgrp.put("maxPackLength", maxPackLength);
+						jgrp.put("batchCount", tg.getBatchCount());
 						jgrp.put("projectid", tg.getProjectid());
 						jgrp.put("screenwidth", screenwidth);
 						jgrp.put("screenheight", screenheight);
+						jgrp.put("ptMode", ptMode);
+						jgrp.put("displayMode", displayMode);
 						jArray.add(jgrp);
 					} else if (Arrays.asList(groupids.split(",")).contains(Integer.toString(grpid))) {
-						String grpName = tg.getGroupname();
-						int screenwidth = tg.getscreenwidth();
-						int screenheight = tg.getscreenheight();
-						int maxPackLength = tg.getMaxPackLength();
 						JSONObject jgrp = new JSONObject();
 						jgrp.put("grpid", grpid);
 						jgrp.put("grpname", grpName);
 						jgrp.put("maxPackLength", maxPackLength);
+						jgrp.put("batchCount", tg.getBatchCount());
 						jgrp.put("projectid", tg.getProjectid());
 						jgrp.put("screenwidth", screenwidth);
 						jgrp.put("screenheight", screenheight);
+						jgrp.put("ptMode", ptMode);
+						jgrp.put("displayMode", displayMode);
 						jArray.add(jgrp);
 					}
 				}
@@ -96,13 +106,20 @@ public class InfoListServiceImpl implements IInfoListService {
 					int screenwidth = tgrpsList.get(i).getscreenwidth();
 					int screenheight = tgrpsList.get(i).getscreenheight();
 					int maxPackLength = tgrpsList.get(i).getMaxPackLength();
+					int ptMode = tgrpsList.get(i).getPtMode() != null ? tgrpsList.get(i).getPtMode() : 0;
+					String displayMode = tgrpsList.get(i).getDisplayMode() != null ? tgrpsList.get(i).getDisplayMode()
+							: "1110000000011001100000";
+
 					JSONObject jgrp = new JSONObject();
 					jgrp.put("grpid", grpid);
 					jgrp.put("grpname", grpName);
 					jgrp.put("maxPackLength", maxPackLength);
+					jgrp.put("batchCount", tgrpsList.get(i).getBatchCount());
 					jgrp.put("projectid", tgrpsList.get(i).getProjectid());
 					jgrp.put("screenwidth", screenwidth);
 					jgrp.put("screenheight", screenheight);
+					jgrp.put("ptMode", ptMode);
+					jgrp.put("displayMode", displayMode);
 					jArray.add(jgrp);
 				}
 			}
@@ -119,13 +136,14 @@ public class InfoListServiceImpl implements IInfoListService {
 			List<advertisement> advertisements = advertisementMapper.selectpubBygroupid(groupid);
 
 			for (int i = 0; i < advertisements.size(); i++) {
-				int id = advertisements.get(i).getinfoSN();
+				String id = advertisements.get(i).getinfoSN();
 				String Advname = advertisements.get(i).getAdvname();
 				String lifeAct = advertisements.get(i).getlifeAct();
 				String lifeDie = advertisements.get(i).getlifeDie();
 				int playTimelength = advertisements.get(i).getplayTimelength();
 				int Pubidid = advertisements.get(i).getPubid();
 				String publishDate = advertisements.get(i).getpublishDate();
+				String remarks = advertisements.get(i).getRemarks();
 
 				JSONObject jadv = new JSONObject();
 				jadv.put("id", id);
@@ -135,6 +153,7 @@ public class InfoListServiceImpl implements IInfoListService {
 				jadv.put("playTimelength", playTimelength);
 				jadv.put("Pubidid", Pubidid);
 				jadv.put("publishDate", publishDate);
+				jadv.put("remarks", remarks);
 
 				jArray.add(jadv);
 			}
@@ -149,10 +168,13 @@ public class InfoListServiceImpl implements IInfoListService {
 	public JSONArray GetInfoList(int groupid) {
 		JSONArray jArray = new JSONArray();
 		try {
-			List<playlist> playlists = playlistMapper.selectbygroupid(groupid);
+//			List<playlist> playlists = playlistMapper.selectbygroupid(groupid);
+
+			SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd");
+			List<playlist> playlists = playlistMapper.selectbygroupidDate(groupid, d1.format(new Date()));
 
 			for (int i = 0; i < playlists.size(); i++) {
-				int id = playlists.get(i).getplaylistSN();
+				String id = playlists.get(i).getplaylistSN();
 				int Delindex = playlists.get(i).getDelindex();
 				int Grpid = playlists.get(i).getGroupid();
 				int Playlistlevel = playlists.get(i).getPlaylistlevel();
@@ -187,17 +209,19 @@ public class InfoListServiceImpl implements IInfoListService {
 
 	@Override
 	public JSONObject CreatinfoList(String listname, int groupid, int listtype, String quantums, int ScheduleType,
-			String programlist, int adminid) {
+			String lifeAct, String lifeDie, String programlist, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
-			Object objid = playlistMapper.selectidByName(listname, groupid);
-			if (objid == null) {
+			int count = playlistMapper.selectByNameCount(listname, groupid);
+			if (count <= 0) {
 				playlist playlist = new playlist();
+				String playlistSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				playlist.setplaylistSN(playlistSN);
 				playlist.setDelindex(0);
 				playlist.setGroupid(groupid);
 				playlist.setPlaylistlevel(listtype);
-				playlist.setPlaylistlifeact("");
-				playlist.setPlaylistlifedie("");
+				playlist.setPlaylistlifeact(lifeAct);
+				playlist.setPlaylistlifedie(lifeDie);
 				playlist.setcreater(adminid);
 				Date now = new Date();
 				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -211,10 +235,8 @@ public class InfoListServiceImpl implements IInfoListService {
 
 				int rowCount = playlistMapper.insert(playlist);
 				if (rowCount > 0) {
-					int returnid = playlist.getplaylistSN();
-
 					jObject.put("result", "success");
-					jObject.put("infoListID", returnid);
+					jObject.put("infoListID", playlistSN);
 				} else {
 					jObject.put("result", "fail");
 					jObject.put("resultMessage", "列表名称:" + listname + "写入数据库失败!");
@@ -240,15 +262,15 @@ public class InfoListServiceImpl implements IInfoListService {
 		try {
 			List<advertisement> advlist = new ArrayList<advertisement>();
 			for (int j = 0; j < oldplArray.size(); j++) {
-				int oldinfoid = oldplArray.getJSONObject(j).getIntValue("infoid");
+				String oldinfoid = oldplArray.getJSONObject(j).getString("infoid");
 				// 判断删除的广告在同组其他播放列表中是否存在
 				boolean isExist = false;
 				List<Object> pList = playlistMapper.selectprogramlistbygroupid(groupid);
 				for (int i = 0; i < pList.size(); i++) {
 					JSONArray plArray = JSONArray.parseArray(pList.get(i).toString());
 					for (int p = 0; p < plArray.size(); p++) {
-						int infoid = plArray.getJSONObject(p).getIntValue("infoid");
-						if (oldinfoid == infoid) {
+						String infoid = plArray.getJSONObject(p).getString("infoid");
+						if (oldinfoid.equals(infoid)) {
 							isExist = true;
 							break;
 						}
@@ -274,7 +296,7 @@ public class InfoListServiceImpl implements IInfoListService {
 		}
 	}
 
-	private int isInfoFull(int listid, String listname, int groupid, int listtype, String quantums, int ScheduleType,
+	private int isInfoFull(String listid, String listname, int groupid, int listtype, String quantums, int ScheduleType,
 			String programlist) {
 		int maxInfoCount = 200, maxPlaylistCount = 30;
 		try {
@@ -288,7 +310,7 @@ public class InfoListServiceImpl implements IInfoListService {
 				for (int i = 0; i < jArrayLoop.size(); i++) {
 					String infoid = jArrayLoop.getJSONObject(i).getString("infoid");
 					String lifeDie = jArrayLoop.getJSONObject(i).getString("lifeDie");
-					if (lifeDie.equals("") || lifeDie.equals(null)) {
+					if (lifeDie.equals("") || lifeDie == null) {
 						lifeDie = "2100-09-09";
 					}
 					if (!infosnlist.contains(infoid) && lifeDie.compareTo(d1.format(now)) >= 0) {
@@ -338,11 +360,11 @@ public class InfoListServiceImpl implements IInfoListService {
 						int comparedate = sd.parse(jObject.getString("lifeDie")).compareTo(new Date());
 						if (comparedate > 0) {
 							playlistcode plcode = new playlistcode();
-							plcode.setPlaylistsn(0);
+							plcode.setPlaylistsn("0");
 							plcode.setPubid(0);
 							plcode.setLifeAct(jObject.getString("lifeAct"));
 							plcode.setLifeDie(jObject.getString("lifeDie"));
-							plcode.setplaylistCodeSN(0);
+							plcode.setplaylistCodeSN("0");
 							plcode.setCodecontext("");
 							JSONArray jArray = jObject.getJSONArray("advlist");
 							List<String> infosns = new ArrayList<String>();
@@ -360,11 +382,11 @@ public class InfoListServiceImpl implements IInfoListService {
 					}
 				} else {
 					playlistcode plcode = new playlistcode();
-					plcode.setPlaylistsn(0);
+					plcode.setPlaylistsn("0");
 					plcode.setPubid(0);
 					plcode.setLifeAct("1999-09-09");
 					plcode.setLifeDie("2100-09-09");
-					plcode.setplaylistCodeSN(0);
+					plcode.setplaylistCodeSN("0");
 					plcode.setCodecontext("");
 					plcode.setContainADID(String.join(",", infosnlist));
 					plcode.setGroupid(groupid);
@@ -380,7 +402,7 @@ public class InfoListServiceImpl implements IInfoListService {
 				for (int i = 0; i < plcodeList.size(); i++) {
 					playlistcode plcode = plcodeList.get(i);
 
-					if (plcode.getPlaylistsn() == listid)// 要删除的列表不参与计算
+					if (plcode.getPlaylistsn().equals(listid))// 要删除的列表不参与计算
 					{
 						continue;
 					}
@@ -394,16 +416,6 @@ public class InfoListServiceImpl implements IInfoListService {
 					if (lifeDie.equals("")) {
 						lifeDie = "2100-09-09";
 					}
-					/*
-					 * SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd"); //
-					 * 加上时间 // 必须捕获异常
-					 * 
-					 * try { java.util.Date date = simpleDateFormat.parse(lifeDie); Calendar
-					 * calendar = new GregorianCalendar(); calendar.setTime(date);
-					 * calendar.add(Calendar.DATE, 1); date = calendar.getTime();
-					 * 
-					 * lifeDie = simpleDateFormat.format(date); } catch (ParseException px) { }
-					 */
 
 					if (!datelist.contains(lifeAct)) {
 						datelist.add(lifeAct);
@@ -452,8 +464,8 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject UpdateinfoList(int listid, String listname, int groupid, int listtype, String quantums,
-			int ScheduleType, String programlist, int adminid) {
+	public JSONObject UpdateinfoList(String listid, String listname, int groupid, int listtype, String quantums,
+			int ScheduleType, String listlifeAct, String listlifeDie, String programlist, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			JSONArray jArrayLoop = null;
@@ -463,7 +475,7 @@ public class InfoListServiceImpl implements IInfoListService {
 				jArrayLoop = JSONArray.parseArray(programlist);
 				for (int i = jArrayLoop.size() - 1; i >= 0; i--) {
 					String lifeDie = jArrayLoop.getJSONObject(i).getString("lifeDie");
-					if (!lifeDie.equals("") && !lifeDie.equals(null) && lifeDie.compareTo(dt.format(new Date())) < 0) {
+					if (!lifeDie.equals("") && lifeDie != null && lifeDie.compareTo(dt.format(new Date())) < 0) {
 						jArrayLoop.remove(i);
 					}
 				}
@@ -504,16 +516,36 @@ public class InfoListServiceImpl implements IInfoListService {
 
 				int pldeleCount = 0;
 
+				/*
+				 * 检查开始 检查数据库中同组中存在多个重名的播放列表,存在就删除,解决出现多个列表情况
+				 */
+				String DelMessageString = "";
+				List<String> plsns = playlistMapper.selectlistsnbyplaylistname(groupid, listname);
+				if (plsns != null && plsns.size() > 0) {
+					DelMessageString = "执行删除多个重复列表指令,列表个数:" + plsns.size() + "播放列表id集合:";
+					for (int i = 0; i < plsns.size(); i++) {
+						DelMessageString += plsns.get(i) + ",";
+						pldeleCount += playlistMapper.updatedelindexByPrimaryKey(plsns.get(i), 1, adminid,
+								d1.format(now));
+						pcdeleCount += playlistcodeMapper.deleteByplaylistSN(plsns.get(i));
+					}
+					DelMessageString += ",成功删除" + pldeleCount + "个播放列表";
+				}
+				/*
+				 * 检查结束
+				 */
 				// 判断删除排期中的广告是否需要删除
 				JSONArray oldplArray = JSONArray.parseArray(oldpl.getProgramlist());
 				deletePublishInfo(oldplArray, oldpl.getGroupid(), adminid);
 
 				playlist playlist = new playlist();
+				String playlistSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				playlist.setplaylistSN(playlistSN);
 				playlist.setDelindex(0);
 				playlist.setGroupid(groupid);
 				playlist.setPlaylistlevel(listtype);
-				playlist.setPlaylistlifeact("");
-				playlist.setPlaylistlifedie("");
+				playlist.setPlaylistlifeact(listlifeAct);
+				playlist.setPlaylistlifedie(listlifeDie);
 				playlist.setcreater(adminid);
 				playlist.setcreateDate(d1.format(now));
 				playlist.setPlaylistname(listname);
@@ -524,11 +556,11 @@ public class InfoListServiceImpl implements IInfoListService {
 
 				int rowCount = playlistMapper.insert(playlist);
 				if (rowCount > 0) {
-					pldeleCount = playlistMapper.updatedelindexByPrimaryKey(listid, 1, adminid, d1.format(now));
-					int returnid = playlist.getplaylistSN();
+					pldeleCount += playlistMapper.updatedelindexByPrimaryKey(listid, 1, adminid, d1.format(now));
 					jObject.put("result", "success");
-					jObject.put("returnid", returnid);
-					jObject.put("deleMessage", "发布时删除旧播放列表" + pldeleCount + "个,编码" + pcdeleCount + "个,就列表SN" + listid);
+					jObject.put("returnid", playlistSN);
+					jObject.put("deleMessage",
+							"发布时删除旧播放列表" + pldeleCount + "个,编码" + pcdeleCount + "个,就列表SN" + listid + DelMessageString);
 
 				} else {
 					jObject.put("result", "fail");
@@ -539,10 +571,10 @@ public class InfoListServiceImpl implements IInfoListService {
 				playlist playlist = new playlist();
 				playlist.setDelindex(0);
 				playlist.setGroupid(groupid);
-				playlist.setId(listid);
+				playlist.setplaylistSN(listid);
 				playlist.setPlaylistlevel(listtype);
-				playlist.setPlaylistlifeact("");
-				playlist.setPlaylistlifedie("");
+				playlist.setPlaylistlifeact(listlifeAct);
+				playlist.setPlaylistlifedie(listlifeDie);
 				playlist.setPlaylistname(listname);
 				playlist.setProgramlist(programlist);
 				playlist.setPubid("0");
@@ -574,11 +606,11 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject UpdatePlaylistName(int playlistid, String listname) {
+	public JSONObject UpdatePlaylistName(String playlistid, String listname) {
 		JSONObject jObject = new JSONObject();
 		try {
 			playlist playlist = new playlist();
-			playlist.setId(playlistid);
+			playlist.setplaylistSN(playlistid);
 			playlist.setPlaylistname(listname);
 
 			int rowCount = playlistMapper.updateByPrimaryKeySelective(playlist);
@@ -599,7 +631,32 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject Copyinfobyid(int infosn, int groupid, int adminid) {
+	public JSONObject UpdateRemarks(String infosn, String remarks) {
+		JSONObject jObject = new JSONObject();
+		try {
+			advertisement advertisement = new advertisement();
+			advertisement.setinfoSN(infosn);
+			advertisement.setRemarks(remarks);
+
+			int rowCount = advertisementMapper.updateByPrimaryKeySelective(advertisement);
+			if (rowCount > 0) {
+				jObject.put("result", "success");
+			} else {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "修改广告id" + infosn + "备注:" + remarks + "写入数据库失败!");
+			}
+
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject Copyinfobyid(String infosn, int groupid, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			advertisement adv = advertisementMapper.selectByPrimaryKey(infosn);
@@ -619,6 +676,8 @@ public class InfoListServiceImpl implements IInfoListService {
 				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				// DateFormat d1 = DateFormat.getDateTimeInstance();
 				advertisement advertisement = new advertisement();
+				String newinfoSN = getCode.getIncreaseIdByCurrentTimeMillis();
+				advertisement.setinfoSN(newinfoSN);
 				advertisement.setAdvname(newInfoNameString);
 				String dts = adv.getlifeAct();
 				String dte = adv.getlifeDie();
@@ -641,7 +700,6 @@ public class InfoListServiceImpl implements IInfoListService {
 				advertisement.setplayTimelength(adv.getplayTimelength());// 默认暂时写10秒
 				int rowCount = advertisementMapper.insert(advertisement);
 				if (rowCount > 0) {
-					int newinfoSN = advertisement.getinfoSN();
 					List<item> itemlist = itemMapper.selectByadid(infosn);
 					for (int j = 0; j < itemlist.size(); j++) {
 						item olditem = itemlist.get(j);
@@ -684,10 +742,11 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject Deleteinfobyid(int infosn, int groupid, int infopubid, int adminid) {
+	public JSONObject Deleteinfobyid(String infosn, int groupid, int infopubid, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
-			List<playlistcode> plcodes = playlistcodeMapper.selectByGroupid(groupid);
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			List<playlistcode> plcodes = playlistcodeMapper.selectByGroupidDate(groupid, formatter.format(new Date()));
 			boolean isF = false;
 			if (plcodes != null && plcodes.size() > 0) {
 				for (int i = 0; i < plcodes.size(); i++) {
@@ -724,7 +783,7 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject GetInfocodebyid(int infosn) {
+	public JSONObject GetInfocodebyid(String infosn) {
 		JSONObject jObject = new JSONObject();
 		try {
 			JSONArray infocodelist = new JSONArray();
@@ -766,7 +825,7 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject DeleteinfoList(int listid, int adminid) {
+	public JSONObject DeleteinfoList(String listid, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			playlist oldpl = playlistMapper.selectByPrimaryKey(listid);
@@ -798,12 +857,38 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
-	public JSONObject PublishinfoList(int listid, int adminid) {
+	public JSONObject PublishinfoListbyGroupid(String listid, int adminid, int groupid) {
+		JSONObject jObject = new JSONObject();
+		try {
+			int ptmode = groupMapper.selectByPrimaryKey(groupid).getPtMode() != null
+					? groupMapper.selectByPrimaryKey(groupid).getPtMode()
+					: 0;
+			switch (ptmode) {
+			case 0:
+				jObject = PublishinfoList(listid, adminid);
+				break;
+			case 1:
+				jObject = PublishinfoListbydate(listid, adminid);
+				break;
+			case 2:
+				jObject = PublishinfoListbydate2(listid, adminid);
+				break;
+			}
+
+			return jObject;
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
+	@Override
+	public JSONObject PublishinfoList(String listid, int adminid) {
 		JSONObject jObject = new JSONObject();
 		try {
 			playlist playlist = playlistMapper.selectByPrimaryKey(listid);
 			String programlist = playlist.getProgramlist();
-			if (programlist == null || programlist == "") {
+			if (programlist == null || programlist.equals("")) {
 				jObject.put("result", "fail");
 				jObject.put("resultMessage", "播放列表没有排期数据!");
 				return jObject;
@@ -842,7 +927,7 @@ public class InfoListServiceImpl implements IInfoListService {
 					if (programlist != null && programlist != "") {
 						JSONArray plArray = JSONArray.parseArray(programlist);
 						for (int i = 0; i < plArray.size(); i++) {
-							int infoid = plArray.getJSONObject(i).getIntValue("infoid");
+							String infoid = plArray.getJSONObject(i).getString("infoid");
 							advertisement advertisement = advertisementMapper.selectByPrimaryKey(infoid);
 							advlist.add(advertisement);
 //							advertisementMapper.updatepublishDateByid(infoid, adminid, d1.format(now));
@@ -862,11 +947,59 @@ public class InfoListServiceImpl implements IInfoListService {
 					// 修改pubid
 					playlistMapper.updatemutipubidByPrimaryKey(listid, pidStrings, adminid, d1.format(now),
 							jArrayinfo.toJSONString());
+
+					JSONArray jsonArr = new JSONArray();
+
+					JSONObject jsonObject = Jionplaylist(playlist);
+					if (jsonObject != null) {
+						JSONArray delArray = jsonObject.getJSONArray("delelePlatlistSNs");
+						JSONArray udeArray = jsonObject.getJSONArray("updatePlatlistSNs");
+
+						if (delArray != null && delArray.size() > 0) {
+							for (int i = 0; i < delArray.size(); i++) {
+								JSONObject jObject2 = DeleteinfoList(delArray.getString(i), adminid);
+								JSONObject jo = new JSONObject();
+								jo.put("changtype", "delete");
+								jo.put("playlistsn", delArray.getString(i));
+								jsonArr.add(jo);
+							}
+						}
+
+						if (udeArray != null && udeArray.size() > 0) {
+							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+							String st = playlist.getPlaylistlifeact().equals("") ? "1999-09-09"
+									: playlist.getPlaylistlifeact();
+							Date d = formatter.parse(st);
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(d);
+							calendar.add(Calendar.DATE, -1);
+							String newLifeDieString = formatter.format(calendar.getTime());
+
+							for (int i = 0; i < udeArray.size(); i++) {
+								JSONObject reJsonObject = updateplaylistdate(udeArray.getString(i),
+										playlistMapper.selectByPrimaryKey(udeArray.getString(i)).getPlaylistlifeact(),
+										newLifeDieString, adminid);
+								if (reJsonObject.getString("result").equals("success")) {
+									JSONObject jo = new JSONObject();
+									jo.put("changtype", "update");
+									jo.put("playlistsn", udeArray.getString(i));
+									jo.put("newsn", reJsonObject.getString("newsn"));
+									jo.put("lifeAct", reJsonObject.getString("lifeAct"));
+									jo.put("lifeDie", reJsonObject.getString("lifeDie"));
+									jo.put("pidStrings", reJsonObject.getString("pidStrings"));
+									jsonArr.add(jo);
+								}
+
+							}
+						}
+					}
+
 					// 写入项目表，发布广告改动时间数据
 					projectMapper.updateAdvUpdateTimeByPrimaryKey(
 							groupMapper.selectByPrimaryKey(playlist.getGroupid()).getProjectid(), d1.format(now));
 					jObject.put("result", "success");
 					jObject.put("pubid", pidStrings);
+					jObject.put("changeInfo", jsonArr.toJSONString());
 				} else {
 					playlistMapper.deleteByPrimaryKey(listid);
 					playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
@@ -906,7 +1039,7 @@ public class InfoListServiceImpl implements IInfoListService {
 					if (programlist != null && programlist != "") {
 						JSONArray plArray = JSONArray.parseArray(programlist);
 						for (int i = 0; i < plArray.size(); i++) {
-							int infoid = plArray.getJSONObject(i).getIntValue("infoid");
+							String infoid = plArray.getJSONObject(i).getString("infoid");
 							advertisement advertisement = advertisementMapper.selectByPrimaryKey(infoid);
 							advlist.add(advertisement);
 							Object publishDate = advertisementMapper.selectpublishDateByPrimaryKey(infoid);
@@ -926,40 +1059,65 @@ public class InfoListServiceImpl implements IInfoListService {
 					// 修改pubid
 					playlistMapper.updatemutipubidByPrimaryKey(listid, pidStrings, adminid, d1.format(now),
 							jArrayinfo.toJSONString());
+
+					JSONArray jsonArr = new JSONArray();
+
+					JSONObject jsonObject = Jionplaylist(playlist);
+					if (jsonObject != null) {
+						JSONArray delArray = jsonObject.getJSONArray("delelePlatlistSNs");
+						JSONArray udeArray = jsonObject.getJSONArray("updatePlatlistSNs");
+
+						if (delArray != null && delArray.size() > 0) {
+							for (int i = 0; i < delArray.size(); i++) {
+								JSONObject jObject2 = DeleteinfoList(delArray.getString(i), adminid);
+								JSONObject jo = new JSONObject();
+								jo.put("changtype", "delete");
+								jo.put("playlistsn", delArray.getString(i));
+								jsonArr.add(jo);
+							}
+						}
+
+						if (udeArray != null && udeArray.size() > 0) {
+							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+							String st = playlist.getPlaylistlifeact().equals("") ? "1999-09-09"
+									: playlist.getPlaylistlifeact();
+							Date d = formatter.parse(st);
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(d);
+							calendar.add(Calendar.DATE, -1);
+							String newLifeDieString = formatter.format(calendar.getTime());
+
+							for (int i = 0; i < udeArray.size(); i++) {
+								JSONObject reJsonObject = updateplaylistdate(udeArray.getString(i),
+										playlistMapper.selectByPrimaryKey(udeArray.getString(i)).getPlaylistlifeact(),
+										newLifeDieString, adminid);
+								if (reJsonObject.getString("result").equals("success")) {
+									JSONObject jo = new JSONObject();
+									jo.put("changtype", "update");
+									jo.put("playlistsn", udeArray.getString(i));
+									jo.put("newsn", reJsonObject.getString("newsn"));
+									jo.put("lifeAct", reJsonObject.getString("lifeAct"));
+									jo.put("lifeDie", reJsonObject.getString("lifeDie"));
+									jo.put("pidStrings", reJsonObject.getString("pidStrings"));
+									jsonArr.add(jo);
+								}
+
+							}
+						}
+					}
+
 					// 写入项目表，发布广告改动时间数据
 					projectMapper.updateAdvUpdateTimeByPrimaryKey(
 							groupMapper.selectByPrimaryKey(playlist.getGroupid()).getProjectid(), d1.format(now));
 					jObject.put("result", "success");
 					jObject.put("pubid", pidStrings);
+					jObject.put("changeInfo", jsonArr.toJSONString());
 				} else {
 					playlistMapper.deleteByPrimaryKey(listid);
 					playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
 					jObject.put("result", "fail");
 					jObject.put("resultMessage", "播放列表编码错误");
 				}
-
-				/*
-				 * int plpid = getCode.GetplpubidbyGroupid(playlist.getGroupid());//
-				 * 每次发布重新生成发布id
-				 * 
-				 * Date now = new Date(); DateFormat d1 = DateFormat.getDateTimeInstance();
-				 * 
-				 * // 写入编码 表 int retplaylistIndex = getCode.GetplaylistCodeListbyid(playlist,
-				 * plpid, playlist.getGroupid()); // 更新广告发布日期 if (retplaylistIndex == 0) { if
-				 * (programlist != null && programlist != "") { JSONArray plArray =
-				 * JSONArray.parseArray(programlist); for (int i = 0; i < plArray.size(); i++) {
-				 * int infoid = plArray.getJSONObject(i).getIntValue("infoid"); Object
-				 * publishDate = advertisementMapper.selectpublishDateByPrimaryKey(infoid); if
-				 * (publishDate == null) { advertisementMapper.updatepublishDateByid(infoid,
-				 * adminid, d1.format(now)); } } } // 修改pubid
-				 * playlistMapper.updatepubidByPrimaryKey(listid, Integer.toString(plpid),
-				 * adminid, d1.format(now)); // 写入项目表，发布广告改动时间数据
-				 * projectMapper.updateAdvUpdateTimeByPrimaryKey(
-				 * groupMapper.selectByPrimaryKey(playlist.getGroupid()).getProjectid(),
-				 * d1.format(now)); jObject.put("result", "success"); jObject.put("pubid",
-				 * Integer.toString(plpid)); } else { jObject.put("result", "fail");
-				 * jObject.put("resultMessage", "播放列表编码错误"); }
-				 */
 			}
 
 			return jObject;
@@ -975,10 +1133,452 @@ public class InfoListServiceImpl implements IInfoListService {
 	}
 
 	@Override
+	public JSONObject PublishinfoListbydate(String listid, int adminid) {
+		JSONObject jObject = new JSONObject();
+		try {
+			playlist playlist = playlistMapper.selectByPrimaryKey(listid);
+			String programlist = playlist.getProgramlist();
+			if (programlist == null || programlist.equals("")) {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "播放列表没有排期数据!");
+				return jObject;
+			}
+			JSONArray jArrayLoop = JSONArray.parseArray(programlist);
+			JSONArray jArrayinfo = null;
+			if (playlist.getScheduletype() == 2 || playlist.getPlaylistlevel() == 0) {
+				// 顺序排期
+				jArrayinfo = getCode.GetJsonArrayinfolistbydate(jArrayLoop, playlist.getPlaylistlifeact(),
+						playlist.getPlaylistlifedie(), 1);
+			} else {
+				jArrayinfo = getCode.GetJsonArrayinfolistbydate2(jArrayLoop, playlist.getPlaylistlifeact(),
+						playlist.getPlaylistlifedie(), 1);
+			}
+			int returnIndex = 0;
+			String pidStrings = "";
+			// 写入编码表
+			if (jArrayinfo != null && jArrayinfo.size() > 0) {
+				playlistcodeMapper.deleteByplaylistSN(listid);// 发布之前删除播放列表编码数据
+				for (int i = 0; i < jArrayinfo.size(); i++) {
+					int plpid = getCode.GetplpubidbyGroupid(playlist.getGroupid());
+					pidStrings += plpid + ",";
+					JSONObject jsonObject = jArrayinfo.getJSONObject(i);
+					int retplaylistIndex = getCode.GetplaylistCodeListbyid(listid, jsonObject, plpid,
+							playlist.getPlaylistlevel(), playlist.getTimequantum(), playlist.getGroupid());
+					if (retplaylistIndex != 0) {
+						returnIndex = retplaylistIndex;
+						break;
+					}
+				}
+			}
+
+			if (returnIndex == 0) {
+				Date now = new Date();
+				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				// DateFormat d1 = DateFormat.getDateTimeInstance();
+
+				List<advertisement> advlist = new ArrayList<advertisement>();
+				// 更新广告发布日期
+				if (programlist != null && programlist != "") {
+					JSONArray plArray = JSONArray.parseArray(programlist);
+					for (int i = 0; i < plArray.size(); i++) {
+						String infoid = plArray.getJSONObject(i).getString("infoid");
+						advertisement advertisement = advertisementMapper.selectByPrimaryKey(infoid);
+						advlist.add(advertisement);
+//							advertisementMapper.updatepublishDateByid(infoid, adminid, d1.format(now));
+						Object publishDate = advertisementMapper.selectpublishDateByPrimaryKey(infoid);
+						if (publishDate == null || publishDate.equals("")) {
+							advertisementMapper.updatepublishDateByid(infoid, adminid, d1.format(now));
+						}
+					}
+				}
+				if (advlist.size() > 0) {
+					// NettyClient.TcpSocketSendPublish(advlist, null);
+				}
+
+				if (pidStrings.length() > 0) {
+					pidStrings = pidStrings.substring(0, pidStrings.length() - 1);
+				}
+				// 修改pubid
+				playlistMapper.updatemutipubidByPrimaryKey(listid, pidStrings, adminid, d1.format(now),
+						jArrayinfo.toJSONString());
+
+				JSONArray jsonArr = new JSONArray();
+
+				JSONObject jsonObject = Jionplaylist(playlist);
+				if (jsonObject != null) {
+					JSONArray delArray = jsonObject.getJSONArray("delelePlatlistSNs");
+					JSONArray udeArray = jsonObject.getJSONArray("updatePlatlistSNs");
+
+					if (delArray != null && delArray.size() > 0) {
+						for (int i = 0; i < delArray.size(); i++) {
+							JSONObject jObject2 = DeleteinfoList(delArray.getString(i), adminid);
+							JSONObject jo = new JSONObject();
+							jo.put("changtype", "delete");
+							jo.put("playlistsn", delArray.getString(i));
+							jsonArr.add(jo);
+						}
+					}
+
+					if (udeArray != null && udeArray.size() > 0) {
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+						String st = playlist.getPlaylistlifeact().equals("") ? "1999-09-09"
+								: playlist.getPlaylistlifeact();
+						Date d = formatter.parse(st);
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(d);
+						calendar.add(Calendar.DATE, -1);
+						String newLifeDieString = formatter.format(calendar.getTime());
+
+						for (int i = 0; i < udeArray.size(); i++) {
+							JSONObject reJsonObject = updateplaylistdate(udeArray.getString(i),
+									playlistMapper.selectByPrimaryKey(udeArray.getString(i)).getPlaylistlifeact(),
+									newLifeDieString, adminid);
+							if (reJsonObject.getString("result").equals("success")) {
+								JSONObject jo = new JSONObject();
+								jo.put("changtype", "update");
+								jo.put("playlistsn", udeArray.getString(i));
+								jo.put("newsn", reJsonObject.getString("newsn"));
+								jo.put("lifeAct", reJsonObject.getString("lifeAct"));
+								jo.put("lifeDie", reJsonObject.getString("lifeDie"));
+								jo.put("pidStrings", reJsonObject.getString("pidStrings"));
+								jsonArr.add(jo);
+							}
+
+						}
+					}
+				}
+
+				// 写入项目表，发布广告改动时间数据
+				projectMapper.updateAdvUpdateTimeByPrimaryKey(
+						groupMapper.selectByPrimaryKey(playlist.getGroupid()).getProjectid(), d1.format(now));
+				jObject.put("result", "success");
+				jObject.put("pubid", pidStrings);
+				jObject.put("changeInfo", jsonArr.toJSONString());
+			} else {
+				playlistMapper.deleteByPrimaryKey(listid);
+				playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "播放列表编码错误");
+			}
+			return jObject;
+
+		} catch (Exception e) {
+			playlistMapper.deleteByPrimaryKey(listid);
+			playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject PublishinfoListbydate2(String listid, int adminid) {
+		JSONObject jObject = new JSONObject();
+		try {
+			playlist playlist = playlistMapper.selectByPrimaryKey(listid);
+			String programlist = playlist.getProgramlist();
+			if (programlist == null || programlist.equals("")) {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "播放列表没有排期数据!");
+				return jObject;
+			}
+			JSONArray jArrayLoop = JSONArray.parseArray(programlist);
+			JSONArray jArrayinfo = null;
+			if (playlist.getScheduletype() == 2 || playlist.getPlaylistlevel() == 0) {
+				// 顺序排期
+				jArrayinfo = getCode.GetJsonArrayinfolistbydate(jArrayLoop, playlist.getPlaylistlifeact(),
+						playlist.getPlaylistlifedie(), 2);
+			} else {
+				jArrayinfo = getCode.GetJsonArrayinfolistbydate2(jArrayLoop, playlist.getPlaylistlifeact(),
+						playlist.getPlaylistlifedie(), 2);
+			}
+			int returnIndex = 0;
+			String pidStrings = "";
+			// 写入编码表
+			if (jArrayinfo != null && jArrayinfo.size() > 0) {
+				playlistcodeMapper.deleteByplaylistSN(listid);// 发布之前删除播放列表编码数据
+				for (int i = 0; i < jArrayinfo.size(); i++) {
+					int plpid = getCode.GetplpubidbyGroupid(playlist.getGroupid());
+					pidStrings += plpid + ",";
+					JSONObject jsonObject = jArrayinfo.getJSONObject(i);
+					int retplaylistIndex = getCode.GetplaylistCodeListbyid(listid, jsonObject, plpid,
+							playlist.getPlaylistlevel(), playlist.getTimequantum(), playlist.getGroupid());
+					if (retplaylistIndex != 0) {
+						returnIndex = retplaylistIndex;
+						break;
+					}
+				}
+			}
+
+			if (returnIndex == 0) {
+				Date now = new Date();
+				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				// DateFormat d1 = DateFormat.getDateTimeInstance();
+
+				List<advertisement> advlist = new ArrayList<advertisement>();
+				// 更新广告发布日期
+				if (programlist != null && programlist != "") {
+					JSONArray plArray = JSONArray.parseArray(programlist);
+					for (int i = 0; i < plArray.size(); i++) {
+						String infoid = plArray.getJSONObject(i).getString("infoid");
+						advertisement advertisement = advertisementMapper.selectByPrimaryKey(infoid);
+						advlist.add(advertisement);
+//							advertisementMapper.updatepublishDateByid(infoid, adminid, d1.format(now));
+						Object publishDate = advertisementMapper.selectpublishDateByPrimaryKey(infoid);
+						if (publishDate == null || publishDate.equals("")) {
+							advertisementMapper.updatepublishDateByid(infoid, adminid, d1.format(now));
+						}
+					}
+				}
+				if (advlist.size() > 0) {
+					// NettyClient.TcpSocketSendPublish(advlist, null);
+				}
+
+				if (pidStrings.length() > 0) {
+					pidStrings = pidStrings.substring(0, pidStrings.length() - 1);
+				}
+				// 修改pubid
+				playlistMapper.updatemutipubidByPrimaryKey(listid, pidStrings, adminid, d1.format(now),
+						jArrayinfo.toJSONString());
+
+				JSONArray jsonArr = new JSONArray();
+
+				JSONObject jsonObject = Jionplaylist(playlist);
+				if (jsonObject != null) {
+					JSONArray delArray = jsonObject.getJSONArray("delelePlatlistSNs");
+					JSONArray udeArray = jsonObject.getJSONArray("updatePlatlistSNs");
+
+					if (delArray != null && delArray.size() > 0) {
+						for (int i = 0; i < delArray.size(); i++) {
+							JSONObject jObject2 = DeleteinfoList(delArray.getString(i), adminid);
+							JSONObject jo = new JSONObject();
+							jo.put("changtype", "delete");
+							jo.put("playlistsn", delArray.getIntValue(i));
+							jsonArr.add(jo);
+						}
+					}
+
+					if (udeArray != null && udeArray.size() > 0) {
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+						String st = playlist.getPlaylistlifeact().equals("") ? "1999-09-09"
+								: playlist.getPlaylistlifeact();
+						Date d = formatter.parse(st);
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(d);
+						calendar.add(Calendar.DATE, -1);
+						String newLifeDieString = formatter.format(calendar.getTime());
+
+						for (int i = 0; i < udeArray.size(); i++) {
+							JSONObject reJsonObject = updateplaylistdate(udeArray.getString(i),
+									playlistMapper.selectByPrimaryKey(udeArray.getString(i)).getPlaylistlifeact(),
+									newLifeDieString, adminid);
+							if (reJsonObject.getString("result").equals("success")) {
+								JSONObject jo = new JSONObject();
+								jo.put("changtype", "update");
+								jo.put("playlistsn", udeArray.getIntValue(i));
+								jo.put("newsn", reJsonObject.getIntValue("newsn"));
+								jo.put("lifeAct", reJsonObject.getString("lifeAct"));
+								jo.put("lifeDie", reJsonObject.getString("lifeDie"));
+								jo.put("pidStrings", reJsonObject.getString("pidStrings"));
+								jsonArr.add(jo);
+							}
+
+						}
+					}
+				}
+
+				// 写入项目表，发布广告改动时间数据
+				projectMapper.updateAdvUpdateTimeByPrimaryKey(
+						groupMapper.selectByPrimaryKey(playlist.getGroupid()).getProjectid(), d1.format(now));
+				jObject.put("result", "success");
+				jObject.put("pubid", pidStrings);
+				jObject.put("changeInfo", jsonArr.toJSONString());
+			} else {
+				playlistMapper.deleteByPrimaryKey(listid);
+				playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "播放列表编码错误");
+			}
+			return jObject;
+
+		} catch (Exception e) {
+			playlistMapper.deleteByPrimaryKey(listid);
+			playlistcodeMapper.deleteByplaylistSN(listid);// 发布失败删除播放列表编码数据
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
+			return jObject;
+		}
+	}
+
+	/*
+	 * 判断列表和原有列表生命周期时间段是否有交集 有交集的 旧列表开始日期>=新列表开始日期,提示并删除旧列表 旧列表开始日期<新列表开始日期,提示并截断旧列表
+	 */
+	private JSONObject Jionplaylist(playlist playlist) {
+		JSONObject jObject = new JSONObject();
+		try {
+			List<String> delelePlatlistSNs = new ArrayList<String>();
+			List<String> updatePlatlistSNs = new ArrayList<String>();
+
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			List<playlist> playlists = playlistMapper.selectbygroupidDate(playlist.getGroupid(),
+					formatter.format(new Date()));
+			if (playlists != null && playlists.size() > 0) {
+				String st = playlist.getPlaylistlifeact().equals("") ? "1999-09-09" : playlist.getPlaylistlifeact();
+				String et = playlist.getPlaylistlifedie().equals("") ? "2100-09-09" : playlist.getPlaylistlifedie();
+
+				JSONObject jsonObject = JSONObject.parseObject(playlist.getTimequantum());
+				JSONArray jsonArray = jsonObject.getJSONArray("timelist");
+
+				for (int i = 0; i < playlists.size(); i++) {
+					playlist item = playlists.get(i);
+					if (!item.getplaylistSN().equals(playlist.getplaylistSN())
+							&& item.getPlaylistlevel() == playlist.getPlaylistlevel()) {
+						String act = item.getPlaylistlifeact().equals("") ? "1999-09-09" : item.getPlaylistlifeact();
+						String die = item.getPlaylistlifedie().equals("") ? "2100-09-09" : item.getPlaylistlifedie();
+						if (!(act.compareTo(et) > 0 || die.compareTo(st) < 0))// 判断生命周期是否有交集
+						{
+							/*
+							 * 判断时间集合是否有交集
+							 */
+							boolean isJoin = false;
+							for (int j = 0; j < jsonArray.size(); j++) {
+								int stval = jsonArray.getJSONObject(j).getIntValue("lifeAct");
+								int etval = jsonArray.getJSONObject(j).getIntValue("lifeDie") == 0 ? 24 * 60
+										: jsonArray.getJSONObject(j).getIntValue("lifeDie");
+
+								JSONObject itemObject = JSONObject.parseObject(item.getTimequantum());
+								JSONArray itemArray = itemObject.getJSONArray("timelist");
+
+								for (int z = 0; z < itemArray.size(); z++) {
+									int lstval = itemArray.getJSONObject(z).getIntValue("lifeAct");
+									int letval = itemArray.getJSONObject(z).getIntValue("lifeDie") == 0 ? 24 * 60
+											: itemArray.getJSONObject(j).getIntValue("lifeDie");
+
+									if ((stval >= lstval && stval < letval) || (etval > lstval && etval < letval)
+											|| (stval <= lstval && etval >= letval)) {
+										isJoin = true;
+										break;
+									}
+								}
+							}
+							if (isJoin) {
+								int swith = 0;
+								if (act.compareTo(st) >= 0)// 旧列表开始日期>=新列表开始日期,提示并删除旧列表
+								{
+									swith = 1;
+								}
+								if (act.compareTo(st) < 0)// 旧列表开始日期<新列表开始日期,提示并截断旧列表
+								{
+									swith = 2;
+								}
+								switch (swith) {
+								case 1:
+									/*
+									 * 删除列表
+									 */
+//								JSONObject jObject2 = DeleteinfoList(item.getplaylistSN(), adminid);
+									delelePlatlistSNs.add(item.getplaylistSN());
+									break;
+
+								case 2:
+									/*
+									 * 截断列表
+									 */
+//								Date d = formatter.parse(st);
+//								Calendar calendar = Calendar.getInstance();
+//								calendar.setTime(d);
+//								calendar.add(Calendar.DATE, -1);
+//
+//								item.setPlaylistlifedie(formatter.format(calendar.getTime()));
+//								playlistMapper.updateByPrimaryKeySelective(item);
+									// 重新编码
+									updatePlatlistSNs.add(item.getplaylistSN());
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			jObject.put("delelePlatlistSNs", delelePlatlistSNs);
+			jObject.put("updatePlatlistSNs", updatePlatlistSNs);
+			return jObject;
+
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private JSONObject updateplaylistdate(String playlistSN, String lifeAct, String lifeDie, int adminid) {
+		JSONObject jObject = new JSONObject();
+		try {
+			playlist playlist = playlistMapper.selectByPrimaryKey(playlistSN);// 获取原播放列表
+
+			Date now = new Date();
+			SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			int delpCount = playlistMapper.updatedelindexByPrimaryKey(playlistSN, 1, adminid, d1.format(now));// 数据库原列表加删除标识
+			int delpcCount = playlistcodeMapper.deleteByplaylistSN(playlistSN);// 数据库原列表编码删除
+
+			playlist item = new playlist();
+			String newplaylistSN = getCode.getIncreaseIdByCurrentTimeMillis();
+			item.setplaylistSN(newplaylistSN);
+
+			item.setDelindex(0);
+			item.setGroupid(playlist.getGroupid());
+			item.setPlaylistlevel(playlist.getPlaylistlevel());
+			item.setPlaylistlifeact(lifeAct);
+			item.setPlaylistlifedie(lifeDie);
+			item.setcreater(adminid);
+			item.setcreateDate(d1.format(now));
+			item.setPlaylistname(playlist.getPlaylistname());
+			item.setProgramlist(playlist.getProgramlist());
+			item.setPubid("0");
+			item.setScheduletype(playlist.getScheduletype());
+			item.setTimequantum(playlist.getTimequantum());
+
+			int rowCount = playlistMapper.insert(item);
+
+			int ptmode = groupMapper.selectByPrimaryKey(playlist.getGroupid()).getPtMode();
+			JSONObject jsonObject = null;
+			switch (ptmode) {
+			case 0:
+
+				break;
+			case 1:
+				jsonObject = PublishinfoListbydate(item.getplaylistSN(), adminid);
+				break;
+			case 2:
+				jsonObject = PublishinfoListbydate2(item.getplaylistSN(), adminid);
+				break;
+			default:
+				break;
+			}
+			if (jsonObject.getString("result").equals("success")) {
+				String pidStrings = jsonObject.getString("pubid");
+				jObject.put("result", "success");
+				jObject.put("oldsn", playlistSN);
+				jObject.put("newsn", item.getplaylistSN());
+				jObject.put("lifeAct", lifeAct);
+				jObject.put("lifeDie", lifeDie);
+				jObject.put("pidStrings", pidStrings);
+			} else {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "播放列表编码错误");
+			}
+			return jObject;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
 	public JSONObject getbyteslistbyTemp(int listtype, String quantums, int ScheduleType, String programlist) {
 		JSONObject jObject = new JSONObject();
 		try {
-			if (programlist == null || programlist == "") {
+			if (programlist == null || programlist.equals("")) {
 				jObject.put("result", "fail");
 				jObject.put("resultMessage", "播放列表没有排期数据!");
 				return jObject;
@@ -1042,9 +1642,9 @@ public class InfoListServiceImpl implements IInfoListService {
 			JSONArray jArrayLoop = JSONArray.parseArray(programlist);
 
 			JSONArray infocodelist = new JSONArray();
-			List<Integer> conInfoidList = new ArrayList<Integer>();
+			List<String> conInfoidList = new ArrayList<String>();
 			for (int i = 0; i < jArrayLoop.size(); i++) {
-				int infoid = jArrayLoop.getJSONObject(i).getIntValue("infoid");
+				String infoid = jArrayLoop.getJSONObject(i).getString("infoid");
 				if (!conInfoidList.contains(infoid)) {
 					conInfoidList.add(infoid);
 					List<infocode> ifcodeList = infocodeMapper.selectByinfoSN(infoid);
@@ -1068,5 +1668,109 @@ public class InfoListServiceImpl implements IInfoListService {
 
 			return jObject;
 		}
+	}
+
+	@Override
+	public JSONObject deleteList2old(String playlistSN) {
+		JSONObject jObject = new JSONObject();
+		try {
+			playlist plist = playlistMapper.selectByPrimaryKey(playlistSN);
+
+			oldplaylistMapper.deleteByPrimaryKey(plist.getplaylistSN());
+			oldplaylist record = new oldplaylist();
+
+			record.setCreatedate(plist.getcreateDate());
+			record.setCreater(plist.getcreater());
+			record.setDeletedate(plist.getdeleteDate());
+			record.setDeleter(plist.getdeleter());
+			record.setDelindex(plist.getDelindex());
+
+			record.setGroupid(plist.getGroupid());
+			record.setMutiprogramlist(plist.getMutiProgramlist());
+			record.setPlaylistlevel(plist.getPlaylistlevel());
+			record.setPlaylistlifeact(plist.getPlaylistlifeact());
+			record.setPlaylistlifedie(plist.getPlaylistlifedie());
+
+			record.setPlaylistname(plist.getPlaylistname());
+			record.setPlaylistsn(plist.getplaylistSN());
+			record.setProgramlist(plist.getProgramlist());
+			record.setPubid(plist.getPubid());
+			record.setPublishdate(plist.getpublishDate());
+
+			record.setPublisher(plist.getpublisher());
+			record.setScheduletype(plist.getScheduletype());
+			record.setTimequantum(plist.getTimequantum());
+
+			oldplaylistMapper.insertSelective(record);
+
+			playlistMapper.deleteByPrimaryKey(playlistSN);
+			playlistcodeMapper.deleteByplaylistSN(playlistSN);
+
+			jObject.put("result", "success");
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		}
+
+		return jObject;
+	}
+
+	@Override
+	public JSONObject DeleteList2oldbyDay() {
+		JSONObject jObject = new JSONObject();
+		try {
+			JSONObject jsonObject = new JSONObject();
+			JSONArray jArraySuccess = new JSONArray();
+			JSONArray jArrayfail = new JSONArray();
+
+			List<project> projects = projectMapper.selectAll();
+			for (int p = 0; p < projects.size(); p++) {
+				String projectid = projects.get(p).getProjectid();
+				String limit = projects.get(p).getProjectLimit();
+				int daylimit = 60;
+				if (limit != null && !limit.equals("")) {
+					JSONObject jsonLimit = JSONObject.parseObject(limit);
+					if (jsonLimit != null) {
+						daylimit = jsonLimit.getIntValue("ExpTime");
+					}
+				}
+
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar date = Calendar.getInstance();
+				date.setTime(new Date());
+				date.set(Calendar.DATE, date.get(Calendar.DATE) - daylimit);
+				String DeleteDate = df.format(date.getTime());
+
+				List<playlist> playlists = playlistMapper.selectByDeleteDateProjectid(DeleteDate, projectid);
+
+				if (playlists != null && playlists.size() > 0) {
+					for (int i = 0; i < playlists.size(); i++) {
+						JSONObject infojObject = deleteList2old(playlists.get(i).getplaylistSN());
+						if (infojObject.getString("result").equals("success")) {
+							jArraySuccess.add(playlists.get(i).getplaylistSN());
+							System.out.println("删除列表" + playlists.get(i).getplaylistSN() + "成功]");
+						} else {
+							jArrayfail.add(playlists.get(i).getplaylistSN());
+							System.out.println("删除列表" + playlists.get(i).getplaylistSN() + "失败]");
+						}
+					}
+				}
+			}
+
+			System.out.println("成功删除列表数量" + jArraySuccess.size() + "个]");
+			System.out.println("失败删除列表数量" + jArrayfail.size() + "个]");
+
+			jsonObject.put("jArraySuccess", jArraySuccess);
+			jsonObject.put("jArrayfail", jArrayfail);
+
+			jObject.put("result", "success");
+			jObject.put("infoMessage", jsonObject);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+		}
+		return jObject;
 	}
 }

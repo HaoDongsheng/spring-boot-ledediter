@@ -1,24 +1,32 @@
 package org.hds.service.impl;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 import org.hds.Encryption;
 import org.hds.GJ_coding.GJ_Set1cls;
 import org.hds.GJ_coding.GJ_Set2cls;
 import org.hds.GJ_coding.GJ_Set3cls;
+import org.hds.GJ_coding.GJ_codingCls;
 import org.hds.mapper.advertisementMapper;
 import org.hds.mapper.basemapMapper;
 import org.hds.mapper.groupMapper;
 import org.hds.mapper.infocodeMapper;
 import org.hds.mapper.itemMapper;
-import org.hds.mapper.oldadvMapper;
 import org.hds.mapper.playlistMapper;
 import org.hds.mapper.playlistcodeMapper;
 import org.hds.mapper.projectMapper;
@@ -28,11 +36,15 @@ import org.hds.mapper.terminalMapper;
 import org.hds.mapper.userMapper;
 import org.hds.model.advertisement;
 import org.hds.model.group;
+import org.hds.model.infocode;
 import org.hds.model.playlist;
+import org.hds.model.playlistcode;
 import org.hds.model.project;
 import org.hds.model.sensitive;
 import org.hds.model.terminal;
 import org.hds.model.user;
+import org.hds.service.IAdvMangerService;
+import org.hds.service.IInfoListService;
 import org.hds.service.IprojectMangerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -59,17 +71,21 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 	@Autowired
 	advertisementMapper advertisementMapper;
 	@Autowired
+	IAdvMangerService advMangerSer;
+	@Autowired
+	IInfoListService InfoListSer;
+	@Autowired
 	infocodeMapper infocodeMapper;
 	@Autowired
 	basemapMapper basemapMapper;
 	@Autowired
 	statisticMapper statisticMapper;
 	@Autowired
-	oldadvMapper oldadvMapper;
-	@Autowired
 	itemMapper itemMapper;
 	@Autowired
 	sensitiveMapper sensitiveMapper;
+	@Autowired
+	getCode getCode;
 
 	@Override
 	public JSONArray getProjectlist() {
@@ -90,6 +106,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 					int defaultStartLevel = project.getDefaultStartlevel();
 					int IsOurModule = project.getIsOurModule();
 					String ConnectParameters = project.getConnectParameters();
+					String projectLimit = project.getProjectLimit();
 					String grpnameString = "";
 					List<group> grplist = groupMapper.selectbyProjectid(projectid);
 					for (int j = 0; j < grplist.size(); j++) {
@@ -116,10 +133,10 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 					jsonObject.put("startLevelControl", startLevelControl);
 					jsonObject.put("defaultStartLevel", defaultStartLevel);
 					jsonObject.put("IsOurModule", IsOurModule);
-					jsonObject.put("disconnect", project.getDisconnect());
 					jsonObject.put("grouplist", grpnameString);
 					jsonObject.put("userlist", usernameString);
 					jsonObject.put("ConnectParameters", ConnectParameters);
+					jsonObject.put("projectLimit", projectLimit);
 
 					JsonArray.add(jsonObject);
 				}
@@ -132,8 +149,8 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 
 	@Override
 	public JSONObject createProject(String projectid, String projectname, String CheckCode, int startlevelControl,
-			int DefaultStartlevel, int isOurModule, int disconnect, String ConnectParameters, String username,
-			String userpwd, String groupname, int packLength, int groupwidth, int groupheight) {
+			int DefaultStartlevel, int isOurModule, String ConnectParameters, String username, String userpwd,
+			String groupname, int packLength, int batchCount, int groupwidth, int groupheight) {
 		JSONObject jObject = new JSONObject();
 		try {
 			String hashAlgorithmNameString = "MD5";
@@ -221,6 +238,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			group.setPara2_User(setPara2);
 			group.setPara3_TimeLight(setPara3);
 			group.setMaxPackLength(packLength);
+			group.setBatchCount(batchCount);
 			group.setscreenheight(groupheight);
 			group.setscreenwidth(groupwidth);
 			group.setProjectid(projectid);
@@ -234,8 +252,11 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			record.setDefaultStartlevel(DefaultStartlevel);
 			record.setAutoGroupTo(group.getGroupid());
 			record.setIsOurModule(isOurModule);
-			record.setDisconnect(disconnect);
 			record.setConnectParameters(ConnectParameters);
+			JSONObject JprojectLimit = new JSONObject();
+			JprojectLimit.put("ExpTime", 90);
+			JprojectLimit.put("ExpDisplay", 0);
+			record.setProjectLimit(JprojectLimit.toJSONString());
 			projectMapper.insert(record);
 
 			jObject.put("result", "success");
@@ -253,7 +274,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 
 	@Override
 	public JSONObject updateProject(String projectid, String projectname, int AutoGroupTo, String CheckCode,
-			int startlevelControl, int DefaultStartlevel, int isOurModule, int disconnect, String ConnectParameters) {
+			int startlevelControl, int DefaultStartlevel, int isOurModule, String ConnectParameters) {
 		JSONObject jObject = new JSONObject();
 		try {
 			project record = new project();
@@ -264,22 +285,21 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			record.setStartlevelControl(startlevelControl);
 			record.setDefaultStartlevel(DefaultStartlevel);
 			record.setIsOurModule(isOurModule);
-			record.setDisconnect(disconnect);
 			record.setConnectParameters(ConnectParameters);
 			projectMapper.updateByPrimaryKeySelective(record);
 
-			if (disconnect == 1) {
-				List<terminal> terminals = terminalMapper.SelectTerminalAllByprojectid(projectid);
-				if (terminals != null) {
-					for (int i = 0; i < terminals.size(); i++) {
-						String taxiName = terminals.get(i).getName();
-						if (getCode.isCarnumberNO(taxiName)) {
-							terminals.get(i).setDisconnect(1);
-							terminalMapper.updateByPrimaryKeySelective(terminals.get(i));
-						}
-					}
-				}
-			}
+//			if (disconnect == 1) {
+//				List<terminal> terminals = terminalMapper.SelectTerminalAllByprojectid(projectid);
+//				if (terminals != null) {
+//					for (int i = 0; i < terminals.size(); i++) {
+//						String taxiName = terminals.get(i).getName();
+//						if (getCode.isCarnumberNO(taxiName)) {
+//							terminals.get(i).setPlaymode(1);
+//							terminalMapper.updateByPrimaryKeySelective(terminals.get(i));
+//						}
+//					}
+//				}
+//			}
 
 			Date now = new Date();
 			DateFormat d1 = DateFormat.getDateTimeInstance();
@@ -297,12 +317,30 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 	}
 
 	@Override
+	public JSONObject updateProjectlimit(String projectid, String projectLimit) {
+		JSONObject jObject = new JSONObject();
+		try {
+			project record = new project();
+			record.setProjectid(projectid);
+			record.setProjectLimit(projectLimit);
+			projectMapper.updateByPrimaryKeySelective(record);
+
+			jObject.put("result", "success");
+
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+			return jObject;
+		}
+	}
+
+	@Override
 	public JSONObject removeProject(String projectid) {
 		JSONObject jObject = new JSONObject();
 		try {
 
 			int result = 0;
-			result = projectMapper.deleteByPrimaryKey(projectid);
 
 			result = userMapper.deleteByprojectid(projectid);
 
@@ -310,12 +348,14 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 
 			result = basemapMapper.deleteByprojectid(projectid);
 
+			result = statisticMapper.deleteByProjectid(projectid);
+
 			List<group> gList = groupMapper.selectbyProjectid(projectid);
 			for (int i = 0; i < gList.size(); i++) {
 				int groupid = gList.get(i).getGroupid();
 				List<advertisement> advlist = advertisementMapper.selectidBygroupid(groupid, 0);
 				for (int j = 0; j < advlist.size(); j++) {
-					int infosn = advlist.get(j).getinfoSN();
+					String infosn = advlist.get(j).getinfoSN();
 					result = advertisementMapper.deleteByPrimaryKey(infosn);
 					result = itemMapper.deleteByadid(infosn);
 					result = infocodeMapper.deleteByinfoSN(infosn);
@@ -323,7 +363,7 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 
 				advlist = advertisementMapper.selectidBygroupid(groupid, 1);
 				for (int j = 0; j < advlist.size(); j++) {
-					int infosn = advlist.get(j).getinfoSN();
+					String infosn = advlist.get(j).getinfoSN();
 					result = advertisementMapper.deleteByPrimaryKey(infosn);
 					result = itemMapper.deleteByadid(infosn);
 					result = infocodeMapper.deleteByinfoSN(infosn);
@@ -334,6 +374,9 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			}
 
 			result = groupMapper.deleteByprojectid(projectid);
+
+			result = projectMapper.deleteByPrimaryKey(projectid);
+
 			jObject.put("result", "success");
 			return jObject;
 		} catch (Exception e) {
@@ -471,6 +514,274 @@ public class projectMangerServiceImpl implements IprojectMangerService {
 			jObject.put("result", "fail");
 			jObject.put("resultMessage", e.toString());
 			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject execel2db() {
+		JSONObject jObject = new JSONObject();
+		try {
+
+			String FileName = "C:\\Users\\86139\\Desktop\\update.xlsx";
+			InputStream inputStream = new FileInputStream(FileName);// 文件的存放路径
+
+			Workbook workbook = null;
+			if (FileName.indexOf(".xlsx") > 0) {
+				workbook = new XSSFWorkbook(inputStream);
+			} else {
+				workbook = new HSSFWorkbook(inputStream);
+			}
+
+			if (workbook != null) {
+				Sheet sheet = workbook.getSheetAt(0);
+				// getFirstRowNum()获取第一行
+				// getLastRowNum()获取最后一行
+
+				for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+					Row row = sheet.getRow(i);
+					Cell cell = row.getCell(0);
+					if (cell != null) {
+						String cellvalue = cell.toString().trim();
+						if (cellvalue.indexOf("'") >= 0) {
+							cellvalue = cellvalue.replace("'", "");
+						}
+
+						if (cellvalue.indexOf("-") >= 0) {
+							cellvalue = cellvalue.replace("-", "");
+						}
+
+						Cell cell1 = row.getCell(1);
+						String dtuString = cellvalue;
+						String projectid = cell1.toString().trim();
+
+						int groupid = 0;
+						switch (projectid) {
+						case "haicheng":
+							groupid = 50;
+							break;
+						case "eerduosi":
+							groupid = 56;
+							break;
+						case "zhaotong":
+							groupid = 19;
+							break;
+						}
+
+						if (terminalMapper.selectByPrimaryKey(dtuString).getProjectid().trim().equals(projectid)) {
+							System.out.println("DTUkey:" + dtuString + ",原来就在项目id:" + projectid);
+						} else {
+							terminal record = new terminal();
+							record.setDtukey(dtuString);
+							record.setName(dtuString);
+							record.setGroupid(groupid);
+							record.setProjectid(projectid);
+							int result = terminalMapper.updateByPrimaryKeySelective(record);
+							if (result != 1) {
+								System.out.println("影响结果不为1");
+							}
+						}
+
+					} else {
+						System.out.println("cell为空");
+					}
+				}
+
+//				FileOutputStream fos = new FileOutputStream("C:\\Users\\86139\\Desktop\\dianxin1.xls");
+//
+//				workbook.write(fos);
+//				fos.flush();
+//				fos.close();
+			}
+
+//			String FileName = "C:\\Users\\86139\\Desktop\\haichengdiushi.xls";
+//			String FileNameError = "C:\\Users\\86139\\Desktop\\error.xls";
+//			InputStream inputStream = new FileInputStream(FileName);// 文件的存放路径
+//			InputStream inputStreamError = new FileInputStream(FileNameError);// 文件的存放路径
+//			Workbook workbook = null;
+//			if (FileName.indexOf(".xls") < 0) {
+//				workbook = new XSSFWorkbook(inputStream);
+//			} else {
+//				workbook = new HSSFWorkbook(inputStream);
+//			}
+//
+//			Workbook workbookError = null;
+//			if (FileNameError.indexOf(".xls") < 0) {
+//				workbookError = new XSSFWorkbook(inputStreamError);
+//			} else {
+//				workbookError = new HSSFWorkbook(inputStreamError);
+//			}
+//
+//			if (workbook != null && workbookError != null) {
+//				Sheet sheet = workbook.getSheetAt(0);
+//				Sheet sheetError = workbookError.getSheetAt(0);
+//				// getFirstRowNum()获取第一行
+//				// getLastRowNum()获取最后一行
+//				for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+//					Row row = sheet.getRow(i);
+//					Cell cell = row.getCell(1);
+//					if (cell != null) {
+//						String cellvalue = cell.toString().trim();
+//						if (cellvalue.indexOf("'") >= 0) {
+//							cellvalue = cellvalue.replace("'", "");
+//						}
+//
+//						if (cellvalue.indexOf("-") >= 0) {
+//							cellvalue = cellvalue.replace("-", "");
+//						}
+//
+//						String dtuString = cellvalue;
+//						for (int j = sheetError.getFirstRowNum(); j <= sheetError.getLastRowNum(); j++) {
+//							Row rowError = sheetError.getRow(j);
+//							Cell cellError = rowError.getCell(5);
+//							if (cellError != null) {
+//								String cellErrorvalue = cellError.toString().trim();
+//								if (cellErrorvalue.equals(dtuString)) {
+//									row.createCell(11);
+//									Cell newcell = row.getCell(11);
+//									newcell.setCellValue("有");
+//
+//									rowError.createCell(7);
+//									Cell Enewcell = rowError.getCell(7);
+//									Enewcell.setCellValue("有");
+//								}
+//							}
+//						}
+//					}
+//				}
+//				FileOutputStream fos = new FileOutputStream("C:\\Users\\86139\\Desktop\\haichengdiushi1.xls");
+//
+//				workbook.write(fos);
+//				fos.flush();
+//				fos.close();
+//
+//				FileOutputStream fosE = new FileOutputStream("C:\\Users\\86139\\Desktop\\error1.xls");
+//
+//				workbookError.write(fosE);
+//				fosE.flush();
+//				fosE.close();
+//			}
+
+			jObject.put("result", "success");
+			return jObject;
+		} catch (
+
+		Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+			return jObject;
+		}
+	}
+
+	@Override
+	public JSONObject codeChange() {
+		JSONObject jObject = new JSONObject();
+		try {
+//			JSONObject jObjectinfo = advMangerSer.Deleteinfo2oldbyDay();
+//
+//			JSONObject jObjectlist = InfoListSer.DeleteList2oldbyDay();
+			List<String> delInfosnsList = new ArrayList<String>();
+			List<String> delPlaylistsnsList = new ArrayList<String>();
+
+			List<infocode> infocodes = infocodeMapper.selectAll();
+			if (infocodes != null && infocodes.size() > 0) {
+				for (int i = 0; i < infocodes.size(); i++) {
+					String SingleCode = infocodes.get(i).getSingleCodeContext();
+					if (SingleCode == null || SingleCode.equals("")) {
+						String infosn = infocodes.get(i).getInfoSN();
+
+						StringBuilder codeString = SingleCodebyCode(infocodes.get(i).getCodecontext());
+
+						if (codeString != null) {
+							infocode record = new infocode();
+							record.setInfoCodeSN(infocodes.get(i).getInfoCodeSN());
+							record.setSingleCodeContext(codeString.toString().trim());
+							infocodeMapper.updateByPrimaryKeySelective(record);
+						} else {
+							delInfosnsList.add(infosn);
+							group ggGroup = groupMapper.selectByPrimaryKey(infocodes.get(i).getGroupid());
+							String messageString = "广告编号:" + infosn;
+							messageString += "广告名称:" + advertisementMapper.selectByPrimaryKey(infosn).getAdvname();
+							messageString += "项目:" + ggGroup.getProjectid();
+							messageString += "分组:" + ggGroup.getGroupname();
+							delPlaylistsnsList.add(messageString);
+						}
+					}
+				}
+			}
+
+			List<playlistcode> playlistcodes = playlistcodeMapper.selectAll();
+			for (int i = 0; i < playlistcodes.size(); i++) {
+				String SingleCode = playlistcodes.get(i).getSingleCodeContext();
+				if (SingleCode == null || SingleCode.equals("")) {
+					String playlistCodeSN = playlistcodes.get(i).getplaylistCodeSN();
+					String playlistSN = playlistcodes.get(i).getPlaylistsn();
+					String codecontext = playlistcodes.get(i).getCodecontext();
+
+					StringBuilder codeString = SingleCodebyCode(codecontext);
+					if (codeString != null) {
+						playlistcode record = new playlistcode();
+						record.setplaylistCodeSN(playlistCodeSN);
+						record.setSingleCodeContext(codeString.toString().trim());
+						playlistcodeMapper.updateByPrimaryKeySelective(record);
+					} else {
+						group ggGroup = groupMapper.selectByPrimaryKey(playlistcodes.get(i).getGroupid());
+						String messageString = "列表编号:" + playlistCodeSN;
+						messageString += "列表名称:" + playlistMapper.selectByPrimaryKey(playlistSN).getPlaylistname();
+						messageString += "项目:" + ggGroup == null ? "" : ggGroup.getProjectid();
+						messageString += "分组:" + ggGroup == null ? "" : ggGroup.getGroupname();
+						delPlaylistsnsList.add(messageString);
+					}
+				}
+			}
+			// infocodeMapper.updateByPrimaryKeySelective(record)
+			jObject.put("result", "success");
+			jObject.put("delinfosns", String.join(",", delInfosnsList));
+			jObject.put("delplaylistsns", String.join(",", delPlaylistsnsList));
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+			return jObject;
+		}
+	}
+
+	private StringBuilder SingleCodebyCode(String codecontext) {
+		StringBuilder codeString = new StringBuilder();
+		try {
+			JSONArray jArray = JSONArray.parseArray(codecontext);
+			if (jArray != null && jArray.size() > 0) {
+				for (int j = 0; j < jArray.size(); j++) {
+					String dataString = jArray.getString(j);
+					dataString = dataString.replace(" ", "");
+					int m = 0, n = 0;
+					int byteLen = dataString.length() / 2; // 每两个字符描述一个字节
+					byte[] byteArray = new byte[byteLen];
+					for (int z = 0; z < byteLen; z++) {
+						m = z * 2 + 1;
+						n = m + 1;
+						int intVal = Integer.decode("0x" + dataString.substring(z * 2, m) + dataString.substring(m, n));
+						byteArray[z] = Byte.valueOf((byte) intVal);
+					}
+
+					GJ_codingCls cls = new GJ_codingCls(950, false, true);
+					byte[] fzyByte = cls.GJ_FanZhuanYi(byteArray);
+
+					int bytelength = (fzyByte[31] & 0xFF) | (fzyByte[30] & 0xFF) << 8;
+
+					byte[] dataByte = new byte[bytelength];
+					System.arraycopy(fzyByte, 32, dataByte, 0, bytelength);
+
+					StringBuilder buf = new StringBuilder(dataByte.length * 2);
+					for (byte b : dataByte) { // 使用String的format方法进行转换
+						buf.append(String.format("%02x", new Integer(b & 0xff)));
+					}
+
+					codeString.append(buf);
+				}
+			}
+			return codeString;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }

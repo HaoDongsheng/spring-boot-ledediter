@@ -57,7 +57,7 @@ public class auditMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/PublishInfobyid", method = RequestMethod.POST)
-	public JSONObject PublishInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+	public JSONObject PublishInfobyid(@RequestParam("infoid") String infoid, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = advMangerSer.Publishinfobyid(infoid, adminid);
@@ -75,7 +75,7 @@ public class auditMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/RefuseInfobyid", method = RequestMethod.POST)
-	public JSONObject RefuseInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+	public JSONObject RefuseInfobyid(@RequestParam("infoid") String infoid, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = advMangerSer.RefuseInfobyid(infoid, adminid);
@@ -93,8 +93,8 @@ public class auditMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/getInfobytesbyid", method = RequestMethod.POST)
-	public JSONObject getInfobytesbyid(@RequestParam("infoid") int infoid, @RequestParam("adminname") String adminname,
-			HttpServletRequest request) {
+	public JSONObject getInfobytesbyid(@RequestParam("infoid") String infoid,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 
 			JSONObject JObject = advMangerSer.getbyteslistbyid(infoid);

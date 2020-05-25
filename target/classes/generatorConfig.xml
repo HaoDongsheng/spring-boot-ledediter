@@ -10,7 +10,7 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--数据库链接地址账号密码-->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.1.136:53433/busleddb" userId="root" password="abcd159357">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:53433/busledlogdb" userId="root" password="root">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -21,16 +21,23 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!--生成映射文件存放位置-->
-        <sqlMapGenerator targetPackage="org.hds.mapper" targetProject="src/main/java">
+        <sqlMapGenerator targetPackage="org.hds.logmapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
-        <!--生成Dao类存放位置-->
-        <!-- 客户端代码，生成易于使用的针对Model对象和XML配置文件 的代码
-                type="ANNOTATEDMAPPER",生成Java Model 和基于注解的Mapper对象
-                type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
-                type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
-        -->
-        <javaClientGenerator type="ANNOTATEDMAPPER" targetPackage="org.hds.mapper" targetProject="src/main/java">
+        <!-- MyBatis3:
+			ANNOTATEDMAPPER:基于注解的Mapper接口，不会有对应的XML映射文件
+			MIXEDMAPPER:XML和注解的混合形式，(上面这种情况中的)SqlProvider注解方法会被XML替代。
+			XMLMAPPER:所有的方法都在XML中，接口调用依赖XML文件。
+			MyBatis3Simple:
+			ANNOTATEDMAPPER:基于注解的Mapper接口，不会有对应的XML映射文件
+			XMLMAPPER:所有的方法都在XML中，接口调用依赖XML文件。
+			Ibatis2Java2或**Ibatis2Java5**:
+			IBATIS:生成的对象符合iBATIS的DAO框架（不建议使用）。
+			GENERIC-CI:生成的对象将只依赖于SqlMapClient，通过构造方法注入。
+			GENERIC-SI:生成的对象将只依赖于SqlMapClient，通过setter方法注入。
+			SPRING:生成的对象符合Spring的DAO接口 
+		-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="org.hds.logmapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
@@ -49,10 +56,10 @@
         <table tableName="t_project" domainObjectName="project" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="t_terminals" domainObjectName="terminal" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="t_statistics" domainObjectName="statistic" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="t_oldadv" domainObjectName="oldadv" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        <table tableName="t_log" domainObjectName="log" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>        
-        -->                                        
-        <table tableName="t_sensitive" domainObjectName="sensitive" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
-        
+        <table tableName="t_oldadv" domainObjectName="oldlogadv" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="t_log" domainObjectName="log" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="t_sensitive" domainObjectName="sensitive" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>        
+        --> 
+        <table tableName="t_oldplaylist" domainObjectName="oldplaylist" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>                                                      
     </context>
 </generatorConfiguration>

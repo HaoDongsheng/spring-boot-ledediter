@@ -1,173 +1,173 @@
 package org.hds.model;
 
 public class item {
-    private Integer infoSN;
+	private String infoSN;
 
-    private Integer pageid;
+	private Integer pageid;
 
-    private Integer itemid;
+	private Integer itemid;
 
-    private Integer itemleft;
+	private Integer itemleft;
 
-    private Integer itemtop;
+	private Integer itemtop;
 
-    private Integer itemwidth;
+	private Integer itemwidth;
 
-    private Integer itemheight;
+	private Integer itemheight;
 
-    private Integer itemfontno;
-    
-    private String itembackcolor;
-    
-    private Integer itembackopacity;
-    
-    private String itemforecolor;
-    
-    private Integer itemforeopacity;
+	private Integer itemfontno;
 
-    private Integer itemtype;
+	private String itembackcolor;
 
-    private Integer delindex;
+	private Integer itembackopacity;
 
-    private String itemcontext;
+	private String itemforecolor;
 
-    private String itemcontextjson;
+	private Integer itemforeopacity;
 
-    private String itemstyle;
+	private Integer itemtype;
 
-    public Integer getInfoSN() {
-        return infoSN;
-    }
+	private Integer delindex;
 
-    public void setInfoSN(Integer infoSN) {
-        this.infoSN = infoSN;
-    }
+	private String itemcontext;
 
-    public Integer getPageid() {
-        return pageid;
-    }
+	private String itemcontextjson;
 
-    public void setPageid(Integer pageid) {
-        this.pageid = pageid;
-    }
+	private String itemstyle;
 
-    public Integer getItemid() {
-        return itemid;
-    }
+	public String getInfoSN() {
+		return infoSN;
+	}
 
-    public void setItemid(Integer itemid) {
-        this.itemid = itemid;
-    }
+	public void setInfoSN(String infoSN) {
+		this.infoSN = infoSN;
+	}
 
-    public Integer getItemleft() {
-        return itemleft;
-    }
+	public Integer getPageid() {
+		return pageid;
+	}
 
-    public void setItemleft(Integer itemleft) {
-        this.itemleft = itemleft;
-    }
+	public void setPageid(Integer pageid) {
+		this.pageid = pageid;
+	}
 
-    public Integer getItemtop() {
-        return itemtop;
-    }
+	public Integer getItemid() {
+		return itemid;
+	}
 
-    public void setItemtop(Integer itemtop) {
-        this.itemtop = itemtop;
-    }
+	public void setItemid(Integer itemid) {
+		this.itemid = itemid;
+	}
 
-    public Integer getItemwidth() {
-        return itemwidth;
-    }
+	public Integer getItemleft() {
+		return itemleft;
+	}
 
-    public void setItemwidth(Integer itemwidth) {
-        this.itemwidth = itemwidth;
-    }
+	public void setItemleft(Integer itemleft) {
+		this.itemleft = itemleft;
+	}
 
-    public Integer getItemfontno() {
-        return itemfontno;
-    }
+	public Integer getItemtop() {
+		return itemtop;
+	}
 
-    public void setItemfontno(Integer itemfontno) {
-        this.itemfontno = itemfontno;
-    }
-    
-    public Integer getItemheight() {
-        return itemheight;
-    }
+	public void setItemtop(Integer itemtop) {
+		this.itemtop = itemtop;
+	}
 
-    public void setItemheight(Integer itemheight) {
-        this.itemheight = itemheight;
-    }
+	public Integer getItemwidth() {
+		return itemwidth;
+	}
 
-    public String getItembackcolor() {
-        return itembackcolor;
-    }
+	public void setItemwidth(Integer itemwidth) {
+		this.itemwidth = itemwidth;
+	}
 
-    public void setItembackcolor(String itembackcolor) {
-        this.itembackcolor = itembackcolor == null ? null : itembackcolor.trim();
-    }
-    
-    public Integer getItembackopacity() {
-        return itembackopacity;
-    }
+	public Integer getItemfontno() {
+		return itemfontno;
+	}
 
-    public void setItembackopacity(Integer itembackopacity) {
-        this.itembackopacity = itembackopacity;
-    }
-    
-    public String getItemforecolor() {
-        return itemforecolor;
-    }
+	public void setItemfontno(Integer itemfontno) {
+		this.itemfontno = itemfontno;
+	}
 
-    public void setItemforecolor(String itemforecolor) {
-        this.itemforecolor = itemforecolor == null ? null : itemforecolor.trim();
-    }
-    
-    public Integer getItemforeopacity() {
-        return itemforeopacity;
-    }
+	public Integer getItemheight() {
+		return itemheight;
+	}
 
-    public void setItemforeopacity(Integer itemforeopacity) {
-        this.itemforeopacity = itemforeopacity;
-    }
+	public void setItemheight(Integer itemheight) {
+		this.itemheight = itemheight;
+	}
 
-    public Integer getItemtype() {
-        return itemtype;
-    }
+	public String getItembackcolor() {
+		return itembackcolor;
+	}
 
-    public void setItemtype(Integer itemtype) {
-        this.itemtype = itemtype;
-    }
+	public void setItembackcolor(String itembackcolor) {
+		this.itembackcolor = itembackcolor == null ? null : itembackcolor.trim();
+	}
 
-    public Integer getDelindex() {
-        return delindex;
-    }
+	public Integer getItembackopacity() {
+		return itembackopacity;
+	}
 
-    public void setDelindex(Integer delindex) {
-        this.delindex = delindex;
-    }
+	public void setItembackopacity(Integer itembackopacity) {
+		this.itembackopacity = itembackopacity;
+	}
 
-    public String getItemcontext() {
-        return itemcontext;
-    }
+	public String getItemforecolor() {
+		return itemforecolor;
+	}
 
-    public void setItemcontext(String itemcontext) {
-        this.itemcontext = itemcontext == null ? null : itemcontext.trim();
-    }
+	public void setItemforecolor(String itemforecolor) {
+		this.itemforecolor = itemforecolor == null ? null : itemforecolor.trim();
+	}
 
-    public String getItemcontextjson() {
-        return itemcontextjson;
-    }
+	public Integer getItemforeopacity() {
+		return itemforeopacity;
+	}
 
-    public void setItemcontextjson(String itemcontextjson) {
-        this.itemcontextjson = itemcontextjson == null ? null : itemcontextjson.trim();
-    }
+	public void setItemforeopacity(Integer itemforeopacity) {
+		this.itemforeopacity = itemforeopacity;
+	}
 
-    public String getItemstyle() {
-        return itemstyle;
-    }
+	public Integer getItemtype() {
+		return itemtype;
+	}
 
-    public void setItemstyle(String itemstyle) {
-        this.itemstyle = itemstyle == null ? null : itemstyle.trim();
-    }
+	public void setItemtype(Integer itemtype) {
+		this.itemtype = itemtype;
+	}
+
+	public Integer getDelindex() {
+		return delindex;
+	}
+
+	public void setDelindex(Integer delindex) {
+		this.delindex = delindex;
+	}
+
+	public String getItemcontext() {
+		return itemcontext;
+	}
+
+	public void setItemcontext(String itemcontext) {
+		this.itemcontext = itemcontext == null ? null : itemcontext.trim();
+	}
+
+	public String getItemcontextjson() {
+		return itemcontextjson;
+	}
+
+	public void setItemcontextjson(String itemcontextjson) {
+		this.itemcontextjson = itemcontextjson == null ? null : itemcontextjson.trim();
+	}
+
+	public String getItemstyle() {
+		return itemstyle;
+	}
+
+	public void setItemstyle(String itemstyle) {
+		this.itemstyle = itemstyle == null ? null : itemstyle.trim();
+	}
 }

@@ -2,7 +2,30 @@ $(function(){
 	init_modal();
 	
 	init_modal_special();
+	
+	var opts = {            
+        lines: 13, // 花瓣数目
+        length: 20, // 花瓣长度
+        width: 10, // 花瓣宽度
+        radius: 30, // 花瓣距中心半径
+        corners: 1, // 花瓣圆滑度 (0-1)
+        rotate: 0, // 花瓣旋转角度
+        direction: 1, // 花瓣旋转方向 1: 顺时针, -1: 逆时针
+        color: '#000', // 花瓣颜色
+        speed: 1, // 花瓣旋转速度
+        trail: 60, // 花瓣旋转时的拖影(百分比)
+        shadow: false, // 花瓣是否显示阴影
+        hwaccel: false, //spinner 是否启用硬件加速及高速旋转            
+        className: 'spinner', // spinner css 样式名称
+        zIndex: 2e9, // spinner的z轴 (默认是2000000000)
+        top: '25%', // spinner 相对父容器Top定位 单位 px
+        left: '50%'// spinner 相对父容器Left定位 单位 px
+    };
+
+    spinner = new Spinner(opts);
 });
+
+var spinner;
 //按钮初始化
 function init_modal()
 {	
@@ -489,24 +512,102 @@ function init_modal()
 			{}
 		else
 			{}
+	});		
+	
+	$("#btn_gif_back").click(function() {
+		$("#div_tp").css("display","inline");
+		$("#div_gif").css("display","none");
+		$("#myModalEdit").attr("data-type",0);
 	});	
 	
-	$("#select_div").change(function() {
-		var selcet_div = parseInt($("#select_div").val());
-		switch(selcet_div)
-		{
-		case 0/*图文*/:{
-			$("#div_tp").css("display","inline");
-			$("#div_gif").css("display","none");
-		};break;
-		case 1/*Gif动画*/:{
-			$("#div_tp").css("display","none");
-			$("#div_gif").css("display","inline");
+	$("#btn_gif_add").click(function() {
+		$('#input_gif_upload').click();
+	});	
+	
+	$("#btn_gif_remove").click(function() {
+		var length = $("#div_giflist .basemapStyle input:checked").length;
+		if(length>0)
+			{ 
+			var basemapidString = "";
+			$("#div_giflist .basemapStyle input:checked").each(function(){
+				var basemapid = $(this).parent().attr("id").substring(7);
+				basemapidString += basemapid + ",";
+			});
+			if(basemapidString.length>0)
+				{
+				basemapidString = basemapidString.substring(0,basemapidString.length - 1);
+				}
 			
-			initgif();
-		};break;
-		}
+			$.ajax({  
+		        url:"/deletebasemapbyids",         
+		        data:{
+		        	basemapids:basemapidString,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+					},  
+		        type:"post",  
+		        dataType:"json", 
+		        success:function(data)  
+		        {       	  
+		        	if(data.result=="success")
+		        		{    		        			
+		        			var currentPage = $('#pagination').data('pagination').currentPage + 1;
+		        			
+		        			initgif(currentPage,9,true);		        			
+		        		}
+		        	else
+		        		{        			
+		        			alertMessage(1, "警告", "删除图片失败:"+data.resultMessage);
+		        		}
+		        },  
+		        error: function() {
+		        	alertMessage(2, "异常", "ajax 函数  deletebasemapbyids 错误");        	           
+		          }  
+		    });
+			}
 	});
+	
+	$("#btn_pic_remove").click(function() {
+		var length = $("#div_imglist .basemapStyle input:checked").length;
+		if(length>0)
+			{ 
+			var basemapidString = "";
+			$("#div_imglist .basemapStyle input:checked").each(function(){
+				var basemapid = $(this).parent().attr("id").substring(7);
+				basemapidString += basemapid + ",";
+			});
+			if(basemapidString.length>0)
+				{
+				basemapidString = basemapidString.substring(0,basemapidString.length - 1);
+				}
+			
+			$.ajax({  
+		        url:"/deletebasemapbyids",         
+		        data:{
+		        	basemapids:basemapidString,
+		        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+					},  
+		        type:"post",  
+		        dataType:"json", 
+		        success:function(data)  
+		        {       	  
+		        	if(data.result=="success")
+		        		{    		        			
+		        			var currentPage = $('#pagination_pic').data('pagination').currentPage + 1;
+		        					        			
+		        			showdivimg("",1,currentPage,9,true)
+		        		}
+		        	else
+		        		{        			
+		        			alertMessage(1, "警告", "删除图片失败:"+data.resultMessage);
+		        		}
+		        },  
+		        error: function() {
+		        	alertMessage(2, "异常", "ajax 函数  deletebasemapbyids 错误");        	           
+		          }  
+		    });
+			}
+	});
+	
 }
 //
 function GetbackgroundStyle()
@@ -771,14 +872,19 @@ function creatinfo_addbasemap(parentdivid)
 	$('#modal_pic_select').modal('show');
 }
 //gif动画初始化
-function initgif()
+function initgif(pageNumber,pageSize,isInit)
 {
+	//请求时spinner出现
+	var target = $("#myModalEdit .modal-body").get(0);
+    spinner.spin(target);
 	$.ajax({  
         url:"/getbasemapbyprojectid",		
         data:{     
         	groupid:parseInt($("#grouplist").val()),
         	imgtype:2,
         	classify:"",
+        	pageNumber:pageNumber,
+        	pageSize:pageSize,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
@@ -786,17 +892,18 @@ function initgif()
         success:function(data)  
         {       	       
         	$('#div_giflist div').remove();
-        	if(data!=null && data.length>0)
-    		{	        		        		
-        		for(var i=0;i<data.length;i++)
+        	if(data!=null)
+    		{	        
+        		var itemJSONArray = data.itemJSONArray;
+        		for(var i=itemJSONArray.length - 1;i>=0;i--)
 				{
-        			var basemapid=data[i].basemapid;
-        			var fileName=data[i].fileName;
-        			var groupid=data[i].groupid;
-        			var classify=data[i].classify;
-        			var contentType=data[i].contentType;
-        			var basemapstyle =data[i].basemapstyle;
-        			var imgBase64String=data[i].imgBase64String;
+        			var basemapid=itemJSONArray[i].basemapid;
+        			var fileName=itemJSONArray[i].fileName;
+        			var groupid=itemJSONArray[i].groupid;
+        			var classify=itemJSONArray[i].classify;
+        			var contentType=itemJSONArray[i].contentType;
+        			var basemapstyle =itemJSONArray[i].basemapstyle;
+        			var imgBase64String=itemJSONArray[i].imgBase64String;
         			if(groupid==0)
         				{
         				addimg2div("#div_giflist",basemapid,fileName,contentType,0,basemapstyle,imgBase64String,false);
@@ -806,17 +913,42 @@ function initgif()
         				addimg2div("#div_giflist",basemapid,fileName,contentType,0,basemapstyle,imgBase64String,true);
         				}        			
 				}
+        		var pages = parseInt(Math.ceil(data.totalCount/parseFloat(pageSize)));
+        		if(isInit)
+        			{      
+        			if(pageNumber>pages){pageNumber=pages;}
+	        		$('#pagination').pagination({
+	        			pages: pages,
+	        			edges: 2,
+	        			cssStyle: 'pagination-sm',
+	        			displayedPages: 5,
+	        			currentPage:pageNumber,
+	        			onPageClick: function(pageNumber, event) {
+	        				//点击时调用        				
+	        				initgif(pageNumber,pageSize,false)
+	        			},
+	        			onInit: function(getid) {
+	        				//刷新时调用
+//	        				alert(getid);
+	        			}
+	
+	        		});
+        			}
     		}
+        	//关闭spinner  
+            spinner.spin();
         },  
         error: function() {  
-        	alertMessage(2, "异常", "ajax 函数  getbasemapbyprojectid 错误");        	           
+        	alertMessage(2, "异常", "ajax 函数  getbasemapbyprojectid 错误");   
+        	//关闭spinner  
+            spinner.spin();
           }  
     });
 }
 //背景初始化
-function initbasemap(imgtype)
+function initbasemap(imgtype,pageNumber,pageSize,isInit)
 {
-	showdivimg("",imgtype);
+	showdivimg("",imgtype,pageNumber,pageSize,isInit);
 }
 //视频初始化
 function initvideo(imgtype)
@@ -824,7 +956,7 @@ function initvideo(imgtype)
 	showdivvideo("",imgtype);	
 }
 //获取图片组
-function showdivimg(classify,imgtype)
+function showdivimg(classify,imgtype,pageNumber,pageSize,isInit)
 {	
 	$.ajax({  
         url:"/getbasemapbyprojectid",		
@@ -832,6 +964,8 @@ function showdivimg(classify,imgtype)
         	groupid:parseInt($("#grouplist").val()),
         	imgtype:imgtype,
         	classify:classify,
+        	pageNumber:pageNumber,
+        	pageSize:pageSize,
         	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  
@@ -839,17 +973,18 @@ function showdivimg(classify,imgtype)
         success:function(data)  
         {       	  
         	$('#div_imglist div').remove();
-        	if(data!=null && data.length>0)
-    		{	        		        		
-        		for(var i=0;i<data.length;i++)
+        	if(data!=null)
+    		{	        
+        		var itemJSONArray = data.itemJSONArray;
+        		for(var i=itemJSONArray.length - 1;i>=0;i--)
 				{
-        			var basemapid=data[i].basemapid;
-        			var fileName=data[i].fileName;
-        			var groupid=data[i].groupid;
-        			var classify=data[i].classify;
-        			var contentType=data[i].contentType;
-        			var basemapstyle =data[i].basemapstyle;
-        			var imgBase64String=data[i].imgBase64String;
+        			var basemapid=itemJSONArray[i].basemapid;
+        			var fileName=itemJSONArray[i].fileName;
+        			var groupid=itemJSONArray[i].groupid;
+        			var classify=itemJSONArray[i].classify;
+        			var contentType=itemJSONArray[i].contentType;
+        			var basemapstyle =itemJSONArray[i].basemapstyle;
+        			var imgBase64String=itemJSONArray[i].imgBase64String;
         			if(groupid==0)
         				{
         				addimg2div("#div_imglist",basemapid,fileName,contentType,0,basemapstyle,imgBase64String,false);
@@ -859,6 +994,28 @@ function showdivimg(classify,imgtype)
         				addimg2div("#div_imglist",basemapid,fileName,contentType,0,basemapstyle,imgBase64String,true);
         				}        			
 				}
+        		
+        		var pages = parseInt(Math.ceil(data.totalCount/parseFloat(pageSize)));
+        		if(isInit)
+        			{        	
+        			if(pageNumber>pages){pageNumber=pages;}
+	        		$('#pagination_pic').pagination({
+	        			pages: pages,
+	        			edges: 2,
+	        			cssStyle: 'pagination-sm',
+	        			displayedPages: 5,
+	        			currentPage:pageNumber,
+	        			onPageClick: function(pageNumber, event) {
+	        				//点击时调用        					        				
+	        				showdivimg("",1,pageNumber,pageSize,false)
+	        			},
+	        			onInit: function(getid) {
+	        				//刷新时调用
+//	        				alert(getid);
+	        			}
+	
+	        		});
+        			}
     		}
         },  
         error: function() {  
@@ -951,13 +1108,8 @@ function input_upload(file)
         {     
         	if(data.result=="success")
     		{     
-        		addimg2div("#div_imglist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);
-        		/*
-        		if(navitem.text=="共享")
-        			{addimg2div("#div_imglist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,false);}
-        		else
-        			{addimg2div("#div_imglist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);}
-        		*/
+//        		addimg2div("#div_imglist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);
+        		showdivimg("",1,1,9,true);
     		}
     	else
     		{    			
@@ -1000,8 +1152,14 @@ function input_gif_upload(file)
         success:function(data)  
         {     
         	if(data.result=="success")
-    		{     
-        		addimg2div("#div_giflist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);        		
+    		{   
+        		initgif(1,9,true)
+        		
+//        		if($("#div_giflist .basemapStyle").length>=9)
+//        			{
+//        			$("#div_giflist .basemapStyle:last").remove();
+//        			}
+//        		addimg2div("#div_giflist",data.basemapid,data.fileName,data.contentType,0,data.basemapstyle,data.imgBase64String,true);        		
     		}
     	else
     		{    			
@@ -1116,7 +1274,7 @@ function addimg2div(parentdiv,basemapid,fileName,contentType,duration,basemapsty
 	var html="";
 	
 	if(isdelete)
-		{html=div+img+checkbox+deletebox+namebox+"</div>";}
+		{html=div+img+checkbox+namebox+"</div>";}
 	else
 		{html=div+img+checkbox+namebox+"</div>";}	
 	
@@ -1154,6 +1312,10 @@ function imgdeletepic2db(basemapid)
         		{    
         			$('#div_imglist #basemap'+basemapid).remove();
         			$('#div_giflist #basemap'+basemapid).remove();
+        			
+        			var currentPage = $('#pagination').data('pagination').currentPage + 1;
+        			
+        			initgif(currentPage,9,true);        			
         		}
         	else
         		{        			

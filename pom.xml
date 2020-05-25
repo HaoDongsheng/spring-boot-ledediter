@@ -21,7 +21,7 @@
 	<dependency>
 	<groupId>dom4j</groupId>
 	<artifactId>dom4j</artifactId>
-	<version>1.6.1</version>
+<!-- 	<version>1.6.1</version> -->
 	</dependency>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -40,17 +40,22 @@
 	   <groupId>org.springframework.boot</groupId>
 	   <artifactId>spring-boot-starter-thymeleaf</artifactId>			   
 	</dependency>
+	<!--定时任务quartz-->
+<!-- 	<dependency> -->
+<!-- 	      <groupId>org.springframework.boot</groupId> -->
+<!-- 	       <artifactId>spring-boot-starter-quartz</artifactId> -->
+<!-- 	</dependency> -->
 	<dependency>  
       <groupId>net.sourceforge.nekohtml</groupId>  
       <artifactId>nekohtml</artifactId>  
-      <version>1.9.22</version>  
+<!--       <version>1.9.22</version>   -->
 	</dependency> 
 	<dependency>
 		<groupId>org.mybatis.spring.boot</groupId>
 		<artifactId>mybatis-spring-boot-starter</artifactId>
 		<version>1.1.1</version>
 	</dependency>
-     <dependency>
+    <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
     </dependency>
@@ -83,7 +88,7 @@
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-devtools</artifactId>
-        <optional>true</optional>
+        <optional>true</optional>        
 	</dependency>  	
 	<dependency>
 	    <groupId>org.bytedeco</groupId>
@@ -93,7 +98,7 @@
 	<dependency>
 		<groupId>io.netty</groupId>
 		<artifactId>netty-all</artifactId>
-		<version>4.1.32.Final</version>
+<!-- 		<version>4.1.32.Final</version> -->
 	</dependency>
 	
 	<dependency>
@@ -101,6 +106,20 @@
 	    <artifactId>ini4j</artifactId>
 	    <version>0.5.4</version>
 	</dependency>
+	
+	<!-- poi:07版之前的二进制格式 -->
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>4.0.0</version>
+    </dependency>
+    <!-- poi-ooxml:07版之后的OpenXML格式 -->
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi-ooxml</artifactId>
+        <version>4.0.0</version>
+    </dependency>
+
 </dependencies>
 	
 <build>
@@ -132,27 +151,72 @@
                 <fork>true</fork>
             </configuration>
 		</plugin>
+		
 		<plugin>  
-               <groupId>org.mybatis.generator</groupId>  
-               <artifactId>mybatis-generator-maven-plugin</artifactId>  
-               <version>1.3.5</version>  
-               <configuration>  
-                   <!--允许移动生成的文件-->  
-                   <verbose>true</verbose>  
-                   <!--允许覆盖生成的文件-->  
-                   <overwrite>true</overwrite>                      
-               </configuration>  
- 
-               <dependencies>  
-                   <!-- 在pom中可以直接配置依赖的数据库 generatorConfig.xml就不需要再配置数据库的jar了 -->  
-                   <dependency>  
-                       <groupId>mysql</groupId>  
-                       <artifactId>mysql-connector-java</artifactId>  
-                       <version>5.1.25</version>  
-                   </dependency>  
-               </dependencies>  
-           </plugin>  
- 
+           <groupId>org.mybatis.generator</groupId>  
+           <artifactId>mybatis-generator-maven-plugin</artifactId>  
+           <version>1.3.5</version>  
+           <configuration>  
+               <!--允许移动生成的文件-->  
+               <verbose>true</verbose>  
+               <!--允许覆盖生成的文件-->  
+               <overwrite>true</overwrite>                      
+           </configuration>  
+
+           <dependencies>  
+               <!-- 在pom中可以直接配置依赖的数据库 generatorConfig.xml就不需要再配置数据库的jar了 -->  
+               <dependency>  
+                   <groupId>mysql</groupId>  
+                   <artifactId>mysql-connector-java</artifactId>  
+                   <version>5.1.25</version>  
+               </dependency>  
+           </dependencies>  
+       </plugin> 
+       
+       <plugin>
+	    <!-- YUI Compressor Maven压缩插件 -->
+	    <groupId>net.alchim31.maven</groupId>
+	    <artifactId>yuicompressor-maven-plugin</artifactId>
+	    <version>1.5.1</version>
+	    <executions>
+	        <execution>
+	        	<phase>process-resources</phase>
+	            <goals>
+	                <goal>compress</goal>
+	            </goals>
+	        </execution>
+	    </executions>
+	    <configuration>
+	        <!-- 读取js,css文件采用UTF-8编码 -->
+	        <encoding>UTF-8</encoding>
+	        <!-- 不显示js可能的错误 -->
+	        <jswarn>false</jswarn>
+	        <!-- 若存在已压缩的文件，会先对比源文件是否有改动  有改动便压缩，无改动就不压缩 -->
+	        <force>true</force>
+	        <!-- 在指定的列号后插入新行 -->
+	        <linebreakpos>-1</linebreakpos>
+	        <!-- 压缩之前先执行聚合文件操作 -->
+	        <preProcessAggregates>true</preProcessAggregates>
+	        <!-- 压缩后保存文件后缀 无后缀 -->
+	        <nosuffix>true</nosuffix>
+	        <!-- 源目录，即需压缩的根目录 -->
+	        <sourceDirectory>src/main/resources/static/javascript</sourceDirectory>
+	        <!-- 输出目录，即压缩后的目录-->
+	        <outputDirectory>target/classes</outputDirectory>	        
+	        <!-- 压缩js和css文件 -->
+	        <includes>
+<!-- 	            <include>**/javascript/*.js</include> -->
+<!-- 	            <include>**/*.css</include> -->
+	        </includes>
+	        <!-- 以下目录和文件不会被压缩 -->
+	        <excludes>
+	            <exclude>**/*.min.js</exclude>
+	            <exclude>**/*.min.css</exclude>
+	        </excludes>
+	    </configuration>
+	    
+	   </plugin> 
+	 
 	</plugins>
 </build>
 </project>

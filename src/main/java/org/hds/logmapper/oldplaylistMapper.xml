@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hds.logmapper.oldplaylistMapper">
+  <resultMap id="BaseResultMap" type="org.hds.model.oldplaylist">
+    <id column="playlistSN" jdbcType="VARCHAR" property="playlistsn" />
+    <result column="groupid" jdbcType="INTEGER" property="groupid" />
+    <result column="pubid" jdbcType="VARCHAR" property="pubid" />
+    <result column="playlistname" jdbcType="VARCHAR" property="playlistname" />
+    <result column="playlistlevel" jdbcType="INTEGER" property="playlistlevel" />
+    <result column="playlistLifeAct" jdbcType="VARCHAR" property="playlistlifeact" />
+    <result column="playlistLifeDie" jdbcType="VARCHAR" property="playlistlifedie" />
+    <result column="creater" jdbcType="INTEGER" property="creater" />
+    <result column="createDate" jdbcType="VARCHAR" property="createdate" />
+    <result column="publisher" jdbcType="INTEGER" property="publisher" />
+    <result column="publishDate" jdbcType="VARCHAR" property="publishdate" />
+    <result column="deleter" jdbcType="INTEGER" property="deleter" />
+    <result column="deleteDate" jdbcType="VARCHAR" property="deletedate" />
+    <result column="ScheduleType" jdbcType="INTEGER" property="scheduletype" />
+    <result column="DelIndex" jdbcType="INTEGER" property="delindex" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.hds.model.oldplaylist">
+    <result column="Timequantum" jdbcType="LONGVARCHAR" property="timequantum" />
+    <result column="programlist" jdbcType="LONGVARCHAR" property="programlist" />
+    <result column="mutiProgramlist" jdbcType="LONGVARCHAR" property="mutiprogramlist" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    playlistSN, groupid, pubid, playlistname, playlistlevel, playlistLifeAct, playlistLifeDie, 
+    creater, createDate, publisher, publishDate, deleter, deleteDate, ScheduleType, DelIndex
+  </sql>
+  <sql id="Blob_Column_List">
+    Timequantum, programlist, mutiProgramlist
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_oldplaylist
+    where playlistSN = #{playlistsn,jdbcType=VARCHAR}
+  </select>
+  <select id="selecthistorybyDate" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_oldplaylist
+    where groupid = #{2} and (not (deleteDate &lt; #{0} or publishDate &gt; #{1}) or ((deleteDate is null or deleteDate='') and publishDate &lt; #{1})) and (not (playlistLifeDie &lt; #{0} or playlistLifeAct &gt; #{1}) or ((playlistLifeDie is null or playlistLifeDie='') and playlistLifeAct &lt; #{1})) order by playlistSN asc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_oldplaylist
+    where playlistSN = #{playlistsn,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.hds.model.oldplaylist">
+    insert into t_oldplaylist (playlistSN, groupid, pubid, 
+      playlistname, playlistlevel, playlistLifeAct, 
+      playlistLifeDie, creater, createDate, 
+      publisher, publishDate, deleter, 
+      deleteDate, ScheduleType, DelIndex, 
+      Timequantum, programlist, mutiProgramlist
+      )
+    values (#{playlistsn,jdbcType=VARCHAR}, #{groupid,jdbcType=INTEGER}, #{pubid,jdbcType=VARCHAR}, 
+      #{playlistname,jdbcType=VARCHAR}, #{playlistlevel,jdbcType=INTEGER}, #{playlistlifeact,jdbcType=VARCHAR}, 
+      #{playlistlifedie,jdbcType=VARCHAR}, #{creater,jdbcType=INTEGER}, #{createdate,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=INTEGER}, #{publishdate,jdbcType=VARCHAR}, #{deleter,jdbcType=INTEGER}, 
+      #{deletedate,jdbcType=VARCHAR}, #{scheduletype,jdbcType=INTEGER}, #{delindex,jdbcType=INTEGER}, 
+      #{timequantum,jdbcType=LONGVARCHAR}, #{programlist,jdbcType=LONGVARCHAR}, #{mutiprogramlist,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.hds.model.oldplaylist">
+    insert into t_oldplaylist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="playlistsn != null">
+        playlistSN,
+      </if>
+      <if test="groupid != null">
+        groupid,
+      </if>
+      <if test="pubid != null">
+        pubid,
+      </if>
+      <if test="playlistname != null">
+        playlistname,
+      </if>
+      <if test="playlistlevel != null">
+        playlistlevel,
+      </if>
+      <if test="playlistlifeact != null">
+        playlistLifeAct,
+      </if>
+      <if test="playlistlifedie != null">
+        playlistLifeDie,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+      <if test="createdate != null">
+        createDate,
+      </if>
+      <if test="publisher != null">
+        publisher,
+      </if>
+      <if test="publishdate != null">
+        publishDate,
+      </if>
+      <if test="deleter != null">
+        deleter,
+      </if>
+      <if test="deletedate != null">
+        deleteDate,
+      </if>
+      <if test="scheduletype != null">
+        ScheduleType,
+      </if>
+      <if test="delindex != null">
+        DelIndex,
+      </if>
+      <if test="timequantum != null">
+        Timequantum,
+      </if>
+      <if test="programlist != null">
+        programlist,
+      </if>
+      <if test="mutiprogramlist != null">
+        mutiProgramlist,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="playlistsn != null">
+        #{playlistsn,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="pubid != null">
+        #{pubid,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistname != null">
+        #{playlistname,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistlevel != null">
+        #{playlistlevel,jdbcType=INTEGER},
+      </if>
+      <if test="playlistlifeact != null">
+        #{playlistlifeact,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistlifedie != null">
+        #{playlistlifedie,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleter != null">
+        #{deleter,jdbcType=INTEGER},
+      </if>
+      <if test="deletedate != null">
+        #{deletedate,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduletype != null">
+        #{scheduletype,jdbcType=INTEGER},
+      </if>
+      <if test="delindex != null">
+        #{delindex,jdbcType=INTEGER},
+      </if>
+      <if test="timequantum != null">
+        #{timequantum,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="programlist != null">
+        #{programlist,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mutiprogramlist != null">
+        #{mutiprogramlist,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.hds.model.oldplaylist">
+    update t_oldplaylist
+    <set>
+      <if test="groupid != null">
+        groupid = #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="pubid != null">
+        pubid = #{pubid,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistname != null">
+        playlistname = #{playlistname,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistlevel != null">
+        playlistlevel = #{playlistlevel,jdbcType=INTEGER},
+      </if>
+      <if test="playlistlifeact != null">
+        playlistLifeAct = #{playlistlifeact,jdbcType=VARCHAR},
+      </if>
+      <if test="playlistlifedie != null">
+        playlistLifeDie = #{playlistlifedie,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null">
+        createDate = #{createdate,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null">
+        publisher = #{publisher,jdbcType=INTEGER},
+      </if>
+      <if test="publishdate != null">
+        publishDate = #{publishdate,jdbcType=VARCHAR},
+      </if>
+      <if test="deleter != null">
+        deleter = #{deleter,jdbcType=INTEGER},
+      </if>
+      <if test="deletedate != null">
+        deleteDate = #{deletedate,jdbcType=VARCHAR},
+      </if>
+      <if test="scheduletype != null">
+        ScheduleType = #{scheduletype,jdbcType=INTEGER},
+      </if>
+      <if test="delindex != null">
+        DelIndex = #{delindex,jdbcType=INTEGER},
+      </if>
+      <if test="timequantum != null">
+        Timequantum = #{timequantum,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="programlist != null">
+        programlist = #{programlist,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mutiprogramlist != null">
+        mutiProgramlist = #{mutiprogramlist,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where playlistSN = #{playlistsn,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="org.hds.model.oldplaylist">
+    update t_oldplaylist
+    set groupid = #{groupid,jdbcType=INTEGER},
+      pubid = #{pubid,jdbcType=VARCHAR},
+      playlistname = #{playlistname,jdbcType=VARCHAR},
+      playlistlevel = #{playlistlevel,jdbcType=INTEGER},
+      playlistLifeAct = #{playlistlifeact,jdbcType=VARCHAR},
+      playlistLifeDie = #{playlistlifedie,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=INTEGER},
+      createDate = #{createdate,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      deleter = #{deleter,jdbcType=INTEGER},
+      deleteDate = #{deletedate,jdbcType=VARCHAR},
+      ScheduleType = #{scheduletype,jdbcType=INTEGER},
+      DelIndex = #{delindex,jdbcType=INTEGER},
+      Timequantum = #{timequantum,jdbcType=LONGVARCHAR},
+      programlist = #{programlist,jdbcType=LONGVARCHAR},
+      mutiProgramlist = #{mutiprogramlist,jdbcType=LONGVARCHAR}
+    where playlistSN = #{playlistsn,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.hds.model.oldplaylist">
+    update t_oldplaylist
+    set groupid = #{groupid,jdbcType=INTEGER},
+      pubid = #{pubid,jdbcType=VARCHAR},
+      playlistname = #{playlistname,jdbcType=VARCHAR},
+      playlistlevel = #{playlistlevel,jdbcType=INTEGER},
+      playlistLifeAct = #{playlistlifeact,jdbcType=VARCHAR},
+      playlistLifeDie = #{playlistlifedie,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=INTEGER},
+      createDate = #{createdate,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=INTEGER},
+      publishDate = #{publishdate,jdbcType=VARCHAR},
+      deleter = #{deleter,jdbcType=INTEGER},
+      deleteDate = #{deletedate,jdbcType=VARCHAR},
+      ScheduleType = #{scheduletype,jdbcType=INTEGER},
+      DelIndex = #{delindex,jdbcType=INTEGER}
+    where playlistSN = #{playlistsn,jdbcType=VARCHAR}
+  </update>
+</mapper>

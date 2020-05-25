@@ -2,9 +2,12 @@ package org.hds.service.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.hds.mapper.advertisementMapper;
 import org.hds.mapper.groupMapper;
@@ -59,7 +62,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LED_ID", terminal.getLedId());
 					jterminal.put("SIMNo", terminal.getSimno());
 					jterminal.put("DtuKey", terminal.getDtukey());
-					jterminal.put("disconnect", terminal.getDisconnect());
+					jterminal.put("disconnect", terminal.getPara6IdSet());
 					String Projectname = "无项目";
 					if (terminal.getProjectid() == null) {
 						jterminal.put("projectid", Projectname);
@@ -75,6 +78,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					JSONArray jadvArray = new JSONArray();
 					if (terminal.getGroupid() != null && terminal.getAdidlist() != null
 							&& !terminal.getAdidlist().trim().equals("")) {
+
 						String[] adidStrings = terminal.getAdidlist().split(",");
 						for (int j = 0; j < adidStrings.length; j++) {
 							int adid = Integer.parseInt(adidStrings[j]);
@@ -83,28 +87,29 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 							JSONObject advjObject = new JSONObject();
 							if (advertisement != null) {
 								String Advname = advertisement.getAdvname();
-								String lifeDie = advertisement.getlifeDie();
-								if (lifeDie.equals("")) {
-									lifeDie = "2100-09-09";
-								}
-								int Delindex = advertisement.getDelindex();
 								String advstatus = "";
-								if (Delindex == 1) {
-									advstatus = "已删除";
-								}
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-								Date datenow = new Date();
-
-								if (sdf.parse(lifeDie).getTime() < datenow.getTime()) {
-									advstatus = "已删除";
-								}
+//								String lifeDie = advertisement.getlifeDie();
+//								if (lifeDie.equals("")) {
+//									lifeDie = "2100-09-09";
+//								}
+//								int Delindex = advertisement.getDelindex();								
+//								if (Delindex == 1) {
+//									advstatus = "已删除";
+//								}
+//								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//								Date datenow = new Date();
+//
+//								if (sdf.parse(lifeDie).getTime() < datenow.getTime()) {
+//									advstatus = "已删除";
+//								}
 								advjObject.put("pubid", adid);
 								advjObject.put("advname", Advname);
 								advjObject.put("advstatus", advstatus);
 							} else {
 								advjObject.put("pubid", adid);
-								advjObject.put("advname", "已删除");
-								advjObject.put("advstatus", "已删除");
+								advjObject.put("advname", "广告id:" + adid);
+								// advjObject.put("advstatus", "已删除");
+								advjObject.put("advstatus", "");
 							}
 
 							jadvArray.add(advjObject);
@@ -134,7 +139,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 						Lastresponsetime = terminal.getLedLastresponsetime();
 					}
 
-					jterminal.put("LED_LastResponseTime", Lastresponsetime);
+					jterminal.put("LED_ResponseTime", Lastresponsetime);
 
 					jterminal.put("StarLevel", terminal.getStarlevel());
 					jterminal.put("StarLevelSet", terminal.getStarlevelset());
@@ -160,6 +165,14 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 			List<terminal> terminalList = null;
 			int startoffset = (pageNum - 1) * pageSize;
 
+			if (sort.equals("DtuOnline")) {
+				sort = "DTU_ResponseTime";
+			}
+
+			if (sort.equals("LedOnline")) {
+				sort = "LED_ResponseTime";
+			}
+
 			if (groupids == null || groupids == "" || adminlevel < 2) {
 				terminalCount = terminalMapper.selectCountbyprojectid(projectid, searchString);
 
@@ -172,20 +185,6 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 				terminalList = terminalMapper.SelectTerminalsByprojectidgrp(startoffset, pageSize, projectid,
 						searchString, listids, sort, sortOrder);
 			}
-
-//			if (groupids != null && groupids != "") {
-//				List<String> listids = Arrays.asList(groupids.split(","));
-//				terminalCount = terminalMapper.selectCountbyprojectidgrp(projectid, searchString, listids);
-//
-//				terminalList = terminalMapper.SelectTerminalsByprojectidgrp(startoffset, pageSize, projectid,
-//						searchString, listids, sort, sortOrder);
-//
-//			} else {
-//				terminalCount = terminalMapper.selectCountbyprojectid(projectid, searchString);
-//
-//				terminalList = terminalMapper.SelectTerminalsByprojectid(startoffset, pageSize, projectid, searchString,
-//						sort, sortOrder);
-//			}
 
 			JSONArray jsonArray = new JSONArray();
 			if (terminalList != null && terminalList.size() > 0) {
@@ -205,7 +204,7 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LED_ID", terminal.getLedId());
 					jterminal.put("SIMNo", terminal.getSimno());
 					jterminal.put("DtuKey", terminal.getDtukey());
-					jterminal.put("disconnect", terminal.getDisconnect());
+					jterminal.put("disconnect", terminal.getPara6IdSet());
 					String Projectname = "无项目";
 					if (terminal.getProjectid() == null) {
 						jterminal.put("projectid", Projectname);
@@ -218,38 +217,48 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 
 					jterminal.put("LedStateString", terminal.getLedstatestring());
 					JSONArray jadvArray = new JSONArray();
+					int pgcount = 0;
+					if (terminal.getGroupid() != null) {
+						pgcount = groupMapper.selectCountBypgid(projectid, terminal.getGroupid());
+					}
+
 					if (terminal.getGroupid() != null && terminal.getAdidlist() != null
-							&& !terminal.getAdidlist().trim().equals("")) {
-						String[] adidStrings = terminal.getAdidlist().split(",");
-						for (int j = 0; j < adidStrings.length; j++) {
-							int adid = Integer.parseInt(adidStrings[j]);
+							&& !terminal.getAdidlist().trim().equals("") && pgcount > 0) {
+
+						List<String> adidlist = Arrays.asList(terminal.getAdidlist().split(","));
+						Collections.sort(adidlist);
+
+						for (int j = 0; j < adidlist.size(); j++) {
+							int adid = Integer.parseInt(adidlist.get(j));
 							advertisement advertisement = advMapper.selectByPubidandGroupid(adid,
 									terminal.getGroupid());
 							JSONObject advjObject = new JSONObject();
 							if (advertisement != null) {
 								String Advname = advertisement.getAdvname();
-								String lifeDie = advertisement.getlifeDie();
-								if (lifeDie.equals("")) {
-									lifeDie = "2100-09-09";
-								}
-								int Delindex = advertisement.getDelindex();
 								String advstatus = "";
-								if (Delindex == 1) {
-									advstatus = "已删除";
-								}
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-								Date datenow = new Date();
-
-								if (sdf.parse(lifeDie).getTime() < datenow.getTime()) {
-									advstatus = "已删除";
-								}
+//								String lifeDie = advertisement.getlifeDie();
+//								if (lifeDie.equals("")) {
+//									lifeDie = "2100-09-09";
+//								}
+//								int Delindex = advertisement.getDelindex();
+//								
+//								if (Delindex == 1) {
+//									advstatus = "已删除";
+//								}
+//								SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//								Date datenow = new Date();
+//
+//								if (sdf.parse(lifeDie).getTime() < datenow.getTime()) {
+//									advstatus = "已删除";
+//								}
 								advjObject.put("pubid", adid);
 								advjObject.put("advname", Advname);
 								advjObject.put("advstatus", advstatus);
 							} else {
 								advjObject.put("pubid", adid);
-								advjObject.put("advname", "已删除");
-								advjObject.put("advstatus", "已删除");
+								advjObject.put("advname", "广告id:" + adid);
+//								advjObject.put("advstatus", "已删除");
+								advjObject.put("advstatus", "");
 							}
 
 							jadvArray.add(advjObject);
@@ -271,10 +280,48 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 					jterminal.put("LedVersion", terminal.getLedversion());
 					jterminal.put("StateLedVersion", terminal.getStateledversion());
 					jterminal.put("RegisterDate", terminal.getRegisterdate());
-					String Lastresponsetime = "2000-01-01 0:00:00";
-					if (terminal.getLedLastresponsetime() != null) {
-						Lastresponsetime = terminal.getLedLastresponsetime();
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+					int overtime = 5;
+
+					if (terminal.getDtuResponsetime() != null) {
+						Date now = new Date();
+						int timeLength = (int) (now.getTime() / 1000 - terminal.getDtuResponsetime().getTime() / 1000);
+						if (timeLength > 60 * overtime || timeLength < 0) {
+							jterminal.put("DtuOnline", 0);
+						} else {
+							jterminal.put("DtuOnline", 1);
+						}
+
+					} else {
+						jterminal.put("DtuOnline", 0);
 					}
+					String dturesponsetime = "2000-01-01 0:00:00";
+					if (terminal.getDtuResponsetime() != null) {
+						dturesponsetime = df.format(terminal.getDtuResponsetime());
+
+					}
+
+					String ledresponsetime = "2000-01-01 0:00:00";
+					if (terminal.getLedResponsetime() != null) {
+						ledresponsetime = df.format(terminal.getLedResponsetime());
+					}
+
+					if (terminal.getLedResponsetime() != null) {
+						Date now = new Date();
+						int timeLength = (int) (now.getTime() / 1000 - terminal.getLedResponsetime().getTime() / 1000);
+						if (timeLength > 60 * overtime || timeLength < 0) {
+							jterminal.put("LedOnline", 0);
+						} else {
+							jterminal.put("LedOnline", 1);
+							jterminal.put("DtuOnline", 1);
+						}
+
+					} else {
+						jterminal.put("LedOnline", 0);
+					}
+					jterminal.put("DTU_ResponseTime", dturesponsetime);
+					jterminal.put("LED_ResponseTime", ledresponsetime);
 					jterminal.put("StarLevel", terminal.getStarlevel());
 					jterminal.put("StarLevelSet", terminal.getStarlevelset());
 
@@ -291,22 +338,180 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 	}
 
 	@Override
+	public JSONObject getTerminalsUpdate(JSONArray DtukeyArray) {
+		JSONObject jObject = new JSONObject();
+		try {
+			List<String> Dtukeys = new ArrayList<String>();
+			if (DtukeyArray != null && DtukeyArray.size() > 0) {
+				for (int i = 0; i < DtukeyArray.size(); i++) {
+					Dtukeys.add(DtukeyArray.getString(i));
+				}
+			}
+			List<terminal> terminalList = null;
+			terminalList = terminalMapper.SelectTerminalsByDtukeys(Dtukeys);
+
+			JSONArray jsonArray = new JSONArray();
+			if (terminalList != null && terminalList.size() > 0) {
+				for (int i = 0; i < terminalList.size(); i++) {
+					JSONObject jterminal = new JSONObject();
+					terminal terminal = terminalList.get(i);
+					jterminal.put("name", terminal.getName());
+					String Groupname = "无分组";
+					if (terminal.getGroupid() == null) {
+						jterminal.put("groupid", Groupname);
+					} else {
+						if (groupMapper.selectByPrimaryKey(terminal.getGroupid()) != null) {
+							Groupname = groupMapper.selectByPrimaryKey(terminal.getGroupid()).getGroupname();
+						}
+						jterminal.put("groupid", Groupname);
+					}
+					jterminal.put("LED_ID", terminal.getLedId());
+					jterminal.put("SIMNo", terminal.getSimno());
+					jterminal.put("DtuKey", terminal.getDtukey());
+					jterminal.put("disconnect", terminal.getPara6IdSet());
+					String Projectname = "无项目";
+					if (terminal.getProjectid() == null) {
+						jterminal.put("projectid", Projectname);
+					} else {
+						if (projectMapper.selectByPrimaryKey(terminal.getProjectid()) != null) {
+							Projectname = projectMapper.selectByPrimaryKey(terminal.getProjectid()).getProjectname();
+						}
+						jterminal.put("projectid", Projectname);
+					}
+
+					jterminal.put("LedStateString", terminal.getLedstatestring());
+					JSONArray jadvArray = new JSONArray();
+					int pgcount = 0;
+					if (terminal.getGroupid() != null) {
+						pgcount = groupMapper.selectCountBypgid(terminal.getProjectid(), terminal.getGroupid());
+					}
+
+					if (terminal.getGroupid() != null && terminal.getAdidlist() != null
+							&& !terminal.getAdidlist().trim().equals("") && pgcount > 0) {
+
+						List<String> adidlist = Arrays.asList(terminal.getAdidlist().split(","));
+						Collections.sort(adidlist);
+						for (int j = 0; j < adidlist.size(); j++) {
+							int adid = Integer.parseInt(adidlist.get(j));
+							advertisement advertisement = advMapper.selectByPubidandGroupid(adid,
+									terminal.getGroupid());
+							JSONObject advjObject = new JSONObject();
+							if (advertisement != null) {
+								String Advname = advertisement.getAdvname();
+								String advstatus = "";
+								advjObject.put("pubid", adid);
+								advjObject.put("advname", Advname);
+								advjObject.put("advstatus", advstatus);
+							} else {
+								advjObject.put("pubid", adid);
+								advjObject.put("advname", "广告id:" + adid);
+								advjObject.put("advstatus", "");
+							}
+
+							jadvArray.add(advjObject);
+						}
+					}
+					if (jadvArray.size() > 0) {
+						jterminal.put("AdIdList", jadvArray.toJSONString());
+					} else {
+						jterminal.put("AdIdList", null);
+					}
+					jterminal.put("AdIdListCount", jadvArray.size());
+					jterminal.put("PlayList", terminal.getPlaylist());
+					double Updater = 0;
+					if (terminal.getUpdaterate() != null) {
+						Updater = terminal.getUpdaterate();
+					}
+					String UpdateRate = (double) ((int) (Updater * 10000)) / 100 + "%";
+					jterminal.put("UpdateRate", UpdateRate);
+					jterminal.put("LedVersion", terminal.getLedversion());
+					jterminal.put("StateLedVersion", terminal.getStateledversion());
+					jterminal.put("RegisterDate", terminal.getRegisterdate());
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+					int overtime = 5;
+
+					if (terminal.getDtuResponsetime() != null) {
+						Date now = new Date();
+						int timeLength = (int) (now.getTime() / 1000 - terminal.getDtuResponsetime().getTime() / 1000);
+						if (timeLength > 60 * overtime || timeLength < 0) {
+							jterminal.put("DtuOnline", 0);
+						} else {
+							jterminal.put("DtuOnline", 1);
+						}
+
+					} else {
+						jterminal.put("DtuOnline", 0);
+					}
+					String dturesponsetime = "2000-01-01 0:00:00";
+					if (terminal.getDtuResponsetime() != null) {
+						dturesponsetime = df.format(terminal.getDtuResponsetime());
+
+					}
+
+					String ledresponsetime = "2000-01-01 0:00:00";
+					if (terminal.getLedResponsetime() != null) {
+						ledresponsetime = df.format(terminal.getLedResponsetime());
+					}
+
+					if (terminal.getLedResponsetime() != null) {
+						Date now = new Date();
+						int timeLength = (int) (now.getTime() / 1000 - terminal.getLedResponsetime().getTime() / 1000);
+						if (timeLength > 60 * overtime || timeLength < 0) {
+							jterminal.put("LedOnline", 0);
+						} else {
+							jterminal.put("LedOnline", 1);
+							jterminal.put("DtuOnline", 1);
+						}
+
+					} else {
+						jterminal.put("LedOnline", 0);
+					}
+					jterminal.put("DTU_ResponseTime", dturesponsetime);
+					jterminal.put("LED_ResponseTime", ledresponsetime);
+					jterminal.put("StarLevel", terminal.getStarlevel());
+					jterminal.put("StarLevelSet", terminal.getStarlevelset());
+
+					jsonArray.add(jterminal);
+				}
+			}
+
+			jObject.put("result", "success");
+			jObject.put("rows", jsonArray);
+			return jObject;
+		} catch (Exception e) {
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+			return jObject;
+		}
+	}
+
+	@Override
 	public JSONObject updateTerminalInfo(String dtukey, String taxiname, int groupid, int StarLevelset) {
 		JSONObject jObject = new JSONObject();
 		try {
-			String projectid = groupMapper.selectByPrimaryKey(groupid).getProjectid();
+			group group = groupMapper.selectByPrimaryKey(groupid);
+			String projectid = group.getProjectid();
 
-			int pdisconnect = projectMapper.selectByPrimaryKey(projectid).getDisconnect();
+			int pdisconnect = JSONObject.parseObject(group.getPara2_User()).getIntValue("Playmode");
 
+			int TerminalCount = terminalMapper.selectCountbyprojectidName(projectid, taxiname);
+			if (TerminalCount > 1) {
+				jObject.put("result", "fail");
+				jObject.put("resultMessage", "终端名称:" + taxiname + ",已存在!");
+				return jObject;
+			}
 			terminal record = new terminal();
 			record.setDtukey(dtukey);
 			record.setName(taxiname);
 			int disconnect = 0;
-			record.setDisconnect(disconnect);
-			if (pdisconnect == 1) {
+			record.setPara6IdSet(disconnect);
+			if (pdisconnect == 2) {
 				if (getCode.isCarnumberNO(taxiname)) {
-					disconnect = 1;
-					record.setDisconnect(disconnect);
+					// 创建Random类对象
+					Random random = new Random();
+					disconnect = random.nextInt(250) + 1;
+					record.setPara6IdSet(disconnect);
 				}
 			}
 			record.setGroupid(groupid);
@@ -464,6 +669,49 @@ public class terminalMangerServiceImpl implements IterminalMangerService {
 			return "OK";
 		} catch (Exception e) {
 			return "ERROR255";
+		}
+	}
+
+	@Override
+	public JSONArray getGroupbyProjectid(String projectid, JSONObject adminInfoJsonObject) {
+		JSONArray jArray = new JSONArray();
+		try {
+			List<group> grplist = groupMapper.selectbyProjectid(projectid);
+			String groupids = adminInfoJsonObject.getString("groupids");
+			for (int i = 0; i < grplist.size(); i++) {
+				group tg = grplist.get(i);
+				int grpid = tg.getGroupid();
+				if (groupids == null || groupids == "" || adminInfoJsonObject.getInteger("adminlevel") < 2) {
+					String grpName = tg.getGroupname();
+					int screenwidth = tg.getscreenwidth();
+					int screenheight = tg.getscreenheight();
+					int maxPackLength = tg.getMaxPackLength();
+					JSONObject jgrp = new JSONObject();
+					jgrp.put("grpid", grpid);
+					jgrp.put("grpname", grpName);
+					jgrp.put("maxPackLength", maxPackLength);
+					jgrp.put("projectid", tg.getProjectid());
+					jgrp.put("screenwidth", screenwidth);
+					jgrp.put("screenheight", screenheight);
+					jArray.add(jgrp);
+				} else if (Arrays.asList(groupids.split(",")).contains(Integer.toString(grpid))) {
+					String grpName = tg.getGroupname();
+					int screenwidth = tg.getscreenwidth();
+					int screenheight = tg.getscreenheight();
+					int maxPackLength = tg.getMaxPackLength();
+					JSONObject jgrp = new JSONObject();
+					jgrp.put("grpid", grpid);
+					jgrp.put("grpname", grpName);
+					jgrp.put("maxPackLength", maxPackLength);
+					jgrp.put("projectid", tg.getProjectid());
+					jgrp.put("screenwidth", screenwidth);
+					jgrp.put("screenheight", screenheight);
+					jArray.add(jgrp);
+				}
+			}
+			return jArray;
+		} catch (Exception ex) {
+			return jArray;
 		}
 	}
 }

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->	
 	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>		
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/groupManger.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -97,10 +97,19 @@
             <div class="row">
                 <div class="col-md-12"> 
                 <div class="table">           			 
-			     <div id="toolbar" class="btn-group">
+			     <div id="toolbar">
+			     
+			     	<div class="btn-group">	
+		            <select shiro:hasRole="admin" id="select_project" class="form-control">	        		
+	        		</select>
+	        		</div>
+	        			
+			     	<div class="btn-group">				     		     					        		
 		            <button id="btn_table_add" type="button" class="btn  btn-success">
 		                <span class="fa fa-plus" aria-hidden="true"></span>创建分组
-		            </button>				           
+		            </button>				         
+		            </div>		              
+	        		
 		        </div>
 		        
 			  	<table id="groupManger_table" class='table-sm table-striped thead-dark'>						    						    
@@ -121,72 +130,57 @@
 			      </div>
 			 
 			      <!-- 模态框主体 -->
-			      <div class="modal-body">	
-			      <div class="row">
-			       <div class="col-md-6">
-			       <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">分组名称</span>
-				      </div>
-						<input type="text" class="form-control required" id="group_edit_name" placeholder="用户名" autofocus="autofocus"></input>												    
-				    </div>
-			       </div>	
-			       
-			       <div class="col-md-6">
-			       <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">项目名称</span>
-				      </div>
-						<select id="group_edit_project" class="form-control">						
-						</select>					    
-				    </div>			       		
-			       </div>				       
-			      </div>
+			      <div class="modal-body">
 			      
-			      <div class="row">
-			       <div class="col-md-6">
-  						  <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">最大包长</span>
-				      </div>
-				      <input type="number" class="form-control" id="group_edit_packLength" placeholder="宽度" min=768 max=10240 value= "1024">				      		    
-				    </div>
-			       </div>
-			      </div>
-			      
-			       <div class="row">
-			       <div class="col-md-6">
-  						  <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">屏幕宽度</span>
-				      </div>
-				      <input type="number" class="form-control" id="group_edit_width" step="8" placeholder="宽度" value= "144">				      		    
-				    </div>
-			       </div>
-			       <div class="col-md-6">
-		    		<div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">屏幕高度</span>
-				      </div>
-				      <input type="number" class="form-control" id="group_edit_height" step="8" placeholder="高度" value= "24">												    
-				    </div>
-			       </div>
-			      </div>
-			      
-			      <div class="row">
-			       <div class="col-md-6">
-  						  <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">分组归属</span>
-				      </div>
-				      <select id="group_edit_enable" class="form-control">	
-				      <option value=0>自身可见</option>
-				      <option value=1 selected>全部用户可见</option>					
-					  </select>				      		    
-				    </div>
-			       </div>
-			      </div>
-			      
+			      <div class="row">	
+				  		<div class="col-md-6">					  	
+					  	分组名称					  							  	
+					  	<input type="text" class="form-control required" id="group_edit_name" placeholder="用户名" autofocus="autofocus"/>
+					  	</div>
+					  	<div class="col-md-6">
+					  	分包规则
+					  	<div class="row">	
+					  	<div class="col-md-6">					  	
+					  	<select id="group_edit_packLength" class="form-control">	
+					      <option value='768'>768</option>
+					      <option value='1024' selected>1024</option>					
+						</select>	
+					  	</div>
+					  	<div class="col-md-6">
+					  	<select id="group_edit_batchCount" class="form-control">	
+					      <option selected value='6'>6</option>
+					      <option  value='12'>12</option>
+					      <option  value='18'>18</option>
+					      <option  value='24'>24</option>
+					      <option  value='30'>30</option>					
+						</select>
+					  	</div>
+					  	</div>					  							  	
+					  	
+					  	</div>						  		  					  	 	
+				  </div>
+				  
+				  <div class="row">	
+				  		<div class="col-md-6">					  	
+					  	屏幕宽度					  							  	
+					  	<input type="number" class="form-control" id="group_edit_width" step="8" placeholder="宽度" value= "144" />
+					  	</div>
+					  	<div class="col-md-6">
+					  	屏幕高度						  							  	
+					  	<input type="number" class="form-control" id="group_edit_height" step="8" placeholder="高度" value= "24" />
+					  	</div>						  		  					  	 	
+				  </div>
+				  
+				  <div class="row">	
+				  		<div class="col-md-6">					  	
+					  	分组归属					  							  	
+					  	<select id="group_edit_enable" class="form-control">	
+					      <option value=0>自身可见</option>
+					      <option value=1 selected>全部用户可见</option>					
+						</select>				      		    
+					  	</div>						  		  					  	 	
+				  </div>
+				  					      
 			      </div>				  			      
 			 
 			  		<!-- 模态框底部 -->

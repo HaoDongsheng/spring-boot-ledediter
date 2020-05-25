@@ -7,11 +7,13 @@ public interface IprojectMangerService {
 	public JSONArray getProjectlist();
 
 	public JSONObject createProject(String projectid, String projectname, String CheckCode, int startlevelControl,
-			int DefaultStartlevel, int isOurModule, int disconnect, String ConnectParameters, String username,
-			String userpwd, String groupname, int packLength, int groupwidth, int groupheight);
+			int DefaultStartlevel, int isOurModule, String ConnectParameters, String username, String userpwd,
+			String groupname, int packLength, int batchCount, int groupwidth, int groupheight);
 
 	public JSONObject updateProject(String projectid, String projectname, int AutoGroupTo, String CheckCode,
-			int startlevelControl, int DefaultStartlevel, int isOurModule, int disconnect, String ConnectParameters);
+			int startlevelControl, int DefaultStartlevel, int isOurModule, String ConnectParameters);
+
+	public JSONObject updateProjectlimit(String projectid, String projectLimit);
 
 	public JSONObject removeProject(String projectid);
 
@@ -24,4 +26,8 @@ public interface IprojectMangerService {
 	public JSONObject passwordEnCode();
 
 	public JSONObject txt2db();
+
+	public JSONObject execel2db();
+
+	public JSONObject codeChange();
 }

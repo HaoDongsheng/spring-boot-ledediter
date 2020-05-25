@@ -53,8 +53,7 @@ function listitemdblclick(obj)
 	var canvasid = $(obj)[0].id;
 	var pageid = canvasid.substring(9,canvasid.indexOf("_item"));	
 	var itemid = canvasid.substring(canvasid.indexOf("_item")+5);
-	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}
-	 $('#myModalEdit').modal('show');
+	if(!ispermission) {alertMessage(1, "警告", "没有相关操作权限,请联系管理员!");return;}	 
 	    if(itemmap.hasOwnProperty(pageid))
 		{
 			for(var i=0;i<itemmap[pageid].length;i++)
@@ -67,8 +66,28 @@ function listitemdblclick(obj)
 //						$("#select_div").val("0");
 //						$("#div_tp").css("display","inline");
 //						$("#div_gif").css("display","none");
-						tinymce.activeEditor.setContent(item.context);
-						initspecial(item.itemstyle.special);
+//						tinymce.activeEditor.setContent(item.context);
+//						initspecial(item.itemstyle.special);
+						switch(item.type)
+						{
+						case 0:{
+							var background_position = $('.edui-default .edui-for-customimage .edui-icon').css('background-position');
+							$('#myModalEdit').modal('show');										
+							$("#myModalEdit").attr("data-type",0);
+							$("#div_tp").css("display","inline");
+							$("#div_gif").css("display","none");										
+							//ue.setContent(item.context);
+							tinymce.activeEditor.setContent(item.context);
+							initspecial(item.itemstyle.special);
+						};break;
+						case 4:{
+							$('#myModalEdit').modal('show');										
+							$("#myModalEdit").attr("data-type",1);
+							$("#div_tp").css("display","none");
+							$("#div_gif").css("display","inline");
+							initgif(1,9,true);
+						};break;
+						}
 						break;
 						}
 				}

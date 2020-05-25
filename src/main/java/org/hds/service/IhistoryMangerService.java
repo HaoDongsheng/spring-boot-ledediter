@@ -9,5 +9,7 @@ public interface IhistoryMangerService {
 	public JSONObject gethistorybyDate(int pageNum, int pageSize, String lifeAct, String lifeDie, int groupid,
 			String sort, String sortOrder);
 
-	public JSONObject getplaylistinfobysn(int playlistsn);
+	public JSONObject gethistorybyDate(String lifeAct, String lifeDie, int groupid);
+
+	public JSONObject getplaylistinfobysn(String playlistsn);
 }

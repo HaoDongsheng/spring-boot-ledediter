@@ -75,9 +75,9 @@ public class projectMangerController {
 			@RequestParam("projectname") String projectname, @RequestParam("CheckCode") String CheckCode,
 			@RequestParam("startlevelControl") int startlevelControl,
 			@RequestParam("DefaultStartlevel") int DefaultStartlevel, @RequestParam("isOurModule") int isOurModule,
-			@RequestParam("disconnect") int disconnect, @RequestParam("ConnectParameters") String ConnectParameters,
-			@RequestParam("username") String username, @RequestParam("userpwd") String userpwd,
-			@RequestParam("groupname") String groupname, @RequestParam("packLength") int packLength,
+			@RequestParam("ConnectParameters") String ConnectParameters, @RequestParam("username") String username,
+			@RequestParam("userpwd") String userpwd, @RequestParam("groupname") String groupname,
+			@RequestParam("packLength") int packLength, @RequestParam("batchCount") int batchCount,
 			@RequestParam("groupwidth") int groupwidth, @RequestParam("groupheight") int groupheight,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
@@ -85,8 +85,8 @@ public class projectMangerController {
 //        	startlevelControl:parseInt($("#select_start").val()),
 //        	DefaultStartlevel:parseInt($("#project_startLevel").val()),
 			JSONObject jsonObject = projectMangerSer.createProject(projectid, projectname, CheckCode, startlevelControl,
-					DefaultStartlevel, isOurModule, disconnect, ConnectParameters, username, userpwd, groupname,
-					packLength, groupwidth, groupheight);
+					DefaultStartlevel, isOurModule, ConnectParameters, username, userpwd, groupname, packLength,
+					batchCount, groupwidth, groupheight);
 			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/createProject 项目id:" + projectid + "===",
 					"/createProject", logger, true);
 			return jsonObject;
@@ -104,18 +104,37 @@ public class projectMangerController {
 			@RequestParam("projectname") String projectname, @RequestParam("AutoGroupTo") int AutoGroupTo,
 			@RequestParam("CheckCode") String CheckCode, @RequestParam("startlevelControl") int startlevelControl,
 			@RequestParam("DefaultStartlevel") int DefaultStartlevel, @RequestParam("isOurModule") int isOurModule,
-			@RequestParam("disconnect") int disconnect, @RequestParam("ConnectParameters") String ConnectParameters,
-			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+			@RequestParam("ConnectParameters") String ConnectParameters, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
 		try {
 			JSONObject jsonObject = projectMangerSer.updateProject(projectid, projectname, AutoGroupTo, CheckCode,
-					startlevelControl, DefaultStartlevel, isOurModule, disconnect, ConnectParameters);
+					startlevelControl, DefaultStartlevel, isOurModule, ConnectParameters);
 			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/updateProject 项目id:" + projectid + "===",
 					"/updateProject", logger, true);
 			return jsonObject;
 		} catch (Exception e) {
-			logger.error("===用户:" + adminname + "/createProject 异常:" + e.getMessage() + "===");
+			logger.error("===用户:" + adminname + "/updateProject 异常:" + e.getMessage() + "===");
 			operateLog.writeLog(adminname, 1,
 					"===用户:" + adminname + "/updateProject 项目id:" + projectid + "异常:" + e.getMessage() + "===",
+					"/updateProject", logger, true);
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updateProjectlimit", method = RequestMethod.POST)
+	public JSONObject updateProjectlimit(@RequestParam("projectid") String projectid,
+			@RequestParam("projectLimit") String projectLimit, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
+		try {
+			JSONObject jsonObject = projectMangerSer.updateProjectlimit(projectid, projectLimit);
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/updateProjectlimit 项目id:" + projectid + "===",
+					"/updateProjectlimit", logger, true);
+			return jsonObject;
+		} catch (Exception e) {
+			logger.error("===用户:" + adminname + "/updateProjectlimit 异常:" + e.getMessage() + "===");
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/updateProjectlimit 项目id:" + projectid + "异常:" + e.getMessage() + "===",
 					"/updateProject", logger, true);
 			return null;
 		}
@@ -187,7 +206,23 @@ public class projectMangerController {
 	@RequestMapping(value = "/txt2db", method = RequestMethod.POST)
 	public JSONObject txt2db(HttpServletRequest request) {
 		try {
-			JSONObject jsonObject = projectMangerSer.txt2db();
+			// JSONObject jsonObject = projectMangerSer.txt2db();
+			JSONObject jsonObject = projectMangerSer.execel2db();
+			return jsonObject;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/codeChangeSingle", method = RequestMethod.POST)
+	public JSONObject codeChangeSingle(HttpServletRequest request) {
+		try {
+			// JSONObject jsonObject = projectMangerSer.txt2db();
+			JSONObject jsonObject = projectMangerSer.codeChange();
+
+			operateLog.writeLog("", 0, "===用户: " + jsonObject.toJSONString() + "===", "/removeProject", logger, true);
+
 			return jsonObject;
 		} catch (Exception e) {
 			return null;

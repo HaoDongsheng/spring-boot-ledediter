@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 			
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->			
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
 	<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
@@ -20,7 +20,7 @@
 	<!-- <script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script> -->	
 	
 	<!-- jcanvas 核心 JavaScript 文件 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jcanvas.js}" ></script>		
+	<script type="text/javascript" th:src="@{~/jcanvas/jcanvas.js}" ></script>		
 		
 	<!-- jquery-ui 核心 JavaScript 文件 -->	
 	<link th:href="@{~/jquery-ui/jquery-ui.min.css}" rel="stylesheet" type="text/css">	
@@ -29,7 +29,11 @@
 	<!-- bootstrap-table -->
 	<link th:href="@{~/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css">	
 	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table.js}" ></script>
-	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>			
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-zh-CN.min.js}" ></script>		
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-resizable.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/colResizable-1.6.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap-table/bootstrap-table-export.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap-table/tableExport.js}" ></script>		
 	
 	<!-- 自定义 核心 JavaScript 文件 -->	
 	<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">	
@@ -38,12 +42,13 @@
 	<script type="text/javascript" th:src="@{~/javascript/infoList.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/DrawInfolistbyCanvas.js}" ></script>
 		
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.min.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.zh-CN.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.zh-CN.js}" ></script>
+	
 	
 	<link th:href="@{~/css/bootstrap-timepicker.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-timepicker.min.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-timepicker.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>	
 	
 	<script type="text/javascript" th:src="@{~/spin/spin.min.js}" ></script>	
 </head>
@@ -145,9 +150,11 @@
 	           
 	           <div class="col-md-8">
 		           <div class="btn-group btn-group-sm">	           		      	
-				    <button shiro:hasPermission="publishManger" id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
-				    <button shiro:hasPermission="publishManger" id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
-				    <button shiro:hasPermission="publishManger" id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>保存并发布</button>
+				    <button shiro:hasPermission="advManger" id='list_create' type="button" class="btn btn-primary"><i class="fa fa-plus"></i>新建</button>			    
+				    <button shiro:hasPermission="advManger" id='list_delete' type="button" class="btn btn-primary"><i class="fa fa-trash-o"></i>删除</button>
+				    <button shiro:hasPermission="advManger" id='list_save' type="button" class="btn btn-primary"><i class="fa fa-save"></i>保存</button>
+				    <button shiro:hasPermission="publishManger" id='list_publish' type="button" class="btn btn-primary"><i class="fa fa-send-o"></i>发布</button>
+				    <button shiro:hasPermission="advManger" id='list_copy' type="button" class="btn btn-primary"><i class="fa fa-copy"></i>复制</button>
 				    <button id='list_attribute' type="button" class="btn btn-primary"><i class="fa fa-exclamation-circle"></i>详情</button>
 				    <button id='list_SerialPort' type="button" class="btn btn-primary"><i class="fa fa-magnet"></i>串口发送</button>
 				    <button id='list_datesearch' type="button" class="btn btn-primary"><i class="fa fa-clock-o"></i>日期检索</button>
@@ -158,10 +165,10 @@
            	
            <div class="row">
            	<div class="col-md-2">
-           	<div class='list-group-item' style='text-align: center;background:#C36464;'>
+           	<div class='list-group-item' style='text-align: center;background:#C36464;box-shadow: 10px 10px 5px #888888;'>
 			<a class='text-white'>广告列表<span id='badge_draft' class="badge badge-light">0</span></a>
 			</div>
-			<div id='infolist_draft' class="list-group">
+			<div id='infolist_draft' class="list-group" style="box-shadow: 10px 10px 5px #888888;">
 			</div>
            	</div>
            	
@@ -226,6 +233,22 @@
 		      </div>
 		      
 		      <div class="row">
+		      		      		      		      		      
+		      <div class="col-md-12">
+		      <div class="input-group mb-3 input-group-sm">
+			      <div class="input-group-prepend">
+			        <span class="input-group-text">生命周期</span>
+			      </div>
+					<input type="text" class="form-control required readonly" id="creat_playlist_lifeAct" placeholder="开始日期" autofocus="autofocus" maxlength="20"></input> 
+					<div class="input-group-prepend">
+			        <span class="input-group-text">~</span>
+			      	</div> 
+					<input type="text" class="form-control required readonly" id="creat_playlist_lifeDie" placeholder="结束日期" autofocus="autofocus" maxlength="20"></input>
+			    </div>	
+		      </div>
+		      </div>
+		      
+		      <div class="row">
 		      		      		      
 		      <div class="col-md-12">
    				<div class="input-group mb-3 input-group-sm">
@@ -268,7 +291,7 @@
 		 
 		  		<!-- 模态框底部 -->
 		        <div class="modal-footer">
-		          <button shiro:hasPermission="publishManger" id="btn_add_playlist" type="button" class="btn btn-primary">确定</button> 
+		          <button shiro:hasPermission="advManger" id="btn_add_playlist" type="button" class="btn btn-primary">确定</button> 
 		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 		        </div>
 		    </div>
@@ -314,6 +337,32 @@
 		  		<!-- 模态框底部 -->
 		        <div class="modal-footer">
 		          <button id="btn_add_quantum" type="button" class="btn btn-primary">确定</button> 
+		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+		        </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<!-- 模态框  修改备注-->
+		<div class="modal fade" data-backdrop="static" id="modal_updateRemarks">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		 
+		      <!-- 模态框头部 -->
+		      <div class="modal-header">
+		        <h4 class="modal-title">修改备注</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		 
+		      <!-- 模态框主体 -->
+		      <div class="modal-body">
+				备注  	
+				<input type="text" class="form-control required" id="update_remarks_name" placeholder="备注" autofocus="autofocus" maxlength="20"></input>				  
+		      </div>				  			      
+		 
+		  		<!-- 模态框底部 -->
+		        <div class="modal-footer">
+		          <button id="btn_update_remarks" type="button" class="btn btn-primary">确定</button> 
 		          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 		        </div>
 		    </div>
@@ -463,14 +512,39 @@
 	        	<div>
 	        	发布时间
 	        	<a id='details_publishDate'></a>
-	        	</div>	        
-	        	<div class="table">
-        		<div id="details_toolbar">				     				     										    				     				           
-		        </div>
-			        
-	         	<table id="info_details_table" class='table-sm table-striped thead-dark'>						    						    
-			  	</table>
-			  	</div>
+	        	</div>
+	        	<div>
+	        	播放时长
+	        	<a id='details_playTimelength'></a>
+	        	</div>	        			  				  	
+			  	<div class="panel-body">
+			  	<ul class="nav nav-tabs">
+                    <li id='nav_txt' class="nav-item"><a class="nav-link active" href="#div_txt" data-toggle="tab">内容</a>
+                    </li>
+                    <li id='nav_st' class="nav-item"><a class="nav-link" href="#div_st" data-toggle="tab">排期</a>
+                    </li>                   
+                </ul>
+
+                <div class="tab-content">
+                    <div id='div_txt' class="tab-pane active container">
+                 	<div class="table">
+	        		<div id="details_toolbar">				     				     										    				     				           
+			        </div>
+				        
+		         	<table id="info_details_table" class='table-sm table-striped thead-dark'>						    						    
+				  	</table>			  	
+				  	</div>
+                    </div>
+                    <div id='div_st' class="tab-pane container">
+                        <div class="table">	
+					  	<div id="st_toolbar">				     				     										    				     				           
+				        </div>		  	
+					  	<table id="st_details_table" class='table-sm table-striped thead-dark'>						    						    
+					  	</table>
+					  	</div>
+                    </div>
+                </div>
+                </div>
 	        </div>
 	   
 	        <!-- 模态框底部 -->

@@ -1,11 +1,33 @@
 $(function(){
 	//var codekey = getCodeKey("AA");
 	
+	var opts = {            
+        lines: 13, // 花瓣数目
+        length: 20, // 花瓣长度
+        width: 10, // 花瓣宽度
+        radius: 30, // 花瓣距中心半径
+        corners: 1, // 花瓣圆滑度 (0-1)
+        rotate: 0, // 花瓣旋转角度
+        direction: 1, // 花瓣旋转方向 1: 顺时针, -1: 逆时针
+        color: '#000', // 花瓣颜色
+        speed: 1, // 花瓣旋转速度
+        trail: 60, // 花瓣旋转时的拖影(百分比)
+        shadow: false, // 花瓣是否显示阴影
+        hwaccel: false, //spinner 是否启用硬件加速及高速旋转            
+        className: 'spinner', // spinner css 样式名称
+        zIndex: 2e9, // spinner的z轴 (默认是2000000000)
+        top: '25%', // spinner 相对父容器Top定位 单位 px
+        left: '50%'// spinner 相对父容器Left定位 单位 px
+    };
+
+    spinner = new Spinner(opts);
+	    
 	initBTabel();
 	
 	getProjectlist();
 });
 
+var spinner;
 var projectList=[];
 
 function initBTabel()
@@ -192,16 +214,6 @@ function initBTabel()
             title: '我司模块'
          
         }, {
-            field: 'disconnect',
-            sortable:true,
-            title: '失联播放模式',
-            formatter: function (value, row, index) {  
-            	var txt="关闭"
-            	if(value!=null && value!="" && value==1)
-            		{txt = "开启";}
-            	return txt;
-            }         
-        }, {
             field: 'userlist',
             title: '包含用户',
             sortable:true,
@@ -237,6 +249,25 @@ function initBTabel()
         	formatter: operateFormatter
         }
         ]
+    });
+    
+    $("#group_packLength").change(function(){ 
+    	var group_packLength = parseInt($("#group_packLength").val());
+    	$("#group_batchcount").empty();
+    	switch (group_packLength) {
+		case 768:			
+			for(var i=0;i<5;i++)
+				{
+				$("#group_batchcount").append("<option value='"+ (i+1)*8 +"'>"+ (i+1)*8 +"</option>")
+				}
+			break;
+		case 1024:			
+			for(var i=0;i<5;i++)
+				{
+				$("#group_batchcount").append("<option value='"+ (i+1)*6 +"'>"+ (i+1)*6 +"</option>")
+				}
+			break;
+		}    							
     });
     
     $("#select_start").change(function(){ 
@@ -285,6 +316,55 @@ function initBTabel()
     $("#btn_table_decode").click(function(){ 
     	$('#decode_result').empty();
     	$("#modal_decode").modal('show');
+    });
+    
+    $("#btn_project_remove").click(function(){   
+    	//请求时spinner出现
+    	var target = $("#modal_project_remove .modal-body").get(0);
+        spinner.spin(target);
+        
+    	var projectId = $('#modal_project_remove').attr("data-projectid");		
+    	
+    	$.ajax({  
+            url:"/removeProject", 
+            data:{
+            	projectid:projectId,
+            	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+    			},  
+            type:"post",  
+            dataType:"json", 
+            success:function(data)  
+            {       	  
+            	if(data.result=="success")
+            		{  
+            		for(var i=0;i<projectList.length;i++)
+					{
+		    			var id=projectList[i].projectid;
+		    			if(id==projectId)
+		    				{
+		    				projectList.splice(i, 1);
+		    				break;
+		    				}
+					}
+            		
+            		$("#projectinfo_table").bootstrapTable("remove", {field: "projectId",values: [projectId]});
+            		alertMessage(0, "成功", "删除项目成功!");
+            		}
+            	else
+            		{
+            			alertMessage(1, "警告", data.resultMessage);        			
+            		}   
+            	$("#modal_project_remove").modal('hide');
+            	//关闭spinner  
+                spinner.spin();
+            },  
+            error: function() {  
+            	alertMessage(2, "异常", "ajax 函数  removeProject 错误");    
+            	$("#modal_project_remove").modal('hide');
+            	//关闭spinner  
+                spinner.spin();
+              }  
+        });
     });
     
     $("#btn_table_change").click(function(){ 
@@ -347,6 +427,39 @@ function initBTabel()
 //            	alertMessage(2, "异常", "ajax 函数  passwordEnCode 错误");             	
 //              }  
 //        });
+    	var target = $("#projectinfo_table").get(0);
+        spinner.spin(target);
+        
+    	$.ajax({  
+            url:"/codeChangeSingle",           
+            type:"post",  
+            dataType:"json", 
+            success:function(data)  
+            {       	  
+            	if(data.result=="success")
+            		{  
+            		
+            		if(data.delinfosns=="" && data.delplaylistsns=="")
+            			{
+            			alertMessage(0, "提示", "转换成功");
+            			}
+            		else {
+						alert("广告编码转换失败:</br>"+ data.delinfosns+"</br>列表转换失败:</br>"+data.delplaylistsns);
+					}
+            		}
+            	else
+            		{
+            			alertMessage(1, "警告", data.resultMessage);              			
+            		}
+            	//关闭spinner  
+                spinner.spin();
+            },  
+            error: function() {  
+            	alertMessage(2, "异常", "ajax 函数  codeChangeSingle 错误");   
+            	//关闭spinner  
+                spinner.spin();
+              }  
+        });
     });
     
     //解码
@@ -604,13 +717,13 @@ function initBTabel()
                 	CheckCode:$('#project_pwd').val(),
                 	startlevelControl:parseInt($("#select_start").val()),
                 	DefaultStartlevel:parseInt($("#project_startLevel").val()),
-                	isOurModule:$('#select_our').val(),
-                	disconnect:parseInt($('#select_disconnect').val()),
+                	isOurModule:$('#select_our').val(),                	
                 	ConnectParameters:JSON.stringify(Protocal),
                 	username:$('#user_name').val(),
                 	userpwd:$('#user_pwd').val(),
                 	groupname:$('#group_name').val(),
                 	packLength:parseInt($('#group_packLength').val()),
+                	batchCount:parseInt($('#group_batchcount').val()),
                 	groupwidth:parseInt($('#group_width').val()),
                 	groupheight:parseInt($('#group_height').val()),
                 	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
@@ -682,8 +795,7 @@ function initBTabel()
                 	CheckCode:$('#project_pwd').val(),
                 	startlevelControl:parseInt($("#select_start").val()),
                 	DefaultStartlevel:parseInt($("#project_startLevel").val()),
-                	isOurModule:$('#select_our').val(),
-                	disconnect:parseInt($('#select_disconnect').val()),
+                	isOurModule:$('#select_our').val(),                	
                 	ConnectParameters:JSON.stringify(Protocal),
                 	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
         			},  
@@ -704,8 +816,7 @@ function initBTabel()
 	        					startLevelControl:parseInt($("#select_start").val()),
 	        					defaultStartLevel:parseInt($("#project_startLevel").val()),
             					ConnectParameters:JSON.stringify(Protocal),
-            					ourmodule:isOurModule,
-            					disconnect:parseInt($('#select_disconnect').val())
+            					ourmodule:isOurModule
             			};    
                 		
                 		for(var i=0;i<projectList.length;i++)
@@ -732,13 +843,63 @@ function initBTabel()
                   }  
             });
 		}    	    	    	    
-    });    
+    });  
+    
+    $("#btn_project_limit").click(function(){
+    	
+    	var projectLimit = {
+    			ExpTime : parseInt($('#project_infoSaveDay').val()),
+    			ExpDisplay : parseInt($('#deleteinfo_display').val())
+    	};
+    	
+//    	$('#modal_project_limit').attr("data-projectid",row.projectId);
+//    	$('#modal_project_limit').attr("data-index",index);
+    	
+    	$.ajax({  
+            url:"/updateProjectlimit",
+            data:{
+            	projectid:$('#modal_project_limit').attr("data-projectid"),             	
+            	projectLimit:JSON.stringify(projectLimit),
+            	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+    			},  
+            type:"post",  
+            dataType:"json", 
+            success:function(data)  
+            {       	  
+            	if(data.result=="success")
+            		{   		
+            		var index = $('#modal_project_limit').attr("data-index");
+            		var rows = $('#projectinfo_table').bootstrapTable('getData');//行的数据
+        		    var item = "";
+        		    for(var i=0;i<rows.length;i++){
+	    		         if(rows[i].projectId == $('#modal_project_limit').attr("data-projectid")){
+	    					item = rows[i];
+	    		             break;
+	    		         }
+        		    }     
+        			item.projectLimit = JSON.stringify(projectLimit);
+            		$('#projectinfo_table').bootstrapTable('updateRow', {index: index, row: item});
+            		$("#modal_project_limit").modal('hide');
+            		}
+            	else
+            		{
+            			alertMessage(1, "警告", data.resultMessage);        			
+            		}        	
+            },  
+            error: function() {  
+            	alertMessage(2, "异常", "ajax 函数  updateProjectlimit 错误");                	           
+              }  
+        });
+    });
 }
 
 function operateFormatter(value, row, index) {
     return [
     	'<a class="edit" href="javascript:void(0)" style="margin:0px 5px;" title="编辑">',
         '<i class="fa fa-edit"></i>编辑',
+        '</a>'+
+        '<a class="limit" href="javascript:void(0)" style="margin:0px 5px;" title="权限">',
+        '<i class="fa fa-cog"></i>权限',
         '</a>'+
         '<a class="remove" href="javascript:void(0)" style="margin:0px 5px;" title="删除">',
         '<i class="fa fa-remove"></i>删除',
@@ -761,9 +922,7 @@ window.operateEvents = {
         	$('#project_name').val(row.projectName);
         	if(row.ourmodule=='否')
         		{$('#select_our').val(0);}
-        	else{$('#select_our').val(1);}
-        	
-        	$('#select_disconnect').val(row.disconnect);
+        	else{$('#select_our').val(1);}        	        	
         	
         	$('#project_pwd').val(row.projectPwd);
         	$('#select_start').val(row.startLevelControl);
@@ -791,42 +950,26 @@ window.operateEvents = {
         	$('#modal_CreateProject').attr("data-index",index);
 			$("#modal_CreateProject").modal('show');
         },
+        'click .limit': function (e, value, row, index) {  
+        	var projectId = row.projectId;
+        	//projectLimit: "{"ExpTime":60,"ExpDisplay":1}"
+        	var projectLimit = row.projectLimit;
+        	if(projectLimit!=null)
+        		{
+        		var JprojectLimit = JSON.parse(projectLimit);
+        		$('#project_infoSaveDay').val(JprojectLimit.ExpTime);
+        		$('#deleteinfo_display').val(JprojectLimit.ExpDisplay);
+        		}
+        	$('#modal_project_limit').attr("data-projectid",row.projectId);
+        	$('#modal_project_limit').attr("data-index",index);
+        	
+			$("#modal_project_limit").modal('show');			
+        },
         'click .remove': function (e, value, row, index) {  
         	var projectId = row.projectId;
-        	
-        	$.ajax({  
-                url:"/removeProject", 
-                data:{
-                	projectid:projectId,
-                	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
-        			},  
-                type:"post",  
-                dataType:"json", 
-                success:function(data)  
-                {       	  
-                	if(data.result=="success")
-                		{  
-                		for(var i=0;i<projectList.length;i++)
-						{
-			    			var id=projectList[i].projectid;
-			    			if(id==projectId)
-			    				{
-			    				projectList.splice(i, 1);
-			    				break;
-			    				}
-						}
-                		
-                		$("#projectinfo_table").bootstrapTable("remove", {field: "projectId",values: [projectId]});
-                		}
-                	else
-                		{
-                			alertMessage(1, "警告", data.resultMessage);        			
-                		}        	
-                },  
-                error: function() {  
-                	alertMessage(2, "异常", "ajax 函数  removeProject 错误");            
-                  }  
-            });
+        	        	        	        	
+        	$('#modal_project_remove').attr("data-projectid",projectId);
+			$("#modal_project_remove").modal('show');			
         }
 }
 //获取分组按项目编号
@@ -888,10 +1031,9 @@ function getProjectlist()
 
 	        			var grouplist=data[i].grouplist;
 	        			var userlist=data[i].userlist;
-	        			var IsOurModule = data[i].IsOurModule;
-	        			var disconnect = data[i].disconnect;
+	        			var IsOurModule = data[i].IsOurModule;	        			
 	        			var ConnectParameters = data[i].ConnectParameters;
-	        			
+	        			var projectLimit =  data[i].projectLimit;
 	        			var strOurModule="是";
 	            		if(IsOurModule == "0")
 	            		{strOurModule="否";} 
@@ -905,10 +1047,10 @@ function getProjectlist()
 	        					startLevelControl:data[i].startLevelControl,
 	        					defaultStartLevel:data[i].defaultStartLevel,
 	        					ConnectParameters:ConnectParameters,
-	        					ourmodule:strOurModule,
-	        					disconnect:disconnect,
+	        					ourmodule:strOurModule,	        					
 	        					grouplist:grouplist,
-	        					userlist:userlist
+	        					userlist:userlist,
+	        					projectLimit:projectLimit
 	        			};
 	        			
 	        			ArrayTable.push(item);

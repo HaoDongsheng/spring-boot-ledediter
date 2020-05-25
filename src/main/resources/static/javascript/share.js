@@ -9,6 +9,7 @@ $(function(){
 	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));	
 	
 	$('#dropdownUser_name').text(adminInfo.adminname);
+	
 });
 
 //获取当前时间，格式YYYY-MM-DD
@@ -28,6 +29,23 @@ function getNowFormatDate() {
     return currentdate;
 }
 
+//获取当前时间，格式YYYY-MM-DD
+function getNowFormatMonth() {
+    var date = new Date();
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month;
+    return currentdate;
+}
+
 function getNowFormatDatetime() {
     var date = new Date();
     var seperator1 = "-";
@@ -42,6 +60,50 @@ function getNowFormatDatetime() {
     }
     var currentdate = year + seperator1 + month + seperator1 + strDate +" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+":"+date.getMilliseconds();
     return currentdate;
+}
+//秒值转时间字符串
+function formatSeconds(value) {
+    var secondTime = parseInt(value);// 秒
+    var minuteTime = 0;// 分
+    var hourTime = 0;// 小时
+    if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+        //获取分钟，除以60取整数，得到整数分钟
+        minuteTime = parseInt(secondTime / 60);
+        //获取秒数，秒数取佘，得到整数秒数
+        secondTime = parseInt(secondTime % 60);
+        //如果分钟大于60，将分钟转换成小时
+        if(minuteTime > 60) {
+            //获取小时，获取分钟除以60，得到整数小时
+            hourTime = parseInt(minuteTime / 60);
+            //获取小时后取佘的分，获取分钟除以60取佘的分
+            minuteTime = parseInt(minuteTime % 60);
+        }
+    }
+    var result = "";
+
+    if(hourTime < 10)
+    	{
+    	result = "0" + parseInt(hourTime) + ":";
+    	}
+    else {	
+    	result = parseInt(hourTime) + ":";
+	}
+    
+    if(minuteTime  < 10) {
+    	result += "0" + parseInt(minuteTime) + ":";
+    }
+    else {
+    	result += parseInt(minuteTime) + ":";
+	}
+    
+    if(secondTime  < 10) {
+    	result += "0" + parseInt(secondTime);
+    }
+    else {
+    	result += parseInt(secondTime);
+	}
+    
+    return result;
 }
 
 function alertMessage(messageType, title, message) {	
@@ -262,11 +324,11 @@ function GJ_FanZhuanYi(oldData) {
 //获取真正秘钥
 function getCodeKey(str)
 {
-	let result = ''
+	var result = ''
       // 转字符串
       str += ''
-      for (let i = 0; i < str.length; i++) {
-        let bit = parseInt(str[i], 16).toString(2)
+      for (var i = 0; i < str.length; i++) {
+    	  var bit = parseInt(str[i], 16).toString(2)
         // 转字符串
         bit.toString()
         // 补零

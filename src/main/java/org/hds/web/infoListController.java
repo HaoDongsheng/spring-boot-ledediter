@@ -87,12 +87,13 @@ public class infoListController {
 	@RequestMapping(value = "/CreatInfoList", method = RequestMethod.POST)
 	public JSONObject CreatInfoList(@RequestParam("listname") String listname, @RequestParam("groupid") int groupid,
 			@RequestParam("listtype") int listtype, @RequestParam("quantums") String quantums,
-			@RequestParam("ScheduleType") int ScheduleType, @RequestParam("programlist") String programlist,
+			@RequestParam("ScheduleType") int ScheduleType, @RequestParam("lifeAct") String lifeAct,
+			@RequestParam("lifeDie") String lifeDie, @RequestParam("programlist") String programlist,
 			@RequestParam("adminid") int adminid, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
-			JSONObject JObject = infoListSer.CreatinfoList(listname, groupid, listtype, quantums, ScheduleType,
-					programlist, adminid);
+			JSONObject JObject = infoListSer.CreatinfoList(listname, groupid, listtype, quantums, ScheduleType, lifeAct,
+					lifeDie, programlist, adminid);
 			operateLog.writeLog(adminname, 0,
 					"===用户:" + adminname + " 新建播放列表:" + listname + " 返回结果:" + JObject.toJSONString() + "===",
 					"/CreatInfoList", logger, true);
@@ -107,15 +108,16 @@ public class infoListController {
 
 	@ResponseBody
 	@RequestMapping(value = "/UpdateInfoList", method = RequestMethod.POST)
-	public JSONObject UpdateInfoList(@RequestParam("listid") int listid, @RequestParam("listname") String listname,
+	public JSONObject UpdateInfoList(@RequestParam("listid") String listid, @RequestParam("listname") String listname,
 			@RequestParam("groupid") int groupid, @RequestParam("listtype") int listtype,
 			@RequestParam("quantums") String quantums, @RequestParam("ScheduleType") int ScheduleType,
+			@RequestParam("lifeAct") String lifeAct, @RequestParam("lifeDie") String lifeDie,
 			@RequestParam("programlist") String programlist, @RequestParam("isPublish") Boolean isPublish,
 			@RequestParam("adminid") int adminid, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
 			JSONObject JObject = infoListSer.UpdateinfoList(listid, listname, groupid, listtype, quantums, ScheduleType,
-					programlist, adminid);
+					lifeAct, lifeDie, programlist, adminid);
 			if (JObject.getString("deleMessage") != null) {
 				operateLog.writeLog(adminname, 0, "===用户:" + adminname + " 更新播放列表:" + listname + " 返回删除旧列表结果:"
 						+ JObject.getString("deleMessage") + "===", "/UpdateInfoList", logger, true);
@@ -123,15 +125,20 @@ public class infoListController {
 			if (JObject.getString("result").equals("success")) {
 				if (isPublish)// 发布
 				{
-					int newlistid = JObject.getIntValue("returnid");
-					logger.info("===用户:" + adminname + " 获取新播放列表sn:" + newlistid + "===");
-					if (newlistid == 0) {
+					String newlistid = JObject.getString("returnid");
+
+					if (newlistid == null || newlistid.equals("0")) {
 						newlistid = listid;
 					}
-					JSONObject JObjectp = infoListSer.PublishinfoList(newlistid, adminid);
+					logger.info("===用户:" + adminname + " 获取新播放列表sn:" + newlistid + "===");
+
+					JSONObject JObjectp = null;
+
+					JObjectp = infoListSer.PublishinfoListbyGroupid(newlistid, adminid, groupid);
 
 					if (JObjectp.getString("result") == "success") {
 						JObject.put("pubid", JObjectp.getString("pubid"));
+						JObject.put("changeInfo", JObjectp.getString("changeInfo"));
 						operateLog.writeLog(adminname, 0,
 								"===用户:" + adminname + " 新播放列表发布编码成功 发布id:" + JObjectp.getString("pubid") + "===",
 								"/UpdateInfoList", logger, true);
@@ -154,7 +161,7 @@ public class infoListController {
 
 	@ResponseBody
 	@RequestMapping(value = "/UpdatePlaylistName", method = RequestMethod.POST)
-	public JSONObject UpdatePlaylistName(@RequestParam("playlistid") int playlistid,
+	public JSONObject UpdatePlaylistName(@RequestParam("playlistid") String playlistid,
 			@RequestParam("listname") String listname, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
@@ -172,8 +179,26 @@ public class infoListController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "/updateRemarks", method = RequestMethod.POST)
+	public JSONObject updateRemarks(@RequestParam("infosn") String infosn, @RequestParam("remarks") String remarks,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		try {
+			JSONObject JObject = infoListSer.UpdateRemarks(infosn, remarks);
+			operateLog.writeLog(adminname, 0,
+					"===用户:" + adminname + " 修改备注:" + remarks + " 返回结果:" + JObject.toJSONString() + "===",
+					"/UpdatePlaylistName", logger, true);
+			return JObject;
+		} catch (Exception e) {
+			operateLog.writeLog(adminname, 1,
+					"===用户:" + adminname + "/updateRemarks 修改备注:" + remarks + " 异常:" + e.getMessage() + "===",
+					"/UpdatePlaylistName", logger, true);
+			return null;
+		}
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "/deleteplaylistbyid", method = RequestMethod.POST)
-	public JSONObject deleteplaylistbyid(@RequestParam("playlistid") int playlistid,
+	public JSONObject deleteplaylistbyid(@RequestParam("playlistid") String playlistid,
 			@RequestParam("adminid") int adminid, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
@@ -223,7 +248,7 @@ public class infoListController {
 
 	@ResponseBody
 	@RequestMapping(value = "/deleteinfobyid", method = RequestMethod.POST)
-	public JSONObject deleteinfobyid(@RequestParam("infosn") int infosn, @RequestParam("groupid") int groupid,
+	public JSONObject deleteinfobyid(@RequestParam("infosn") String infosn, @RequestParam("groupid") int groupid,
 			@RequestParam("infopubid") int infopubid, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
@@ -242,7 +267,7 @@ public class infoListController {
 
 	@ResponseBody
 	@RequestMapping(value = "/CopyInfotodraft", method = RequestMethod.POST)
-	public JSONObject CopyInfotodraft(@RequestParam("infosn") int infosn, @RequestParam("groupid") int groupid,
+	public JSONObject CopyInfotodraft(@RequestParam("infosn") String infosn, @RequestParam("groupid") int groupid,
 			@RequestParam("adminid") int adminid, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
@@ -261,7 +286,7 @@ public class infoListController {
 
 	@ResponseBody
 	@RequestMapping(value = "/getinfoListbyinfoid", method = RequestMethod.POST)
-	public JSONObject getinfoListbyinfoid(@RequestParam("infosn") int infosn,
+	public JSONObject getinfoListbyinfoid(@RequestParam("infosn") String infosn,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = infoListSer.GetInfocodebyid(infosn);

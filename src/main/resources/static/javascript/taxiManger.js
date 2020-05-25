@@ -1,3 +1,4 @@
+var selectProjectid = "";
 $(function(){			
 	//$( '#taxi_command_cycle div').draggable({ cursor: "move",containment: "parent",axis: "y",connectToSortable: "#taxi_command_cycle",helper: "clone",revert: "invalid" });
 	
@@ -8,18 +9,27 @@ $(function(){
 	      axis: "y"
 	    });
 	
-	getGroup();
+	getprojectList();
 	
-	initBTabel();
+//	getGroup();
+	
+	//initBTabel();
 		
+	$('#select_project').change(function() {		
+		selectProjectid = $('#select_project').val();
+		getGroup($('#select_project').val());
+		initBTabel();
+	});
+	
 	$('#taxi_command_cycle input').change(function() {
 		alert($(this).parent().text().trim());
 	});	
 	
-	var intervalpie = setInterval("refreshTable()",60000);
+	//var intervalpie = setInterval("refreshTable()",60000);
+	var intervalpie = setInterval("updateTable()",60000);
 	
 	$('#btn_table_search').click(function() {
-		initBTabel();				
+		initBTabel();		
 	});
 	
 	$('#btn_taxi_edit').click(function() {
@@ -174,6 +184,68 @@ function refreshTable() {
     $('#taxi_table').bootstrapTable('refresh', {url: '/getTerminalsbypageNum'});        
 }
 
+//刷新表格数据,点击你的按钮调用这个方法就可以刷新
+function updateTable() {
+    //$('#taxi_table').bootstrapTable('refresh', {url: '/getTerminalsbypageNum'});  
+	var DtuKeyList=[];
+	var tableData = $('#taxi_table').bootstrapTable('getData');
+	if(tableData!=null && tableData.length>0)
+		{
+		for(var i=0;i<tableData.length;i++)
+			{
+				var DtuKey = tableData[i].DtuKey;
+				if(DtuKey!=null)
+				{DtuKeyList.push(DtuKey);}
+			}  	
+		}
+	if(DtuKeyList.length>0)
+		{
+	$.ajax({  
+        url:"/getTerminalsUpdate", 
+        data:{
+        	Dtukeys: JSON.stringify(DtuKeyList),        	
+        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+			},  
+        type:"post",  
+        dataType:"json", 
+        success:function(data)  
+        {       	  
+        	if(data.result=="success")
+        		{    
+        		//$("#taxi_table").bootstrapTable("remove", {field: "DtuKey",values: [selectDtuKey]}); 
+        		var items = data.rows;
+        		if(items!=null && items.length>0)
+        			{
+        			for(var i=0;i<items.length;i++)
+        				{        				
+        				var tableData = $('#taxi_table').bootstrapTable('getData');
+                    	for(var j=0;j<tableData.length;j++)
+                    		{            			
+                    			if(items[i].DtuKey == tableData[j].DtuKey)
+                    				{                    				
+                    				var map={
+                        					index:j,
+                        					row: items[i]
+                        			};
+                            		$("#taxi_table").bootstrapTable("updateRow",map);
+                            		break;
+                    				}    			
+                    		}                            	                		                		
+        				}
+        			}
+        		}
+        	else
+        		{
+        			alertMessage(1, "警告", data.resultMessage);        			
+        		}
+        },  
+        error: function() {  
+        	alertMessage(2, "异常", "ajax 函数  getTerminalsUpdate 错误");         		                                    
+          }  
+    });	
+		}
+}
+
 function initBTabel()
 {
 	$('#taxi_table').bootstrapTable('destroy');
@@ -221,12 +293,42 @@ function initBTabel()
         }, {
             field: 'name',
             title: '终端名称',
+            width:150,
             sortable:true
             
         }, {
             field: 'DtuKey',
             title: 'DTU编号',
+            width:150,
             sortable:true          
+        }, {
+            field: 'DtuOnline',
+            title: 'DTU状态',
+            width:50,
+            sortable:true,
+            formatter:function (value, row, index) { 
+            	if(row.DtuOnline==1)
+            		{
+	                return "<span class='fa fa fa-circle' style='font-size: 25px;color:#00ff00;'></span>";
+            		}
+            	else {
+            		return "<span class='fa fa fa-circle' style='font-size: 25px;color:#ff0000;'></span>";
+				}
+            }          
+        }, {
+            field: 'LedOnline',
+            title: 'LED状态',
+            width:50,
+            sortable:true,
+            formatter:function (value, row, index) { 
+            	if(row.LedOnline==1)
+            		{
+	                return "<span class='fa fa fa-circle' style='font-size: 25px;color:#00ff00;'></span>";
+            		}
+            	else {
+            		return "<span class='fa fa fa-circle' style='font-size: 25px;color:#ff0000;'></span>";
+				}
+            }          
         }, {
             field: 'disconnect',
             title: '内置车牌',
@@ -234,7 +336,7 @@ function initBTabel()
             sortable:true,
             formatter: function (value, row, index) {  
             	var txt="否"
-            	if(value!=null && value!="" && value==1)
+            	if(value!=null && value!="" && value!=0)
             		{txt = "是";}
             	return txt;
             }        
@@ -318,6 +420,7 @@ function initBTabel()
         }, {
             field: 'AdIdListCount',
             title: '广告总数',
+            width:50,
             visible: true,                   
         }, /*{
             field: 'PlayList',
@@ -349,7 +452,7 @@ function initBTabel()
             field: 'LedVersion',
             title: 'LED版本',
             width:100,
-            class:'colStyle',
+            "class":'colStyle',
             formatter:function (value, row, index) { 
             	if(row.LedVersion!=null)
             		{
@@ -370,7 +473,7 @@ function initBTabel()
             field: 'StateLedVersion',
             title: '智能顶灯版本',
             width:100,
-            class:'colStyle',
+            "class":'colStyle',
             formatter:function (value, row, index) { 
             	if(row.StateLedVersion!=null)
             		{
@@ -420,7 +523,7 @@ function initBTabel()
             field: 'RegisterDate',
             title: '安装日期',
             width:100,
-            class:'colStyle',
+            "class":'colStyle',
             formatter:function (value, row, index) { 
             	if(row.RegisterDate!=null)
             		{
@@ -438,19 +541,40 @@ function initBTabel()
             visible: false,
             sortable:true         
         }, {
-            field: 'LED_LastResponseTime',
-            title: 'LED最后应答',
+            field: 'DTU_ResponseTime',
+            title: 'DTU最后应答',
             width:100,
-            class:'colStyle',
+            "class":'colStyle',
             formatter:function (value, row, index) { 
-            	if(row.LED_LastResponseTime!=null)
+            	if(row.DTU_ResponseTime!=null)
             		{
-	            	var values = row.LED_LastResponseTime;//获取当前字段的值
+	            	var values = row.DTU_ResponseTime;//获取当前字段的值
 	                //替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
 	                //&nbsp;代替
 	                values = values.replace(/\s+/g,'&nbsp;')
 	                values = values.replace(/\},/,'},\n');//换行
-	                return "<span title="+values+">"+row.LED_LastResponseTime+"</span>"
+	                return "<span title="+values+">"+row.DTU_ResponseTime+"</span>"
+            		}
+            	else {
+            		return "<span title=''></span>"
+				}
+            },
+            visible: false,
+            sortable:true         
+        }, {
+            field: 'LED_ResponseTime',
+            title: 'LED最后应答',
+            width:100,
+            "class":'colStyle',
+            formatter:function (value, row, index) { 
+            	if(row.LED_ResponseTime!=null)
+            		{
+	            	var values = row.LED_ResponseTime;//获取当前字段的值
+	                //替换空格，因为字符串拼接的时候如果遇到空格，会自动将后面的部分截掉，所有这里用html的转义符
+	                //&nbsp;代替
+	                values = values.replace(/\s+/g,'&nbsp;')
+	                values = values.replace(/\},/,'},\n');//换行
+	                return "<span title="+values+">"+row.LED_ResponseTime+"</span>"
             		}
             	else {
             		return "<span title=''></span>"
@@ -473,7 +597,7 @@ function initBTabel()
             sort: params.sort,      //排序列名  
             sortOrder: params.order,//排位命令（desc，asc） 
             issuperuser:JSON.parse(localStorage.getItem("adminInfo")).issuperuser,
-            projectid:JSON.parse(localStorage.getItem("adminInfo")).projectid,
+            projectid:selectProjectid,//JSON.parse(localStorage.getItem("adminInfo")).projectid,
             adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname,
             groupids:JSON.parse(localStorage.getItem("adminInfo")).groupids,
             adminlevel:JSON.parse(localStorage.getItem("adminInfo")).adminlevel
@@ -481,14 +605,14 @@ function initBTabel()
         return temp;
     };
 }
-//获取分组信息
-function getGroup()
+
+//获取项目列表
+function getprojectList()
 {
-	var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));	
-	if(grpsinfo==null || grpsinfo.length<=0)
-		{		
+	if($('#select_project').length>0)
+		{
 		$.ajax({  
-	        url:"/getGroup",          
+	        url:"/getProjectListbyuser",          
 	        type:"post",  
 	        dataType:"json", 
 	        data:{
@@ -497,38 +621,104 @@ function getGroup()
 	        success:function(data)  
 	        {       	  
 	        	if(data!=null && data.length>0)    		
-	        		{
-	        			sessionStorage.setItem('grpsinfo', JSON.stringify(data));
-		        			
-	        			grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
-	        				     
-	        			$('#taxi_group_group').append("<option value='0' selected>全部分组</option>");
-	        			for(var i=0;i<grpsinfo.length;i++)
-	        			{
-	        				var grpid=grpsinfo[i].grpid;
-	        				var grpname = grpsinfo[i].grpname;
+	        		{    
+	        			$('#select_project').empty();
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{
+	        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";		
+	        					
+	        					getGroup(projectId);
+	        					selectProjectid = projectId;
+	        					initBTabel();
+							}
+	        				else
+							{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
 	        				
-	        				$('#taxi_edit_group').append("<option value='"+grpid+"'>"+grpname+"</option>");	
-	        				$('#taxi_group_group').append("<option value='"+grpid+"'>"+grpname+"</option>");	
-	        			}	        			
-	        		}
+		        			$('#select_project').append(option);
+						}	        		
+	        		}        	
 	        },  
 	        error: function() { 
-	        	alertMessage(2, "异常", "ajax 函数  getGroup 错误");	        	           
-	          } 
-		 });
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
 		}
 	else
-		{		
-			$('#taxi_group_group').append("<option value='0' selected>全部分组</option>");
-			for(var i=0;i<grpsinfo.length;i++)
-			{
-				var grpid=grpsinfo[i].grpid;
-				var grpname = grpsinfo[i].grpname;
-				$('#taxi_edit_group').append("<option value='"+grpid+"'>"+grpname+"</option>");	
-				$('#taxi_group_group').append("<option value='"+grpid+"'>"+grpname+"</option>");
-			}			
+		{
+		$.ajax({  
+	        url:"/getProjectListbyuser",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null && data.length>0)    		
+	        		{    	        			
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{		        					
+	        					getGroup(projectId);
+	        					selectProjectid = projectId;
+	        					initBTabel();
+	        					break;
+							}
+						}	        		
+	        		}        	
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
 		}
+}
+//获取分组信息
+function getGroup(selectProjectid)
+{	
+	$('#taxi_edit_group').empty();
+	$('#taxi_group_group').empty();
+	$.ajax({  
+        url:"/gettGroupbyProjectid",          
+        type:"post",  
+        dataType:"json", 
+        data:{
+        	projectid:selectProjectid,
+        	adminInfo:localStorage.getItem("adminInfo")
+        	},
+        success:function(data)  
+        {       	  
+        	if(data!=null && data.length>0)    		
+        		{        				        		
+        			grpsinfo= data;
+        				     
+        			$('#taxi_group_group').append("<option value='0' selected>全部分组</option>");
+        			for(var i=0;i<grpsinfo.length;i++)
+        			{
+        				var grpid=grpsinfo[i].grpid;
+        				var grpname = grpsinfo[i].grpname;
+        				
+        				$('#taxi_edit_group').append("<option value='"+grpid+"'>"+grpname+"</option>");	
+        				
+        				$('#taxi_group_group').append("<option value='"+grpid+"'>"+grpname+"</option>");	
+        			}	        			
+        		}
+        },  
+        error: function() { 
+        	alertMessage(2, "异常", "ajax 函数  gettGroupbyProjectid 错误");	        	           
+          } 
+	 });
 }
 //编辑终端信息
 function taxi_info_edit()
@@ -640,8 +830,8 @@ function taxi_group_edit()
         data:{        	
         	groupid:groupid,
         	StarLevelset:StarLevelset,
-        	issuperuser:JSON.parse(localStorage.getItem("adminInfo")).issuperuser,
-            projectid:JSON.parse(localStorage.getItem("adminInfo")).projectid,
+        	issuperuser:0,
+            projectid:selectProjectid,
             adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
 			},  
         type:"post",  

@@ -40,12 +40,13 @@ public class groupMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/CreatGroup", method = RequestMethod.POST)
 	public JSONObject CreatGroup(@RequestParam("grpname") String grpname, @RequestParam("projectid") String projectid,
-			@RequestParam("packLength") int packLength, @RequestParam("grpwidth") int grpwidth,
-			@RequestParam("grpheight") int grpheight, @RequestParam("grpbelong") int grpbelong,
-			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+			@RequestParam("packLength") int packLength, @RequestParam("batchCount") int batchCount,
+			@RequestParam("grpwidth") int grpwidth, @RequestParam("grpheight") int grpheight,
+			@RequestParam("grpbelong") int grpbelong, @RequestParam("adminname") String adminname,
+			HttpServletRequest request) {
 		try {
-			JSONObject JObject = groupMangerSer.CreatGroup(grpname, projectid, packLength, grpwidth, grpheight,
-					grpbelong, adminname);
+			JSONObject JObject = groupMangerSer.CreatGroup(grpname, projectid, packLength, batchCount, grpwidth,
+					grpheight, grpbelong, adminname);
 			operateLog.writeLog(adminname, 0,
 					"===用户:" + adminname + " 新建分组:" + grpname + " 返回结果:" + JObject.toJSONString() + "===",
 					"/CreatGroup", logger, true);
@@ -61,12 +62,12 @@ public class groupMangerController {
 	@ResponseBody
 	@RequestMapping(value = "/EditGroup", method = RequestMethod.POST)
 	public JSONObject EditGroup(@RequestParam("grpid") int grpid, @RequestParam("grpname") String grpname,
-			@RequestParam("packLength") int packLength, @RequestParam("grpwidth") int grpwidth,
-			@RequestParam("grpheight") int grpheight, @RequestParam("adminname") String adminname,
-			HttpServletRequest request) {
+			@RequestParam("packLength") int packLength, @RequestParam("batchCount") int batchCount,
+			@RequestParam("grpwidth") int grpwidth, @RequestParam("grpheight") int grpheight,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 
-			JSONObject JObject = groupMangerSer.EditGroup(grpid, grpname, packLength, grpwidth, grpheight);
+			JSONObject JObject = groupMangerSer.EditGroup(grpid, grpname, packLength, batchCount, grpwidth, grpheight);
 			operateLog.writeLog(adminname, 0,
 					"===用户:" + adminname + " 编辑分组:" + grpname + " 返回结果:" + JObject.toJSONString() + "===", "/EditGroup",
 					logger, true);

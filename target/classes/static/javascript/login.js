@@ -68,6 +68,7 @@ $().ready(function() {
 */
 var slider;
 $(function() {	
+		
 	slider = new SliderUnlock("#slider",{
         successLabelTip : "验证成功"    
     },function(){
@@ -174,12 +175,13 @@ $(function() {
 	            		else {
 	            			localStorage.setItem("loginInfo","");
 						}
-	            		
+	            		 
 	            		localStorage.setItem("loginErrorCount",0);
 	            		window.location.href="main";
 	            		localStorage.setItem("adminInfo",JSON.stringify(data.adminInfo));
 	            		sessionStorage.setItem('grpsinfo', null);
 	            		sessionStorage.setItem('selectgrpid',0);
+	            		sessionStorage.setItem('sensitivelist', null);
 	            		//var grpsinfo= JSON.parse(sessionStorage.getItem('grpsinfo'));
 	            	}
 	            else{
@@ -195,7 +197,10 @@ $(function() {
 	   					$('#slider').css("display","block");
 	   					}	   
 	            }
-	        }
+	        },  
+		    error: function() {
+		    	alertMessage(2, "异常", "数据库连接错误");	    		        
+		      }  
 	    });   
 	});
 });

@@ -35,14 +35,14 @@ public class project {
 
 	private Integer startlevelControl;
 
-	private Integer disconnect;
+	private String projectLimit;
 
-	public Integer getDisconnect() {
-		return disconnect;
+	public String getProjectLimit() {
+		return projectLimit;
 	}
 
-	public void setDisconnect(Integer disconnect) {
-		this.disconnect = disconnect;
+	public void setProjectLimit(String projectLimit) {
+		this.projectLimit = projectLimit;
 	}
 
 	public Integer getAutoGroupTo() {

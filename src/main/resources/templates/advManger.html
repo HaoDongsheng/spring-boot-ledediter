@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 			
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
@@ -20,9 +20,10 @@
 	
 	<!-- bootstrap-colorpicker 核心 JavaScript 文件 -->
 	<link th:href="@{~/css/bootstrap-colorpicker.min.css}" rel="stylesheet" type="text/css">		
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-colorpicker.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-colorpicker.min.js}" ></script>	
 	<!-- jcanvas 核心 JavaScript 文件 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jcanvas.js}" ></script>		
+	<script type="text/javascript" th:src="@{~/jcanvas/jcanvas.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/spin/spin.min.js}" ></script>	
 	
 	<!-- ion.rangeSlider 核心 JavaScript 文件 -->	
 	<link th:href="@{~/ion.rangeSlider/ion.rangeSlider.min.css}" rel="stylesheet" type="text/css">	
@@ -46,25 +47,28 @@
     <link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css">
     <link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<link th:href="@{~/css/createinfoModel.css}" rel="stylesheet" type="text/css">
+	<script type="text/javascript" th:src="@{~/jquery/pages.js}"></script>
+<!-- 	<script type="text/javascript" th:src="@{~/javascript/jquery-bootstrap4-pagination.js}"></script> -->
     <script type="text/javascript" th:src="@{~/javascript/share.js}"></script>	
     <script type="text/javascript" th:src="@{~/javascript/layerlist.js}"></script>	
 	<script type="text/javascript" th:src="@{~/javascript/ledSvgEditer.js}"></script>		
 	<script type="text/javascript" th:src="@{~/javascript/createinfoModel.js}"></script>
 	<script type="text/javascript" th:src="@{~/javascript/DrawItembyCanvas.js}"></script>	
 	<script type="text/javascript" th:src="@{~/javascript/analogdisplay.js}"></script>	
+	
 	<link th:href="@{~/css/bootstrap-datetimepicker.min.css}" rel="stylesheet" type="text/css">
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.min.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-datetimepicker.zh-CN.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-datetimepicker.zh-CN.js}" ></script>	
 	
 	<link th:href="@{~/tinymce/js/tinymce/skins/content/default/content.min.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/tinymce.min.js}"></script>	
 	
 	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/themes/silver/theme.min.js}"></script>
 	<script type="text/javascript" th:src="@{~/tinymce/js/tinymce/langs/zh_CN.js}"></script>	
-	<script type="text/javascript" th:src="@{~/javascript/tinymceConfig.js}" ></script>
+	<script type="text/javascript" th:src="@{~/jquery/tinymceConfig.js}" ></script>
 	<script type="text/javascript" th:src="@{~/gif.js-master/dist/gif.js}" ></script>
 	<script type="text/javascript" th:src="@{~/gif.js-master/dist/gif.worker.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>
 	
 	
 </head>
@@ -302,36 +306,6 @@
 			      <option selected value='0' class="small text-left">静止</option>
 			      <option value='1' class="small text-left">左滚</option>
 			      <option value='2' class="small text-left">上滚</option>
-<!-- 			      <option value='3' class="small text-left">左拉帘</option> -->
-<!-- 			      <option value='4' class="small text-left">右拉帘</option>				       -->
-<!-- 			      <option value='5' class="small text-left">左右拉帘</option> -->
-<!-- 			      <option value='6' class="small text-left">上拉帘</option> -->
-<!-- 			      <option value='7' class="small text-left">下拉帘</option> -->
-<!-- 			      <option value='8' class="small text-left">上下拉帘</option> -->
-<!-- 			      <option value='9' class="small text-left">渐亮</option> -->
-<!-- 			      <option value='10' class="small text-left">渐灭</option>				       -->
-			      <option value='11' class="small text-left">左移进</option>
-<!-- 			      <option value='12' class="small text-left">右移进</option> -->
-<!-- 			      <option value='13' class="small text-left">左右移进</option> -->
-<!-- 			      <option value='14' class="small text-left">隔行左右对进</option> -->
-<!-- 			      <option value='15' class="small text-left">上移进</option>				       -->
-			      <option value='16' class="small text-left">下移进</option>
-<!-- 			      <option value='17' class="small text-left">上下隔行移进</option> -->
-<!-- 			      <option value='18' class="small text-left">闪烁</option> -->
-<!-- 			      <option value='19' class="small text-left">百叶</option> -->
-<!-- 			      <option value='20' class="small text-left">放大 左上角->全屏</option>				       -->
-<!-- 			      <option value='21' class="small text-left">放大 中间->全屏</option> -->
-			      </select>
-			    <!-- 
-		    	<div class="row">
-		    	<div class="col-md-6 small text-right">
-		    	显示方式
-		    	</div>
-		    	<div class="col-md-6">
-		    	<select id="svg_animation_playtype" class="form-control">
-			      <option selected value='0' class="small text-left">静止</option>
-			      <option value='1' class="small text-left">左滚</option>
-			      <option value='2' class="small text-left">上滚</option>
 			      <option value='3' class="small text-left">左拉帘</option>
 			      <option value='4' class="small text-left">右拉帘</option>				      
 			      <option value='5' class="small text-left">左右拉帘</option>
@@ -351,10 +325,7 @@
 			      <option value='19' class="small text-left">百叶</option>
 			      <option value='20' class="small text-left">放大 左上角->全屏</option>				      
 			      <option value='21' class="small text-left">放大 中间->全屏</option>
-			      </select>
-			      </div>
-		    	</div>	
-		    	-->			    
+			      </select>	    
 		    </div>
 		    
 	        <div class="col-md-3 small">
@@ -515,12 +486,7 @@
 		      </div>
 		 
 		      <!-- 模态框主体 -->
-		      <div class="modal-body">
-		      	<select id="select_div" class="form-control">
-			      <option selected value='0'>图文</option>
-			      <option value='1'>GIF动画</option>
-			    </select>	
-			    
+		      <div class="modal-body">			    
 	      		<div id="div_tp">
 	      		<!-- 加载编辑器的容器 -->
     			<!-- <script id="ueditor_context" name="content" type="text/plain"></script>-->
@@ -528,10 +494,41 @@
     			</div>
     			
     			<div id="div_gif" style="display:none;">
-    			  <input type="file" id="input_gif_upload" style="display: none" accept="image/gif">					  				  			  	  
-				  <div id='div_giflist'  class="form-inline" style="border:1px solid;">
-				  <img id='gif_upload' onclick="$('#input_gif_upload').click();" th:src="@{~/img/addImg.png}" alt="添加图片" width="64" height="64">						    
-			      </div>
+    			
+   				<div class="row">
+   				<div class="col-md-12" style="margin-bottom:10px;">
+   				<div class="btn-group">	
+        		<button id="btn_gif_back" type="button" class="btn btn-info">
+	                <span class="fa fa-arrow-left" aria-hidden="true"></span>返回
+	            </button>		            
+        		</div>
+        		
+        		<div class="btn-group">	
+        		<button id="btn_gif_add" type="button" class="btn btn-primary">
+	                <span class="fa fa-plus" aria-hidden="true"></span>添加
+	            </button>		            
+        		</div>
+        		
+        		<div class="btn-group">	
+		        <button id="btn_gif_remove" type="button" class="btn btn-danger">
+	                <span class="fa fa-remove" aria-hidden="true"></span>删除 
+	            </button>
+		        </div>
+		        </div>
+		        </div>
+		        <div class="row">
+		        <div class="col-md-12" style="margin-bottom:10px;">
+   			    <input type="file" id="input_gif_upload" style="display: none" accept="image/gif">					  				  			  	  
+			    <div id='div_giflist'  class="form-inline" style="border:1px solid;min-height:50px;">
+<!-- 			    <img id='gif_upload' onclick="$('#input_gif_upload').click();" th:src="@{~/img/addImg.png}" alt="添加图片" width="64" height="64">						     -->
+		        </div>
+		        </div>
+		        </div>
+		        <div class="row">
+		        <div class="col-md-12" style="margin-bottom:10px;">
+		        <div id="pagination" style="float:right;"></div>
+		        </div>
+		        </div>
     			</div>		      		 
 		      </div>
 		 
@@ -598,19 +595,37 @@
 		 
 		      <!-- 模态框主体 -->
 		      <div class="modal-body">
+		      	<div class="row">
+   				<div class="col-md-12" style="margin-bottom:10px;">   				        		
+        		<div class="btn-group">	
+        		<button id="btn_pic_add" type="button" class="btn btn-primary" onclick="$('#input_upload').click();">
+	                <span class="fa fa-plus" aria-hidden="true"></span>添加
+	            </button>		            
+        		</div>
+        		
+        		<div class="btn-group">	
+		        <button id="btn_pic_remove" type="button" class="btn btn-danger">
+	                <span class="fa fa-remove" aria-hidden="true"></span>删除 
+	            </button>
+		        </div>
+		        </div>
+		        </div>
+		        <div class="row">
+   				<div class="col-md-12" style="margin-bottom:10px;">
 				  <input type="file" id="input_upload" style="display: none" accept="image/jpeg,image/jpg,image/png,image/bmp">					  
-				  <div id="div_pic_tab">
-				  	  <!-- Nav tabs -->
-				  	  <!-- 
-					  <ul id='nav_pictype' class="nav nav-pills" role="tablist"  style="border:2px solid;border-radius:15px;">
-					  <li class='nav-item'><a id='add_pic_nav' class='nav-link' data-toggle='pill' href='#'><i class="fa fa-plus-circle" style="font-size:20px;color:red"></i></a></li>						    
-					  </ul>
-					   -->
-					  <!-- Tab panes -->
-					  <div id='div_imglist'  class="form-inline" style="border:2px solid;border-radius:15px;">
-					  <img id='img_upload' onclick="$('#input_upload').click();" th:src="@{~/img/addImg.png}" alt="添加图片" width="64" height="64">						    
+				  <div id="div_pic_tab">				  	  
+					  <div id='div_imglist'  class="form-inline" style="border:1px solid;min-height:50px;">					  						   
 				      </div>
-				  </div>					  
+				  </div>
+			    </div>
+			    </div>
+			    
+			    <div class="row">
+		        <div class="col-md-12" style="margin-bottom:10px;">
+		        <div id="pagination_pic" style="float:right;"></div>
+		        </div>
+		        </div>
+		        					  
 		      </div>
 		 
 		  		<!-- 模态框底部 -->

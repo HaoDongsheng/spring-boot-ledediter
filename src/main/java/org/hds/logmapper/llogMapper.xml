@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.hds.logmapper.llogMapper">
+  <resultMap id="BaseResultMap" type="org.hds.model.llog">
+    <result column="logtime" jdbcType="VARCHAR" property="logtime" />
+    <result column="adminid" jdbcType="INTEGER" property="adminid" />
+    <result column="functionName" jdbcType="VARCHAR" property="functionname" />
+    <result column="operateType" jdbcType="INTEGER" property="operatetype" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.hds.model.llog">
+    <result column="operate" jdbcType="LONGVARCHAR" property="operate" />
+  </resultMap>
+  <sql id="Blob_Column_List">
+    operate
+  </sql>
+  <insert id="insert" parameterType="org.hds.model.llog">
+    insert into t_llog (logtime, adminid, functionName, 
+      operateType, operate)
+    values (#{logtime,jdbcType=VARCHAR}, #{adminid,jdbcType=INTEGER}, #{functionname,jdbcType=VARCHAR}, 
+      #{operatetype,jdbcType=INTEGER}, #{operate,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.hds.model.llog">
+    insert into t_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="logtime != null">
+        logtime,
+      </if>
+      <if test="adminid != null">
+        adminid,
+      </if>
+      <if test="functionname != null">
+        functionName,
+      </if>
+      <if test="operatetype != null">
+        operateType,
+      </if>
+      <if test="operate != null">
+        operate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="logtime != null">
+        #{logtime,jdbcType=VARCHAR},
+      </if>
+      <if test="adminid != null">
+        #{adminid,jdbcType=INTEGER},
+      </if>
+      <if test="functionname != null">
+        #{functionname,jdbcType=VARCHAR},
+      </if>
+      <if test="operatetype != null">
+        #{operatetype,jdbcType=INTEGER},
+      </if>
+      <if test="operate != null">
+        #{operate,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

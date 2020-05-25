@@ -119,16 +119,17 @@ public class advMangerController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getbasemapbyprojectid", method = RequestMethod.POST)
-	public JSONArray getbasemapbyprojectid(@RequestParam("groupid") int groupid, @RequestParam("imgtype") int imgtype,
-			@RequestParam("classify") String classify, @RequestParam("adminname") String adminname,
+	public JSONObject getbasemapbyprojectid(@RequestParam("groupid") int groupid, @RequestParam("imgtype") int imgtype,
+			@RequestParam("classify") String classify, @RequestParam("pageNumber") int pageNumber,
+			@RequestParam("pageSize") int pageSize, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
 			String projectid = taxigroupMapper.selectByPrimaryKey(groupid).getProjectid();
 
-			JSONArray JsonArray = advMangerSer.getimgbyprojectid(projectid, imgtype, classify);
+			JSONObject jObject = advMangerSer.getimgbyprojectid(projectid, imgtype, classify, pageNumber, pageSize);
 			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/getbasemapbyprojectid===",
 					"/getbasemapbyprojectid", logger, false);
-			return JsonArray;
+			return jObject;
 		} catch (Exception e) {
 			logger.error("===用户:" + adminname + "/getbasemapbyprojectid 异常:" + e.getMessage() + "===");
 			operateLog.writeLog(adminname, 1,
@@ -166,6 +167,34 @@ public class advMangerController {
 			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/deletebasemapbyid 异常:" + e.getMessage() + "===",
 					"/deletebasemapbyid", logger, true);
 			return 1;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/deletebasemapbyids", method = RequestMethod.POST)
+	public JSONObject deletebasemapbyids(@RequestParam("basemapids") String basemapids,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
+		JSONObject jObject = new JSONObject();
+		try {
+			String[] basemapidArrayStrings = basemapids.split(",");
+			for (int i = 0; i < basemapidArrayStrings.length; i++) {
+				int basemapid = Integer.parseInt(basemapidArrayStrings[i]);
+				int result = advMangerSer.deletebasemapbyid(basemapid);
+			}
+			jObject.put("result", "success");
+
+			operateLog.writeLog(adminname, 0, "===用户:" + adminname + "/deletebasemapbyids===", "/deletebasemapbyids",
+					logger, true);
+			return jObject;
+		} catch (Exception e) {
+			logger.error("===用户:" + adminname + "/deletebasemapbyids 异常:" + e.getMessage() + "===");
+			operateLog.writeLog(adminname, 1, "===用户:" + adminname + "/deletebasemapbyids 异常:" + e.getMessage() + "===",
+					"/deletebasemapbyids", logger, true);
+
+			jObject.put("result", "fail");
+			jObject.put("resultMessage", e.toString());
+
+			return jObject;
 		}
 	}
 
@@ -222,7 +251,7 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/UpdateInfo", method = RequestMethod.POST)
-	public JSONObject UpdateInfo(@RequestParam("infoid") int infoid, @RequestParam("pubid") int pubid,
+	public JSONObject UpdateInfo(@RequestParam("infoid") String infoid, @RequestParam("pubid") int pubid,
 			@RequestParam("infoName") String infoName, @RequestParam("groupid") int groupid,
 			@RequestParam("lifeAct") String lifeAct, @RequestParam("lifeDie") String lifeDie,
 			@RequestParam("BackgroundStyle") String BackgroundStyle, @RequestParam("adminid") int adminid,
@@ -235,7 +264,7 @@ public class advMangerController {
 				if (JdelObject.getString("result") == "success") {
 					JSONObject JcreatObject = advMangerSer.Creatinfo(infoName, groupid, lifeAct, lifeDie,
 							BackgroundStyle, adminid);
-					int newinfoid = JcreatObject.getIntValue("infoID");
+					String newinfoid = JcreatObject.getString("infoID");
 					JSONObject JciObject = advMangerSer.CopyItem(infoid, newinfoid);
 					if (JciObject.getString("result") == "success") {
 						JObject.put("result", "success");
@@ -304,7 +333,7 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/DeleteInfobyid", method = RequestMethod.POST)
-	public JSONObject DeleteInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+	public JSONObject DeleteInfobyid(@RequestParam("infoid") String infoid, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = advMangerSer.DeleteInfobyid(infoid, adminid);
@@ -370,7 +399,7 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/AuditInfobyid", method = RequestMethod.POST)
-	public JSONObject AuditInfobyid(@RequestParam("infoid") int infoid, @RequestParam("adminid") int adminid,
+	public JSONObject AuditInfobyid(@RequestParam("infoid") String infoid, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject JObject = advMangerSer.AuditInfobyid(infoid, adminid);
@@ -388,9 +417,9 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/getPublishInfobyid", method = RequestMethod.POST)
-	public JSONObject getPublishInfobyid(@RequestParam("infoid") int infoid, @RequestParam("infodata") String infodata,
-			@RequestParam("arritem") String arritem, @RequestParam("adminname") String adminname,
-			HttpServletRequest request) {
+	public JSONObject getPublishInfobyid(@RequestParam("infoid") String infoid,
+			@RequestParam("infodata") String infodata, @RequestParam("arritem") String arritem,
+			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
 			JSONObject jinfo = JSONObject.parseObject(infodata);
 			JSONObject jsoninfo = JSONObject.parseObject(arritem);
@@ -415,7 +444,7 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/SaveItem", method = RequestMethod.POST)
-	public JSONObject SaveItem(@RequestParam("infoid") int infoid, @RequestParam("infodata") String infodata,
+	public JSONObject SaveItem(@RequestParam("infoid") String infoid, @RequestParam("infodata") String infodata,
 			@RequestParam("arritem") String arritem, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
@@ -464,7 +493,7 @@ public class advMangerController {
 					JSONObject JcreatObject = advMangerSer.Creatinfo(jinfo.getString("advname"),
 							jinfo.getIntValue("groupid"), jinfo.getString("lifeAct"), jinfo.getString("lifeDie"),
 							jinfo.getString("BackgroundStyle"), adminid);
-					int newinfoid = JcreatObject.getIntValue("infoID");
+					String newinfoid = JcreatObject.getString("infoID");
 
 					// JSONObject JciObject =advMangerSer.CopyItem(infoid,newinfoid);
 
@@ -510,7 +539,7 @@ public class advMangerController {
 
 	@ResponseBody
 	@RequestMapping(value = "/GetItem", method = RequestMethod.POST)
-	public JSONObject GetItem(@RequestParam("infoid") int infoid, @RequestParam("adminname") String adminname,
+	public JSONObject GetItem(@RequestParam("infoid") String infoid, @RequestParam("adminname") String adminname,
 			HttpServletRequest request) {
 		try {
 			JSONObject JObject = advMangerSer.GetItembyid(infoid);

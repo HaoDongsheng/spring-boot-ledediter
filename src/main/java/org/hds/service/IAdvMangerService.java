@@ -6,11 +6,14 @@ import com.alibaba.fastjson.JSONObject;
 public interface IAdvMangerService {
 	public JSONArray getadvlist(JSONObject adminInfoJsonObject);
 
+	public JSONObject Deleteinfo2oldbyDay();
+
 	public JSONArray getadvListbyGrpid(int Grpid);
 
 	public JSONArray getadvEditListbyGrpid(int Grpid);
 
-	public JSONObject getadvListDelbyGrpid(int Grpid, int pageNum, int pageSize, String sort, String sortOrder);
+	public JSONObject getadvListDelbyGrpid(int Grpid, int type, String infoName, String lifeAct, String lifeDie,
+			int pageNum, int pageSize, String sort, String sortOrder);
 
 	public JSONArray getadvListbyGrpidState(int Grpid, int infoState);
 
@@ -22,29 +25,31 @@ public interface IAdvMangerService {
 	public JSONObject CopyInfo(String infoName, int groupid, String lifeAct, String lifeDie, String BackgroundStyle,
 			String itemlist);
 
-	public JSONObject deleteInfo2old(int infoid);
+	public JSONObject CopyExpinfobyid(String infosn, int groupid, int adminid);
 
-	public JSONObject DeleteInfobyid(int infoid, int adminid);
+	public JSONObject deleteInfo2old(String infoSN);
 
-	public JSONObject DeleteinfoCodebyid(int infoid, int adminid);
+	public JSONObject DeleteInfobyid(String infoSN, int adminid);
 
-	public JSONObject SaveItem(int infoid, JSONObject jsoninfo);
+	public JSONObject DeleteinfoCodebyid(String infoSN, int adminid);
 
-	public JSONObject CopyItem(int oldinfoid, int newinfoid);
+	public JSONObject SaveItem(String infoSN, JSONObject jsoninfo);
 
-	public int Updatainfo(int infoid, JSONObject jsoninfo);
+	public JSONObject CopyItem(String oldinfoSN, String newinfoSN);
 
-	public JSONObject GetItembyid(int infoid);
+	public int Updatainfo(String infoSN, JSONObject jsoninfo);
 
-	public JSONObject Publishinfobyid(int infoid, int adminid);
+	public JSONObject GetItembyid(String infoSN);
 
-	public JSONObject getbyteslistbyid(int infoid);
+	public JSONObject Publishinfobyid(String infoSN, int adminid);
 
-	public JSONObject getbyteslistbyTemp(int infoid, JSONObject jsoninfo, JSONObject jsonarritem);
+	public JSONObject getbyteslistbyid(String infoSN);
 
-	public JSONObject RefuseInfobyid(int infoid, int adminid);
+	public JSONObject getbyteslistbyTemp(String infoSN, JSONObject jsoninfo, JSONObject jsonarritem);
 
-	public JSONObject AuditInfobyid(int infoid, int adminid);
+	public JSONObject RefuseInfobyid(String infoSN, int adminid);
+
+	public JSONObject AuditInfobyid(String infoSN, int adminid);
 
 	public JSONObject getSensitive(String adminname);
 
@@ -63,7 +68,7 @@ public interface IAdvMangerService {
 
 	public JSONArray getimgclassifybyprojectid(String projectid, int imgtype);
 
-	public JSONArray getimgbyprojectid(String projectid, int imgtype, String classify);
+	public JSONObject getimgbyprojectid(String projectid, int imgtype, String classify, int pageNumber, int pageSize);
 
 	public int updatebasemapclassify(String projectid, Integer imgtype, String oldbasemapclassify,
 			String newbasemapclassify);

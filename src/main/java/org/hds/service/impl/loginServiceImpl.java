@@ -1,5 +1,9 @@
 package org.hds.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -55,6 +59,7 @@ public class loginServiceImpl implements IloginService {
 			currentUser.login(token);// 传到MyAuthorizingRealm类中的方法进行认证
 			Session session = currentUser.getSession();
 			session.setAttribute("userName", adminName);
+			SecurityUtils.getSubject().getSession().setTimeout(-1000L);
 			// return "/index";
 		} catch (UnknownAccountException e) {
 			e.printStackTrace();
@@ -65,7 +70,23 @@ public class loginServiceImpl implements IloginService {
 			e.printStackTrace();
 			msg = "用户验证失败";
 		}
-
+		if (admin.getIssuperuser() == 0) {
+			int status = admin.getAdminstatus();
+			if (status == 1) {
+				msg = "用户停用状态,不能登录,请联系管理员!";
+			}
+			String Expdate = admin.getExpdate();
+			if (Expdate != null && Expdate != "") {
+				SimpleDateFormat d1 = new SimpleDateFormat("yyyy-MM-dd");
+				Date now = new Date();
+				try {
+					if (d1.parse(Expdate).compareTo(now) < 0) {
+						msg = "用户过期,不能登录,请联系管理员!";
+					}
+				} catch (ParseException ex) {
+				}
+			}
+		}
 		jObject.put("result", msg);
 		if (msg.equals("success")) {
 			admin.setAdminpwd("");

@@ -1,5 +1,6 @@
 var arrpms=["广告编辑","广告审核","广告发布","分组管理","用户管理","车辆管理"];
 var isDisplayProjectid=false;
+var selectProjectid="";
 $(function(){
 	
 	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
@@ -17,10 +18,56 @@ $(function(){
 	
 	initBTabel();
 	
-	getprojectList();
-	
-	getuserList();		
+	getprojectList();				
 		
+	$('#select_project').change(function() {
+		
+		selectProjectid = $('#select_project').val();
+		getuserList($('#select_project').val());
+	});
+		
+	//二级用户修改密码
+	$('#btn_user_changPwd').click(function(){
+		
+		if($('#old_pwd').val().trim()==null || $('#old_pwd').val().trim()=='')
+		{alertMessage(1, "警告", "旧密码不能为空!");return;}
+		
+		if($('#new_pwd').val().trim()==null || $('#new_pwd').val().trim()=='')
+		{alertMessage(1, "警告", "新密码不能为空!");return;}
+		
+		if($('#new_pwd').val().trim() != $('#ok_pwd').val().trim())
+		{alertMessage(1, "警告", "新密码和确认密码不一致!");return;}
+		
+		var user_sn = parseInt($('#modal_user_changPwd').attr("data-type"));
+		
+		$.ajax({  
+	        url:"/ChangPassword",          
+	        type:"post", 
+	        data:{	        	
+	        	adminid: user_sn,
+	        	oldPwd: $('#old_pwd').val().trim(),
+	        	newPwd: $('#new_pwd').val().trim(),
+	        	adminname:JSON.parse(localStorage.getItem("adminInfo")).adminname
+				},  
+	        dataType:"json", 
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null)    		
+	        		{
+		        		if(data.result=='success')
+						{		        			
+		        			$('#modal_user_changPwd').modal('hide');	
+						}
+		        		else
+						{alertMessage(1, "警告", data.resultMessage);}
+	        		}
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  ChangPassword 错误"); 	            
+	          }  
+	    });
+	});	
+	
 	//模态确定按钮
 	$('#btn_user_edit').click(function(){
 		 model_eidtuser();
@@ -62,24 +109,13 @@ $(function(){
 		$('#user_edit_exp').val('2022-01-01');
 				
 		$('#user_edit_grps input').attr("checked", false);
-		$('#user_edit_pm input').attr("checked", false);
-		
-		if($('#user_edit_project option').length > 1)
-		{$('#user_edit_project').parents('.row').css('display','block');}
-		else
-		{$('#user_edit_project').parents('.row').css('display','none');}
-		
-		$('#inherit').parent().css("display","block");
+		$('#user_edit_pm input').attr("checked", false);						
 		
 		$('#modal_user_edit').attr("data-type",0);
 		$('#modal_user_edit').modal('show');
 					
 	});	
-	
-	$('#user_edit_project').change(function () {
-		getGroup($('#user_edit_project').val(),null);
-	});
-	
+		
 });
 
 function initBTabel()
@@ -232,19 +268,40 @@ function initBTabel()
 }
 
 function operateFormatter(value, row, index) {
-    return [
-         '<a class="edit" href="javascript:void(0)" style="margin:0px 5px;" title="编辑">',
-            '<i class="fa fa-edit"></i>编辑',
-            '</a>'+
-            '<a class="remove" href="javascript:void(0)" style="margin:0px 5px;" title="删除">',
-            '<i class="fa fa-remove	"></i>删除',
-            '</a>'
-    ].join('');
+	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+	
+	if(adminInfo.adminlevel>=2)
+		{
+		return [
+	         '<a class="edit" href="javascript:void(0)" style="margin:0px 5px;" title="编辑">',
+	            '<i class="fa fa-edit"></i>编辑',
+	            '</a>'
+	    ].join('');
+		}
+	else {
+	    return [
+	         '<a class="edit" href="javascript:void(0)" style="margin:0px 5px;" title="编辑">',
+	            '<i class="fa fa-edit"></i>编辑',
+	            '</a>'+
+	            '<a class="remove" href="javascript:void(0)" style="margin:0px 5px;" title="删除">',
+	            '<i class="fa fa-remove	"></i>删除',
+	            '</a>'
+	    ].join('');
+	}
+
 }
 
 window.operateEvents = {
         'click .edit': function (e, value, row, index) {  
 
+        	var adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+        	
+        	if(adminInfo.adminlevel>=2)
+        		{        		
+        		$('#modal_user_changPwd').attr("data-type",row.user_sn);            	
+        		$('#modal_user_changPwd').modal('show');
+        		}
+        	else {				
 			var name = row.user_name;
 			var pwd = row.user_pwd;
 			var level = row.user_level;
@@ -278,12 +335,11 @@ window.operateEvents = {
 						}
 				}
 			
-			getGroup(row.projectid,groups);
-			$('#inherit').parent().css("display","none");
-			$('#user_edit_project').parents('.row').css('display','none');
+			getGroup(row.projectid,groups);			
         	$('#modal_user_edit').attr("data-type",row.user_sn);
         	$('#modal_user_edit').attr("data-index",index);
     		$('#modal_user_edit').modal('show');
+        	}
         },
         'click .remove': function (e, value, row, index) {        
         	$("#modal_user_delete").attr("data-type",row.user_sn);
@@ -376,49 +432,90 @@ function getGroup(projectid,groups)
 //获取项目列表
 function getprojectList()
 {
-	$.ajax({  
-        url:"/getProjectListbyuser",          
-        type:"post",  
-        dataType:"json", 
-        data:{
-        	adminInfo:localStorage.getItem("adminInfo")
-        	},
-        success:function(data)  
-        {       	  
-        	if(data!=null && data.length>0)    		
-        		{    
-        			$('#user_edit_project').empty();
-	        		for(var i=0;i<data.length;i++)
-					{	
-	        			var project = data[i];
-	        			var projectId = project.projectid;
-	        			var projectName = project.projectname;
-	        			var option="";
-        				if(i==0)
-						{
-        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";
-        					getGroup(projectId,null);
-						}
-        				else
-						{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
-        				
-	        			$('#user_edit_project').append(option);
-					}	        		
-        		}        	
-        },  
-        error: function() {
-        	alertMessage(2, "异常", "ajax 函数  getProjectListbyuser 错误");              
-          }  
-    });
+	if($('#select_project').length>0)
+		{
+		$.ajax({  
+	        url:"/getProjectListbyuser",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null && data.length>0)    		
+	        		{    
+	        			$('#select_project').empty();
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{
+	        					option = "<option selected value='"+projectId+"'>"+projectName+"</option>";		
+	        					
+	        					getuserList(projectId);
+	        					selectProjectid = projectId;
+							}
+	        				else
+							{option = "<option value='"+projectId+"'>"+projectName+"</option>";}
+	        				
+		        			$('#select_project').append(option);
+						}	        		
+	        		}        	
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
+		}
+	else
+		{
+		$.ajax({  
+	        url:"/getProjectListbyuser",          
+	        type:"post",  
+	        dataType:"json", 
+	        data:{
+	        	adminInfo:localStorage.getItem("adminInfo")
+	        	},
+	        success:function(data)  
+	        {       	  
+	        	if(data!=null && data.length>0)    		
+	        		{    	        			
+		        		for(var i=0;i<data.length;i++)
+						{	
+		        			var project = data[i];
+		        			var projectId = project.projectid;
+		        			var projectName = project.projectname;
+		        			var option="";
+	        				if(i==0)
+							{		        					
+	        					getuserList(projectId);
+	        					selectProjectid = projectId;
+	        					break;
+							}
+						}	        		
+	        		}        	
+	        },  
+	        error: function() { 
+	        	alertMessage(2, "异常", "ajax 函数  getProjectList 错误");            
+	          }  
+	    });
+		}
 }
 //获取用户列表信息
-function getuserList()
+function getuserList(SelectProjectid)
 {
+	getGroup(SelectProjectid,null);
+	
 	$.ajax({  
         url:"/getUserList",          
         type:"post",  
         dataType:"json", 
-        data:{        	
+        data:{    
+        	projectid:SelectProjectid,
         	adminInfo:localStorage.getItem("adminInfo")
         	},
         success:function(data)  
@@ -558,28 +655,28 @@ function permissionvalue2String(permissionvalue)
 //模态确定按钮
 function model_eidtuser()
 {
-	var adminname = $('#user_edit_name').val();
-	var adminpwd = $('#user_edit_pwd').val();
-	var inherit=0;
-	if($('#inherit').prop('checked'))
-		{inherit=1;}
-	var adminstatus=$('#user_edit_status').val();			
-	var expdate = $('#user_edit_exp').val();	
+	if(selectProjectid=="" || selectProjectid==null)
+	{
+	alertMessage(1, "警告", "项目id不能为空!");return;
+	}
+	var adminname = $('#user_edit_name').val().trim();
+	var adminpwd = $('#user_edit_pwd').val().trim();
+	var inherit=0;	
+	var adminstatus=$('#user_edit_status').val().trim();			
+	var expdate = $('#user_edit_exp').val().trim();	
 	
 	var admingrps=groupinput2value();
 	
 	var adminpermission=permissioninput2value();
 	
-	if(adminname==null && adminname=='')
+	if(adminname==null || adminname=='')
 		{alertMessage(1, "警告", "用户名不能为空!");return;}
 	
-	if(adminpwd==null && adminpwd=='')
+	if(adminpwd==null || adminpwd=='')
 	{alertMessage(1, "警告", "密码不能为空!");return;}	
 	
-	if(admingrps==null && admingrps=='')
-	{alertMessage(1, "警告", "请选择分组!");return;}	
-			
-	var projectid=$('#user_edit_project').val();
+	if(admingrps==null || admingrps=='')
+	{alertMessage(1, "警告", "请选择分组!");return;}					
 	
 	var user_sn = parseInt($('#modal_user_edit').attr("data-type"));
 	if(user_sn==0)//创建
@@ -594,7 +691,7 @@ function model_eidtuser()
 	        	expdate:expdate,
 	        	adminpermission:adminpermission,
 	        	admingrps:admingrps,
-	        	projectid:projectid,
+	        	projectid:selectProjectid,
 	        	inherit:inherit,
 	        	adminInfo:localStorage.getItem("adminInfo")
 				},  
@@ -634,6 +731,7 @@ function model_eidtuser()
 		        					user_pwd:pwd,
 		        					user_level:level,
 		        					user_permission:Permission,
+		        					projectid:selectProjectid,
 		        					user_status:Status,
 		        					user_group:admingrps,
 		        					user_exp:expDate
@@ -682,6 +780,7 @@ function model_eidtuser()
 		        					user_name:adminname,
 		        					user_pwd:adminpwd,		        					
 		        					user_permission:permissionvalue2String(adminpermission),
+		        					projectid:selectProjectid,
 		        					user_status:Status,
 		        					user_group:admingrps,
 		        					user_exp:expdate

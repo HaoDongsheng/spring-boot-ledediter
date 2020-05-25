@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     
 	<!-- 在bootstrap.min.js 之前引入 -->	
-	<script type="text/javascript" th:src="@{~/javascript/jquery-3.3.1.min.js}" ></script>	
+	<script type="text/javascript" th:src="@{~/jquery/jquery-3.3.1.min.js}" ></script>	
 	<!-- Bootstrap 核心 JavaScript 文件 -->		
 	<script type="text/javascript" th:src="@{~/bootstrap/popper.min.js}" ></script>	
 	<link th:href="@{~/bootstrap/bootstrap.min.css}" rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@
 	<link th:href="@{~/img/ic-16.css}" rel="stylesheet" type="text/css">
 	<script type="text/javascript" th:src="@{~/javascript/share.js}" ></script>
 	<script type="text/javascript" th:src="@{~/javascript/userManger.js}" ></script>
-	<script type="text/javascript" th:src="@{~/javascript/bootstrap-notify.min.js}" ></script>
+	<script type="text/javascript" th:src="@{~/bootstrap/bootstrap-notify.min.js}" ></script>
 </head>
 <body>
     <header>
@@ -96,11 +96,18 @@
             <div class="row">				
 			 <div class="col-md-12">
                 <div class="table">           			 
-				     <div id="toolbar" class="btn-group">
-				            <button id="btn_table_add" style="display:none;" type="button" class="btn  btn-success">
-				                <span class="fa fa-plus" aria-hidden="true"></span>创建用户
-				            </button>				           
-				        </div>
+				    <div id="toolbar">
+				    <div class="btn-group">	
+		            <select shiro:hasRole="admin" id="select_project" class="form-control">	        		
+	        		</select>
+	        		</div>
+	        		
+	        		<div class="btn-group">
+		            <button id="btn_table_add" style="display:none;" type="button" class="btn  btn-success">
+		                <span class="fa fa-plus" aria-hidden="true"></span>创建用户
+		            </button>				
+		            </div>           
+			        </div>
 			        
 				  	<table id="userManger_table" class='table-sm table-striped thead-dark'>						    						    
 				  	</table>
@@ -123,61 +130,30 @@
 			      <div class="modal-body">	
 			      <div class="row">
 			       <div class="col-md-6">
-			       <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">用户名称</span>
-				      </div>
-						<input type="text" class="form-control required" id="user_edit_name" placeholder="用户名" autofocus="autofocus"></input>	
-						<div class="input-group-prepend">
-				        <span class="input-group-text"><input id="inherit" type="checkbox">继承</span>
-				      </div>			    
-				    </div>
+						用户名称
+						<input type="text" class="form-control required" id="user_edit_name" placeholder="用户名" autofocus="autofocus"></input>
 			       </div>
 			       <div class="col-md-6">
-			        <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">用户密码</span>
-				      </div>
-						<input type="password" class="form-control required" id="user_edit_pwd" placeholder="密码" autofocus="autofocus"></input>				    
-				    </div>
+						用户密码
+						<input type="password" class="form-control required" id="user_edit_pwd" placeholder="密码" autofocus="autofocus"></input>	
 			       </div>
 			      </div>
 			      
-			       <div class="row">
+			       <div class="row" style="margin-top:10px;">
 			       <div class="col-md-6">
-				  	<div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">用户状态</span>
-				      </div>
+						用户状态
 						<select id="user_edit_status" class="form-control">
 						<option value='0'>正常</option>
 						<option value='1'>停用</option>
 						</select>					    
-				    </div>
 			       </div>
 			       <div class="col-md-6">
-		    		<div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">到期时间</span>
-				      </div>
-						<input type="date" class="form-control required" id="user_edit_exp" autofocus="autofocus"></input>				    
-				    </div>
+			    	到期时间
+			    	<input type="date" class="form-control required" id="user_edit_exp" autofocus="autofocus"></input>
 			       </div>
-			      </div>
-			      
-			      <div class="row">			       
-			       <div class="col-md-6">
-			       <div class="input-group mb-3 input-group-sm">
-				      <div class="input-group-prepend">
-				        <span class="input-group-text">项目名称</span>
-				      </div>
-						<select id="user_edit_project" class="form-control">						
-						</select>					    
-				    </div>			       		
-			       </div>
-			      </div>
+			      </div>			      
 			      			      
-			       <div class="row">			       
+			       <div class="row" style="margin-top:10px;">			       
 			       <div class="col-md-6">
 			       		<div class="card">
 						  <div class="card-header">管理权限</div>
@@ -206,6 +182,50 @@
 			  		<!-- 模态框底部 -->
 			        <div class="modal-footer">
 			          <button id="btn_user_edit" type="button" class="btn btn-primary">确定</button> 
+			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			        </div>
+			    </div>
+			  </div>
+			</div>
+			
+			            <!-- 模态框  编辑用户-->
+			<div class="modal fade" data-backdrop="static" id="modal_user_changPwd">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			 
+			      <!-- 模态框头部 -->
+			      <div class="modal-header">
+			        <h4 class="modal-title">修改密码</h4>
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			      </div>
+			 
+			      <!-- 模态框主体 -->
+			      <div class="modal-body">	
+			      <div class="row">
+			       <div class="col-md-12">
+					旧密码
+					<input type="password" class="form-control required" id="old_pwd" placeholder="密码" autofocus="autofocus"></input>	
+			       </div>
+			      </div>
+			      
+			       <div class="row" style="margin-top:10px;">
+			       <div class="col-md-12">
+			    	新密码
+					<input type="password" class="form-control required" id="new_pwd" placeholder="密码" autofocus="autofocus"></input>
+			       </div>
+			      </div>			      
+			      			      
+				  <div class="row" style="margin-top:10px;">
+			       <div class="col-md-12">
+			    	确认密码
+					<input type="password" class="form-control required" id="ok_pwd" placeholder="密码" autofocus="autofocus"></input>
+			       </div>
+			      </div>						    						   
+			      </div>				  			      
+			 
+			  		<!-- 模态框底部 -->
+			        <div class="modal-footer">
+			          <button id="btn_user_changPwd" type="button" class="btn btn-primary">确定</button> 
 			          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
 			        </div>
 			    </div>

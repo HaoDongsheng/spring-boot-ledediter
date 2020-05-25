@@ -1,5 +1,7 @@
 package org.hds.model;
 
+import java.util.Date;
+
 public class terminal {
 	private String dtukey;
 
@@ -10,6 +12,8 @@ public class terminal {
 	private String ledId;
 
 	private String simno;
+
+	private String mcu;
 
 	private String taxitype;
 
@@ -75,19 +79,41 @@ public class terminal {
 
 	private Double updaterate;
 
+	private Integer para1Id;
+
+	private Integer para2Id;
+
+	private Integer para3Id;
+
+	private Integer para6IdSet;
+
+	private Integer para6Id;
+
+	private String licenseplatenumber;
+
+	private String positiontime;
+
+	private Double positionlongitude;
+
+	private Double positionlatitude;
+
+	private String positionaddress;
+
+	private Date dtuOnlinetime;
+
+	private Date dtuOfflinetime;
+
+	private Date dtuResponsetime;
+
+	private Date ledOnlinetime;
+
+	private Date ledOfflinetime;
+
+	private Date ledResponsetime;
+
 	private String adidlist;
 
 	private String playlist;
-
-	private Integer disconnect;
-
-	public Integer getDisconnect() {
-		return disconnect;
-	}
-
-	public void setDisconnect(Integer disconnect) {
-		this.disconnect = disconnect;
-	}
 
 	public String getDtukey() {
 		return dtukey;
@@ -127,6 +153,14 @@ public class terminal {
 
 	public void setSimno(String simno) {
 		this.simno = simno == null ? null : simno.trim();
+	}
+
+	public String getMcu() {
+		return mcu;
+	}
+
+	public void setMcu(String mcu) {
+		this.mcu = mcu == null ? null : mcu.trim();
 	}
 
 	public String getTaxitype() {
@@ -383,6 +417,134 @@ public class terminal {
 
 	public void setUpdaterate(Double updaterate) {
 		this.updaterate = updaterate;
+	}
+
+	public Integer getPara1Id() {
+		return para1Id;
+	}
+
+	public void setPara1Id(Integer para1Id) {
+		this.para1Id = para1Id;
+	}
+
+	public Integer getPara2Id() {
+		return para2Id;
+	}
+
+	public void setPara2Id(Integer para2Id) {
+		this.para2Id = para2Id;
+	}
+
+	public Integer getPara3Id() {
+		return para3Id;
+	}
+
+	public void setPara3Id(Integer para3Id) {
+		this.para3Id = para3Id;
+	}
+
+	public Integer getPara6IdSet() {
+		return para6IdSet;
+	}
+
+	public void setPara6IdSet(Integer para6IdSet) {
+		this.para6IdSet = para6IdSet;
+	}
+
+	public Integer getPara6Id() {
+		return para6Id;
+	}
+
+	public void setPara6Id(Integer para6Id) {
+		this.para6Id = para6Id;
+	}
+
+	public String getLicenseplatenumber() {
+		return licenseplatenumber;
+	}
+
+	public void setLicenseplatenumber(String licenseplatenumber) {
+		this.licenseplatenumber = licenseplatenumber == null ? null : licenseplatenumber.trim();
+	}
+
+	public String getPositiontime() {
+		return positiontime;
+	}
+
+	public void setPositiontime(String positiontime) {
+		this.positiontime = positiontime == null ? null : positiontime.trim();
+	}
+
+	public Double getPositionlongitude() {
+		return positionlongitude;
+	}
+
+	public void setPositionlongitude(Double positionlongitude) {
+		this.positionlongitude = positionlongitude;
+	}
+
+	public Double getPositionlatitude() {
+		return positionlatitude;
+	}
+
+	public void setPositionlatitude(Double positionlatitude) {
+		this.positionlatitude = positionlatitude;
+	}
+
+	public String getPositionaddress() {
+		return positionaddress;
+	}
+
+	public void setPositionaddress(String positionaddress) {
+		this.positionaddress = positionaddress == null ? null : positionaddress.trim();
+	}
+
+	public Date getDtuOnlinetime() {
+		return dtuOnlinetime;
+	}
+
+	public void setDtuOnlinetime(Date dtuOnlinetime) {
+		this.dtuOnlinetime = dtuOnlinetime;
+	}
+
+	public Date getDtuOfflinetime() {
+		return dtuOfflinetime;
+	}
+
+	public void setDtuOfflinetime(Date dtuOfflinetime) {
+		this.dtuOfflinetime = dtuOfflinetime;
+	}
+
+	public Date getDtuResponsetime() {
+		return dtuResponsetime;
+	}
+
+	public void setDtuResponsetime(Date dtuResponsetime) {
+		this.dtuResponsetime = dtuResponsetime;
+	}
+
+	public Date getLedOnlinetime() {
+		return ledOnlinetime;
+	}
+
+	public void setLedOnlinetime(Date ledOnlinetime) {
+		this.ledOnlinetime = ledOnlinetime;
+	}
+
+	public Date getLedOfflinetime() {
+		return ledOfflinetime;
+	}
+
+	public void setLedOfflinetime(Date ledOfflinetime) {
+		this.ledOfflinetime = ledOfflinetime;
+	}
+
+	public Date getLedResponsetime() {
+		return ledResponsetime;
+	}
+
+	public void setLedResponsetime(Date ledResponsetime) {
+		this.ledResponsetime = ledResponsetime;
 	}
 
 	public String getAdidlist() {
