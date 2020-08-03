@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.hds.GJ_coding.GJ_Set1cls;
 import org.hds.GJ_coding.GJ_Set2cls;
 import org.hds.GJ_coding.GJ_Set3cls;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 @Service
@@ -200,6 +204,27 @@ public class groupMangerServiceImpl implements IgroupMangerService {
 					DateFormat d1 = DateFormat.getDateTimeInstance();
 					// 写入项目表，发布广告改动时间数据
 					projectMapper.updateParameterUpdateTimeByPrimaryKey(projectid, d1.format(now));
+
+					Subject currentUser = SecurityUtils.getSubject();
+					Session session = currentUser.getSession();
+					JSONArray jsonArray = JSONArray.parseArray(session.getAttribute("pglist").toString());
+
+					for (int i = 0; i < jsonArray.size(); i++) {
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+						if (jsonObject.getString("projectid").equals(projectid)) {
+							JSONArray jgArray = jsonObject.getJSONArray("groups");
+							for (int j = 0; j < jgArray.size(); j++) {
+								JSONObject jgObject = jgArray.getJSONObject(j);
+								if (jgObject.getIntValue("groupid") == grpid) {
+									jgArray.remove(j);
+									break;
+								}
+							}
+							break;
+						}
+					}
+
+					session.setAttribute("pglist", jsonArray.toJSONString());
 
 					jObject.put("result", "success");
 				} else {

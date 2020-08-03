@@ -145,7 +145,9 @@ public interface groupMapper {
 			"screenheight = #{screenheight,jdbcType=INTEGER},", "projectid = #{projectid,jdbcType=VARCHAR},",
 			"pubid = #{pubid,jdbcType=INTEGER},", "plpubid = #{plpubid,jdbcType=INTEGER},",
 			"ptMode = #{ptMode,jdbcType=INTEGER},", "displayMode = #{displayMode,jdbcType=VARCHAR},",
-			"DelIndex = #{delindex,jdbcType=INTEGER}", "where groupid = #{groupid,jdbcType=INTEGER}" })
+			"PlayList = #{PlayList,jdbcType=VARCHAR},", "PlayAdList = #{PlayAdList,jdbcType=VARCHAR},",
+			"TotalAdList = #{TotalAdList,jdbcType=VARCHAR},", "DelIndex = #{delindex,jdbcType=INTEGER}",
+			"where groupid = #{groupid,jdbcType=INTEGER}" })
 	int updateByPrimaryKey(group record);
 
 	@Update({ "update t_group", "set pubid = #{pubid,jdbcType=INTEGER}",

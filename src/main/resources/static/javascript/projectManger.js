@@ -462,6 +462,36 @@ function initBTabel()
         });
     });
     
+    
+    $("#btn_update_pubdata").click(function(){ 
+    	var target = $("#projectinfo_table").get(0);
+        spinner.spin(target);
+        
+    	$.ajax({  
+            url:"/updatepubdata",           
+            type:"post",  
+            dataType:"json", 
+            success:function(data)  
+            {       	  
+            	if(data.result=="success")
+            		{  
+        				alertMessage(0, "提示", "转换成功!</br>"+data.message);            			            		
+            		}
+            	else
+            		{
+            			alertMessage(1, "警告", data.resultMessage);              			
+            		}
+            	//关闭spinner  
+                spinner.spin();
+            },  
+            error: function() {  
+            	alertMessage(2, "异常", "ajax 函数  updatepubdata 错误");   
+            	//关闭spinner  
+                spinner.spin();
+              }  
+        });
+    });
+    
     //解码
     $("#btn_decode").click(function(){  
     	var Content = tinymce.activeEditor.getContent({ 'format' : 'text' });

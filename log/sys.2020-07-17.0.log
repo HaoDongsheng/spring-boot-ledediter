@@ -1,0 +1,47 @@
+2020-07-17 13:19:34,671 INFO (StartupInfoLogger.java:50)- Starting Application on DESKTOP-H8FS49Q with PID 11968 (D:\eclipse-workspace\spring-boot-ledediter\target\classes started by 86139 in D:\eclipse-workspace\spring-boot-ledediter)
+2020-07-17 13:19:34,686 INFO (SpringApplication.java:675)- No active profile set, falling back to default profiles: default
+2020-07-17 13:19:34,775 INFO (DeferredLog.java:227)- Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2020-07-17 13:19:34,776 INFO (DeferredLog.java:227)- For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2020-07-17 13:19:37,099 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'shiroConfig' of type [org.hds.config.ShiroConfig$$EnhancerBySpringCGLIB$$cff84369] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,127 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'druidDBConfig' of type [org.hds.config.DruidDBConfig$$EnhancerBySpringCGLIB$$d7a360d8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,291 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'PrimaryDataSource' of type [com.alibaba.druid.pool.DruidDataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,361 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'PrimarydbSqlSessionFactory' of type [org.apache.ibatis.session.defaults.DefaultSqlSessionFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,424 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [org.mybatis.spring.mapper.MapperFactoryBean] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,428 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'userMapper' of type [com.sun.proxy.$Proxy66] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,429 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'customRealm' of type [org.hds.config.MyShiroRealm] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,431 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'securityManager' of type [org.apache.shiro.web.mgt.DefaultWebSecurityManager] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,531 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$587fcc9c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:38,547 INFO (PostProcessorRegistrationDelegate.java:330)- Bean 'authorizationAttributeSourceAdvisor' of type [org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-07-17 13:19:39,351 INFO (TomcatWebServer.java:90)- Tomcat initialized with port(s): 8011 (http)
+2020-07-17 13:19:39,380 INFO (DirectJDKLog.java:173)- Initializing ProtocolHandler ["http-nio-8011"]
+2020-07-17 13:19:39,403 INFO (DirectJDKLog.java:173)- Starting service [Tomcat]
+2020-07-17 13:19:39,404 INFO (DirectJDKLog.java:173)- Starting Servlet engine: [Apache Tomcat/9.0.16]
+2020-07-17 13:19:39,425 INFO (DirectJDKLog.java:173)- The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_241\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_241/bin/server;C:/Program Files/Java/jre1.8.0_241/bin;C:/Program Files/Java/jre1.8.0_241/lib/amd64;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\MySQL\bin;C:\Program Files\Java\jre1.8.0_202\bin;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files (x86)\Windows Kits\8.0\Windows Performance Toolkit\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\VSShell\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\PrivateAssemblies\;C:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;d:\Program Files\Git\cmd;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\Program Files\apache-maven-3.6.3\bin;C:\Users\86139\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\86139\AppData\Local\Programs\Python\Python38-32\;C:\Users\86139\AppData\Local\Microsoft\WindowsApps;;D:\eclipse;;.]
+2020-07-17 13:19:39,607 INFO (DirectJDKLog.java:173)- Initializing Spring embedded WebApplicationContext
+2020-07-17 13:19:39,608 INFO (ServletWebServerApplicationContext.java:296)- Root WebApplicationContext: initialization completed in 4832 ms
+2020-07-17 13:19:41,042 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'applicationTaskExecutor'
+2020-07-17 13:19:41,293 WARN (TemplateMode.java:150)- [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2020-07-17 13:19:41,369 INFO (WelcomePageHandlerMapping.java:61)- Adding welcome page template: index
+2020-07-17 13:19:41,515 INFO (ExecutorConfigurationSupport.java:171)- Initializing ExecutorService 'taskScheduler'
+2020-07-17 13:19:43,899 WARN (OptionalLiveReloadServer.java:61)- Unable to start LiveReload server
+2020-07-17 13:19:43,960 INFO (DirectJDKLog.java:173)- Starting ProtocolHandler ["http-nio-8011"]
+2020-07-17 13:19:44,009 INFO (TomcatWebServer.java:204)- Tomcat started on port(s): 8011 (http) with context path ''
+2020-07-17 13:19:44,016 INFO (StartupInfoLogger.java:59)- Started Application in 10.291 seconds (JVM running for 11.324)
+2020-07-17 13:19:47,026 INFO (DirectJDKLog.java:173)- Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-07-17 13:19:47,027 INFO (FrameworkServlet.java:524)- Initializing Servlet 'dispatcherServlet'
+2020-07-17 13:19:47,043 INFO (FrameworkServlet.java:546)- Completed initialization in 16 ms
+2020-07-17 13:19:47,122 INFO (LoginController.java:49)- /Index Open
+2020-07-17 13:19:48,154 INFO (LoginController.java:49)- /Index Open
+2020-07-17 13:19:57,027 INFO (DruidDataSource.java:930)- {dataSource-1} inited
+2020-07-17 13:19:57,432 INFO (operateLog.java:29)- ===用户登录:admin返回结果:{"result":"success","adminInfo":{"adminRemarks":"VmpGYVYyRXhWWGxXYmtwT1ZteGFiMXBYZUV0VU1YQllaRWhPVDFKc1NuaFZWM1JMWVVaR1ZVMUVhejA9","admincount":0,"adminid":1,"adminlevel":1,"adminname":"admin","adminpermission":"1111111","adminpwd":"","adminstatus":0,"delindex":0,"grpcount":0,"issuperuser":1,"parentid":0,"projectid":""}}===
+2020-07-17 13:19:57,469 INFO (DruidDataSource.java:930)- {dataSource-2} inited
+2020-07-17 13:19:57,599 INFO (MainController.java:27)- /main Open
+2020-07-17 13:19:58,007 INFO (operateLog.java:29)- ===用户:admin/getGroup===
+2020-07-17 13:20:02,832 INFO (historyMangerController.java:32)- /historyManger Open
+2020-07-17 13:20:04,465 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===
+2020-07-17 13:20:13,510 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===
+2020-07-17 13:23:10,031 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===
+2020-07-17 13:23:16,203 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===
+2020-07-17 13:23:17,889 INFO (historyMangerController.java:32)- /historyManger Open
+2020-07-17 13:23:18,865 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===
+2020-07-17 13:23:25,151 INFO (operateLog.java:29)- ===用户:admin/RefreshHistoryData===

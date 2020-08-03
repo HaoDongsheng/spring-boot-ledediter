@@ -33,6 +33,36 @@ public class group {
 
 	private String displayMode;
 
+	private String PlayList;
+
+	private String PlayAdList;
+
+	private String TotalAdList;
+
+	public String getPlayList() {
+		return PlayList;
+	}
+
+	public void setPlayList(String playList) {
+		PlayList = playList;
+	}
+
+	public String getPlayAdList() {
+		return PlayAdList;
+	}
+
+	public void setPlayAdList(String playAdList) {
+		PlayAdList = playAdList;
+	}
+
+	public String getTotalAdList() {
+		return TotalAdList;
+	}
+
+	public void setTotalAdList(String totalAdList) {
+		TotalAdList = totalAdList;
+	}
+
 	public Integer getGroupid() {
 		return groupid;
 	}

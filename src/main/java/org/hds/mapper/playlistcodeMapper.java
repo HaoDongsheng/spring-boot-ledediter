@@ -105,6 +105,23 @@ public interface playlistcodeMapper {
 			@Result(column = "packLength", property = "packLength", jdbcType = JdbcType.INTEGER) })
 	List<playlistcode> selectByGroupidDate(int groupid, String nowDate);
 
+	@Select({ "select",
+			"playlistCodeSN, groupid, containADID, lifeAct, lifeDie, playlistSN, pubid, playlistCrc, codeContext, singleCodeContext, packCount, packLength",
+			"from t_playlistcode", "where groupid = #{0} and lifeDie>=#{1} and lifeAct<=#{2}" })
+	@Results({ @Result(column = "playlistCodeSN", property = "playlistCodeSN", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "containADID", property = "containADID", jdbcType = JdbcType.LONGVARCHAR),
+			@Result(column = "lifeAct", property = "lifeAct", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "lifeDie", property = "lifeDie", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "playlistSN", property = "playlistsn", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "playlistCrc", property = "playlistcrc", jdbcType = JdbcType.INTEGER),
+			@Result(column = "codeContext", property = "codecontext", jdbcType = JdbcType.LONGVARCHAR),
+			@Result(column = "singleCodeContext", property = "singleCodeContext", jdbcType = JdbcType.LONGVARCHAR),
+			@Result(column = "packCount", property = "packCount", jdbcType = JdbcType.INTEGER),
+			@Result(column = "packLength", property = "packLength", jdbcType = JdbcType.INTEGER) })
+	List<playlistcode> selectByGroupidDate2(int groupid, String lifeAct, String lifeDie);
+
 	@Select({ "select", "pubid", "from t_playlistcode", "where playlistSN = #{playlistSN,jdbcType=VARCHAR}" })
 	@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.INTEGER)
 	int selectpubidByplaylistSN(String playlistSN);

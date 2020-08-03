@@ -2,6 +2,7 @@ package org.hds.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hds.service.IInfoListService;
 import org.hds.service.IprojectMangerService;
 import org.hds.service.impl.operateLog;
 import org.slf4j.Logger;
@@ -22,6 +23,10 @@ public class projectMangerController {
 
 	@Autowired
 	IprojectMangerService projectMangerSer;
+
+	@Autowired
+	IInfoListService InfoListSer;
+
 	@Autowired
 	operateLog operateLog;
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -227,5 +232,20 @@ public class projectMangerController {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/updatepubdata", method = RequestMethod.POST)
+	public JSONObject updatepubdata(HttpServletRequest request) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = InfoListSer.updateAllLists();
+			operateLog.writeLog("", 0, "更新全部group表发布字段:" + jsonObject.toJSONString(), "/updateLists", logger, true);
+
+		} catch (Exception e) {
+			jsonObject.put("result", "fail");
+			jsonObject.put("resultMessage", e.getMessage());
+		}
+		return jsonObject;
 	}
 }

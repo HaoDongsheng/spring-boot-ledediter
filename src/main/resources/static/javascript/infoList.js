@@ -312,6 +312,7 @@ function mutiadditemtip() {
 				//alertMessage(1, "警告", '预计添加'+arrayitem.length+'条排期,排期时间:'+arrayitem.join(',')+"秒"); 					
 			}
 	}
+	
 	if(!isS)
 	{$('#mutiadd_itemtip').text('没有空间容纳本条广告!');}
 }
@@ -1735,9 +1736,10 @@ function playlistDeletebyid(playlistid)
           }  
     });
 }
+var ispublish = 0 ;
 //保存列表
 function playlistSavebyid(playlistid)
-{
+{	
 	if(itemlist == null || itemlist.length<=0)
 		{		
 		alertMessage(1, "警告", "排期数据为空不能发布");
@@ -1747,11 +1749,17 @@ function playlistSavebyid(playlistid)
 	var mapData = getListData(playlistid);
 	
 	if(mapData.issave != 0)
-	{ajaxSaveInfoList(playlistid,mapData.listname,mapData.listtype,mapData.strquantums,mapData.ScheduleType,mapData.Playlistlifeact,mapData.Playlistlifedie,itemlist,false,false);}	
+	{ajaxSaveInfoList(playlistid,mapData.listname,mapData.listtype,mapData.strquantums,mapData.ScheduleType,mapData.Playlistlifeact,mapData.Playlistlifedie,itemlist,false,false);}
+	else {		
+		alertMessage(1, "警告", "列表没有修改不需要重新保存!");
+	}
 }
 //发布列表
 function playlistPublishbyid(playlistid)
-{
+{	
+	if(ispublish == 0)
+	{
+	ispublish = 1;
 	if(itemlist == null || itemlist.length<=0)
 		{		
 		alertMessage(1, "警告", "排期数据为空不能发布");
@@ -1761,7 +1769,16 @@ function playlistPublishbyid(playlistid)
 	var mapData = getListData(playlistid);
 	
 	if(mapData.issave != 0 || mapData.pubid=="0")
-	{ajaxSaveInfoList(playlistid,mapData.listname,mapData.listtype,mapData.strquantums,mapData.ScheduleType,mapData.Playlistlifeact,mapData.Playlistlifedie,itemlist,false,true);}	
+	{ajaxSaveInfoList(playlistid,mapData.listname,mapData.listtype,mapData.strquantums,mapData.ScheduleType,mapData.Playlistlifeact,mapData.Playlistlifedie,itemlist,false,true);}
+	else {
+		ispublish = 0;
+		alertMessage(1, "警告", "列表没有修改不需要重新发布!");
+	}
+	}
+	else
+		{
+		alertMessage(1, "警告", "发布函数正常执行,请过一会在点!");
+		}
 }
 //获取数据
 function getListData(playlistid)
@@ -1995,8 +2012,7 @@ function itemDeletebyst(infoid,st)
 	}
 		
 	// 删除所所有排期图层	
-	$('#info_canvas').removeLayerGroup(infoid+"offset"+st).drawLayers();	
-	
+	$('#info_canvas').removeLayerGroup(infoid+"offset"+st).drawLayers();		
 }
 //创建播放列表
 function playlist_creat()
@@ -2466,7 +2482,7 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 					    						var jpl={
 					    								id:data.returnid,
 					    								Playlistname:listname,
-					    								pubid:"0",
+					    								pubid:data.pubid,
 					    								Playlistlifeact:listlifeAct,
 					    								Playlistlifedie:listlifeDie,
 					    								Playlistlevel:listtype,
@@ -2501,10 +2517,14 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 			    							if(data.pubid!=null)
 						    				{
 			    								//保存后发布了
-			    								playlists[i].pubid=data.pubid;			  										
+			    								playlists[i].pubid=data.pubid;	
+			    								$('#list_save').css("display","none");
 						    				}
 			    							else
-		    								{playlists[i].pubid = "0";}
+		    								{
+			    								playlists[i].pubid = "0";
+			    								$('#list_save').css("display","block");
+		    								}
 			    							
 			    							
 			    							playlists[i].isSave=0;
@@ -2534,7 +2554,7 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
 			    											}
 			    									}
 			    								}
-		    								}
+		    								}			    							
 					    					}					    						    							
 //					    				break;
 					    				}
@@ -2551,14 +2571,16 @@ function ajaxSaveInfoList(playlistid,listname,listtype,strquantums,ScheduleType,
         		}
         	else{alertMessage(1, "警告", "存储列表返回数据为null");}	
         	//关闭spinner  
-            spinner.spin();
+            spinner.spin();            
+        	ispublish = 0;
 //            $("#modal_spinner").modal('hide');
         },  
         error: function() { 
         	//关闭spinner  
             spinner.spin();
 //            $("#modal_spinner").modal('hide');
-        	alertMessage(2, "异常", "ajax 函数  UpdateInfoList 错误");        	            
+        	alertMessage(2, "异常", "ajax 函数  UpdateInfoList 错误");    
+        	ispublish = 0;
           }  
     });
 }

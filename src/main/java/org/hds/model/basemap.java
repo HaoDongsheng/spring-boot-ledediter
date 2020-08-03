@@ -1,93 +1,93 @@
 package org.hds.model;
 
 public class basemap {
-    private Integer id;
+	private Integer id;
 
-    private String basemapname;
+	private String basemapname;
 
-    private String projectid;
-    
-    private Integer imgtype;
-    
-    private String basemapclassify;
+	private String projectid;
 
-    private String basemaptype;
-    
-    private String basemapstyle;
+	private Integer imgtype;
 
-    private String basemapdata;
+	private String basemapclassify;
 
-    private Integer delindex;
-    
-    public Integer getId() {
-        return id;
-    }
+	private String basemaptype;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	private String basemapstyle;
 
-    public String getBasemapname() {
-        return basemapname;
-    }
+	private String basemapdata;
 
-    public void setBasemapname(String basemapname) {
-        this.basemapname = basemapname == null ? null : basemapname.trim();
-    }
-    
-    public String getprojectid() {
-        return projectid;
-    }
+	private Integer delindex;
 
-    public void setprojectid(String projectid) {
-        this.projectid = projectid;
-    }
-    
-    public Integer getimgtype() {
-        return imgtype;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setimgtype(Integer imgtype) {
-        this.imgtype = imgtype;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getBasemapclassify() {
-        return basemapclassify;
-    }
+	public String getBasemapname() {
+		return basemapname;
+	}
 
-    public void setBasemapclassify(String basemapclassify) {
-        this.basemapclassify = basemapclassify == null ? null : basemapclassify.trim();
-    }
+	public void setBasemapname(String basemapname) {
+		this.basemapname = basemapname == null ? null : basemapname.trim();
+	}
 
-    public String getBasemaptype() {
-        return basemaptype;
-    }
+	public String getprojectid() {
+		return projectid;
+	}
 
-    public void setBasemaptype(String basemaptype) {
-        this.basemaptype = basemaptype == null ? null : basemaptype.trim();
-    }
-    
-    public String getbasemapstyle() {
-        return basemapstyle;
-    }
+	public void setprojectid(String projectid) {
+		this.projectid = projectid;
+	}
 
-    public void setbasemapstyle(String basemapstyle) {
-        this.basemapstyle = basemapstyle == null ? null : basemapstyle.trim();
-    }
+	public Integer getimgtype() {
+		return imgtype;
+	}
 
-    public String getBasemapdata() {
-        return basemapdata;
-    }
+	public void setimgtype(Integer imgtype) {
+		this.imgtype = imgtype;
+	}
 
-    public void setBasemapdata(String basemapdata) {
-        this.basemapdata = basemapdata == null ? null : basemapdata.trim();
-    }
-    
-    public Integer getdelindex() {
-        return delindex;
-    }
+	public String getBasemapclassify() {
+		return basemapclassify;
+	}
 
-    public void setdelindex(Integer delindex) {
-        this.delindex = delindex;
-    }
+	public void setBasemapclassify(String basemapclassify) {
+		this.basemapclassify = basemapclassify == null ? null : basemapclassify.trim();
+	}
+
+	public String getBasemaptype() {
+		return basemaptype;
+	}
+
+	public void setBasemaptype(String basemaptype) {
+		this.basemaptype = basemaptype == null ? null : basemaptype.trim();
+	}
+
+	public String getbasemapstyle() {
+		return basemapstyle;
+	}
+
+	public void setbasemapstyle(String basemapstyle) {
+		this.basemapstyle = basemapstyle == null ? null : basemapstyle.trim();
+	}
+
+	public String getBasemapdata() {
+		return basemapdata;
+	}
+
+	public void setBasemapdata(String basemapdata) {
+		this.basemapdata = basemapdata == null ? null : basemapdata.trim();
+	}
+
+	public Integer getdelindex() {
+		return delindex;
+	}
+
+	public void setdelindex(Integer delindex) {
+		this.delindex = delindex;
+	}
 }

@@ -448,39 +448,6 @@ public class advMangerController {
 			@RequestParam("arritem") String arritem, @RequestParam("adminid") int adminid,
 			@RequestParam("adminname") String adminname, HttpServletRequest request) {
 		try {
-//			ClassPathResource classPathResource = new ClassPathResource("static/不良词汇表.txt");
-//
-////			File file = classPathResource.getFile();
-//			InputStream inputStream = classPathResource.getInputStream();
-//			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//			String errorString = "";
-//			String s = "";
-//			StringBuilder textBuilder = new StringBuilder();
-//			JSONObject jsonitem = JSONObject.parseObject(arritem);
-//			for (String dataKey : jsonitem.keySet()) {
-//				JSONArray jArrpage = jsonitem.getJSONArray(dataKey);
-//				for (int i = 0; i < jArrpage.size(); i++) {
-//					JSONObject jitem = jArrpage.getJSONObject(i);
-//					String contextJson = jitem.getString("contextJson");
-//					JSONArray jonArray = JSONArray.parseArray(contextJson);
-//					for (int z = 0; z < jonArray.size(); z++) {
-//						for (int q = 0; q < jonArray.getJSONArray(z).size(); q++) {
-//							if (jonArray.getJSONArray(z).getJSONObject(q).getIntValue("itemType") == 0) {
-//								textBuilder.append(jonArray.getJSONArray(z).getJSONObject(q).getString("value"));
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//			while ((s = br.readLine()) != null) {
-//				int index = textBuilder.indexOf(s);
-//				if (index != -1) {
-//					errorString = s;
-//					break;
-//				}
-//			}
-
 			JSONObject jinfo = JSONObject.parseObject(infodata);
 
 			if (jinfo.getIntValue("pubid") != 0) {

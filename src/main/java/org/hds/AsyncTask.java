@@ -29,7 +29,7 @@ public class AsyncTask {
 //		System.out.println("[ " + "当前时间 : " + new Date() + " ]");
 //	}
 
-	@Scheduled(cron = "0 05 23 * * *")
+	@Scheduled(cron = "0 15 00 * * *")
 	public void Delete2oldbyDay() {
 		try {
 			// System.out.println("[ " + "222当前时间 : " + new Date() + " ]");
@@ -41,6 +41,13 @@ public class AsyncTask {
 		try {
 //			JSONObject jObjectlist = InfoListSer.DeleteList2oldbyDay();
 //			operateLog.writeLog("", 0, "删除过期列表信息:" + jObjectlist.toJSONString(), "/DeleteList2oldbyDay", logger, true);
+		} catch (Exception e) {
+			// System.out.println("[ " + "222当前时间 : " + new Date() + " ]");
+		}
+
+		try {
+			JSONObject jObjectup = InfoListSer.updateAllLists();
+			operateLog.writeLog("", 0, "更新全部group表发布字段:" + jObjectup.toJSONString(), "/updateLists", logger, true);
 		} catch (Exception e) {
 			// System.out.println("[ " + "222当前时间 : " + new Date() + " ]");
 		}

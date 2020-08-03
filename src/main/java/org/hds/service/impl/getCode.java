@@ -149,7 +149,6 @@ public class getCode {
 		} catch (Exception e) {
 			return 0;
 		}
-
 	}
 
 	// 广告编码

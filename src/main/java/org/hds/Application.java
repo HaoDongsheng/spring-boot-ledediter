@@ -22,12 +22,12 @@ public class Application implements CommandLineRunner {
 
 	@Autowired
 	org.hds.socket.NettyServer NettyServer;
+//	@Autowired
+//	IInfoListService InfoListSer;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 		try {
-//			NettyClient client = new NettyClient();
-//			client.star();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -36,6 +36,8 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		// InfoListSer.updateAllLists();
+
 		NettyClient.star();
 	}
 

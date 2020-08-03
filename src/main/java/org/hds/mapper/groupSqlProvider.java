@@ -73,6 +73,18 @@ public class groupSqlProvider {
 			sql.VALUES("displayMode", "#{displayMode,jdbcType=VARCHAR}");
 		}
 
+		if (record.getPlayList() != null) {
+			sql.VALUES("PlayList", "#{PlayList,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPlayAdList() != null) {
+			sql.VALUES("PlayAdList", "#{PlayAdList,jdbcType=VARCHAR}");
+		}
+
+		if (record.getTotalAdList() != null) {
+			sql.VALUES("TotalAdList", "#{TotalAdList,jdbcType=VARCHAR}");
+		}
+
 		return sql.toString();
 	}
 
@@ -138,6 +150,18 @@ public class groupSqlProvider {
 
 		if (record.getDisplayMode() != null) {
 			sql.SET("displayMode = #{displayMode,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPlayList() != null) {
+			sql.SET("PlayList = #{PlayList,jdbcType=VARCHAR}");
+		}
+
+		if (record.getPlayAdList() != null) {
+			sql.SET("PlayAdList = #{PlayAdList,jdbcType=VARCHAR}");
+		}
+
+		if (record.getTotalAdList() != null) {
+			sql.SET("TotalAdList = #{TotalAdList,jdbcType=VARCHAR}");
 		}
 
 		sql.WHERE("groupid = #{groupid,jdbcType=INTEGER}");

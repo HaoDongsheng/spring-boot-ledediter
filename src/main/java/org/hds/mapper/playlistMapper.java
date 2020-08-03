@@ -108,6 +108,30 @@ public interface playlistMapper {
 
 	@Select({ "select",
 			"playlistSN, groupid, pubid, playlistname, playlistlevel, playlistLifeAct, playlistLifeDie, creater, createDate, publisher, publishDate, deleter, deleteDate,",
+			"ScheduleType, DelIndex, Timequantum, programlist, mutiProgramlist", "from t_playlist",
+			"where groupid = #{0} and DelIndex=0 and (playlistLifeDie='' or playlistLifeDie >= #{1}) and (playlistLifeAct='' or playlistLifeAct <= #{2})" })
+	@Results({ @Result(column = "playlistSN", property = "playlistSN", jdbcType = JdbcType.VARCHAR, id = true),
+			@Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER),
+			@Result(column = "pubid", property = "pubid", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "playlistname", property = "playlistname", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "playlistlevel", property = "playlistlevel", jdbcType = JdbcType.INTEGER),
+			@Result(column = "playlistLifeAct", property = "playlistlifeact", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "playlistLifeDie", property = "playlistlifedie", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "creater", property = "creater", jdbcType = JdbcType.INTEGER),
+			@Result(column = "createDate", property = "createDate", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "publisher", property = "publisher", jdbcType = JdbcType.INTEGER),
+			@Result(column = "publishDate", property = "publishDate", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "deleter", property = "deleter", jdbcType = JdbcType.INTEGER),
+			@Result(column = "deleteDate", property = "deleteDate", jdbcType = JdbcType.VARCHAR),
+			@Result(column = "ScheduleType", property = "scheduletype", jdbcType = JdbcType.INTEGER),
+			@Result(column = "DelIndex", property = "delindex", jdbcType = JdbcType.INTEGER),
+			@Result(column = "Timequantum", property = "timequantum", jdbcType = JdbcType.LONGVARCHAR),
+			@Result(column = "programlist", property = "programlist", jdbcType = JdbcType.LONGVARCHAR),
+			@Result(column = "mutiProgramlist", property = "mutiProgramlist", jdbcType = JdbcType.LONGVARCHAR) })
+	List<playlist> selectbygroupidDate2(Integer groupid, String lifeAct, String lifeDie);
+
+	@Select({ "select",
+			"playlistSN, groupid, pubid, playlistname, playlistlevel, playlistLifeAct, playlistLifeDie, creater, createDate, publisher, publishDate, deleter, deleteDate,",
 			"ScheduleType, DelIndex, Timequantum, programlist, mutiProgramlist", "from t_playlist" })
 	@Results({ @Result(column = "playlistSN", property = "playlistSN", jdbcType = JdbcType.VARCHAR, id = true),
 			@Result(column = "groupid", property = "groupid", jdbcType = JdbcType.INTEGER),

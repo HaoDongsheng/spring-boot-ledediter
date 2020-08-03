@@ -1240,6 +1240,7 @@ public class DrawTextGraphics {
 		}
 	}
 
+	// 重新生成Gif
 	public static byte[] Gif2Gif(byte[] imgBytes, int w, int h) {
 		try {
 			/*
@@ -1294,6 +1295,7 @@ public class DrawTextGraphics {
 		}
 	}
 
+	// 获取gif第一张图片
 	public static JSONObject Gif2Img(String base64ImgString, int w, int h) {
 		try {
 			JSONObject jObject = new JSONObject();

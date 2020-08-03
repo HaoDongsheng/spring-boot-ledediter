@@ -41,4 +41,8 @@ public interface IInfoListService {
 	public JSONObject deleteList2old(String playlistSN);
 
 	public JSONObject DeleteList2oldbyDay();
+
+	public int updateLists(int groupid);
+
+	public JSONObject updateAllLists();
 }

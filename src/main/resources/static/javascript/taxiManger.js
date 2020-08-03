@@ -348,7 +348,7 @@ function initBTabel()
         }, {
             field: 'groupid',
             title: '分组名称',
-            visible: false,
+            visible: true,
             sortable:true              
         },/* {
             field: 'LedStateString',
